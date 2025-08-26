@@ -11,23 +11,23 @@ export interface AuthContext {
 
 const AuthContext = React.createContext<AuthContext | null>(null);
 
-const key = "tanstack.auth.user";
+const key = "leo.user";
 
 function getStoredUser() {
-	return localStorage.getItem(key);
+	return sessionStorage.getItem(key);
 }
 
 function setStoredUser(user: string | null) {
 	if (user) {
-		localStorage.setItem(key, user);
+		sessionStorage.setItem(key, user);
 	} else {
-		localStorage.removeItem(key);
+		sessionStorage.removeItem(key);
 	}
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = React.useState<string | null>(getStoredUser());
-	const isAuthenticated = !!user;
+	const isAuthenticated = !!user; // [ ]Test with user only
 
 	const logout = React.useCallback(async () => {
 		await sleep(250);
