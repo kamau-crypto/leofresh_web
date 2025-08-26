@@ -23,6 +23,7 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
+import { useAuth } from "./leofresh/auth";
 
 // This is sample data.
 const data = {
@@ -155,6 +156,11 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const { isAuthenticated } = useAuth();
+
+	if (!isAuthenticated) {
+		return null;
+	}
 	return (
 		<Sidebar
 			collapsible='icon'
