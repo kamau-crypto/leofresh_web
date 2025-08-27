@@ -1,3 +1,4 @@
+import { useLocation } from "@tanstack/react-router";
 import { useAuth } from "../context";
 import {
 	Breadcrumb,
@@ -13,6 +14,10 @@ import { AppSidebar } from "./app-sidebar";
 
 export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 	const { api_token } = useAuth();
+	const location = useLocation();
+
+	const paths = location.pathname.split("/").filter(Boolean);
+	const leadingPath = paths.length > 0 ? paths.shift() : "Home";
 
 	//
 	//[ ] Add the various profiles within the app at this stage
@@ -20,7 +25,6 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 	if (!api_token) {
 		return null;
 	}
-
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -35,12 +39,19 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 						<Breadcrumb>
 							<BreadcrumbList>
 								<BreadcrumbItem className='hidden md:block'>
-									{/* Get the parent route here */}
-									<BreadcrumbLink href='#'>
-										Building Your Application
+									<BreadcrumbLink href={`/${leadingPath}`}>
+										{leadingPath?.toLocaleUpperCase()}
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className='hidden md:block' />
+								{/* [ ] Think of a stucture like /app/about/settings/user. And how you can create breadcrumbs from it, alongisde the proper order*/}
+								{paths.length > 0 && (
+									<BreadcrumbItem>
+										<BreadcrumbLink href={`${leadingPath}/${paths.join("/")}`}>
+											{paths.join("/").toLocaleUpperCase()}
+										</BreadcrumbLink>
+									</BreadcrumbItem>
+								)}
 								<BreadcrumbItem>
 									<BreadcrumbPage>Data Fetching</BreadcrumbPage>
 								</BreadcrumbItem>

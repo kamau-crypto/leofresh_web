@@ -22,7 +22,7 @@ export const useLoginForm = () => {
 			await login({ password, username });
 
 			toast.success("Login successful");
-			navigate({ to: "/", ignoreBlocker: true });
+			navigate({ to: "/app", ignoreBlocker: true });
 		} catch (error) {
 			if (error instanceof Error) {
 				form.setError("password", { message: "Invalid Credentials" });

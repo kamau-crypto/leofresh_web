@@ -1,3 +1,1 @@
-export const companyName = "LeoFresh Limited";
-
-
+export const companyName = "LEOFRESH Limited";

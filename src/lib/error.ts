@@ -6,6 +6,6 @@ export class LeofreshError {
 	}
 
 	renderToast({ message }: { message: string }) {
-		return toast(message);
+		return toast.error(message, { duration: 5000, position: "bottom-right" });
 	}
 }

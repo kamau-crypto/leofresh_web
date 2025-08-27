@@ -1,38 +1,20 @@
 "use client";
-import { useAuth } from "@/components/context/auth";
-import { Button } from "@/components/ui/button";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Check } from "lucide-react";
-import toast from "react-hot-toast";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
 	component: Index,
-	beforeLoad: ({ context }) => {
-		if (!context.auth.api_token) {
-			console.log("Token Is", context.auth);
-			throw redirect({
-				to: "/login",
-			});
-		}
-	},
 });
 
 function Index() {
-	const auth = useAuth();
 	return (
-		<div className='p-2'>
-			<h3>Welcome {auth.user?.user.username}</h3>
-			<div className='flex min-h-svh flex-col items-center justify-center'>
-				<Button
-					onClick={() =>
-						toast.success("Button clicked!", {
-							duration: 2000,
-							icon: <Check />,
-						})
-					}>
-					Click me
-				</Button>
-			</div>
+		<div className='grid w-full h-full justify-center gap-4 '>
+			<h3 className='text-4xl'>Welcome to LeoFresh</h3>
+			<p className='font'>Login to acccess your account</p>
+			<Link
+				to={"/auth/login"}
+				className=' bg-primary text-white rounded-md elevation-4 text-center p-2'>
+				Login
+			</Link>
 		</div>
 	);
 }
