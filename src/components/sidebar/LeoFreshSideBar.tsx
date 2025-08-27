@@ -1,3 +1,4 @@
+import { toSentenceCase } from "@/lib/utils";
 import { useLocation } from "@tanstack/react-router";
 import { useAuth } from "../context";
 import {
@@ -40,11 +41,11 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 							<BreadcrumbList>
 								<BreadcrumbItem className='hidden md:block'>
 									<BreadcrumbLink href={`/${leadingPath}`}>
-										{leadingPath?.toLocaleUpperCase()}
+										{leadingPath && toSentenceCase(leadingPath)}
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className='hidden md:block' />
-								{/* [ ] Think of a stucture like /app/about/settings/user. And how you can create breadcrumbs from it, alongisde the proper order*/}
+								{/* [ ] Think of a stucture like /app/about/settings/user. And how you can create breadcrumbs from it, alongisde the proper order* convert it to a tree or a linked list*/}
 								{paths.length > 0 && (
 									<BreadcrumbItem>
 										<BreadcrumbLink href={`${leadingPath}/${paths.join("/")}`}>
