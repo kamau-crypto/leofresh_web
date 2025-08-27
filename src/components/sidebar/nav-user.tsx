@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useNavigate } from "@tanstack/react-router";
 import toast from "react-hot-toast";
-import { useAuth } from "./context";
+import { useAuth } from "../context";
 
 export function NavUser({
 	user,
@@ -44,7 +44,7 @@ export function NavUser({
 
 	const handleLogout = async () => {
 		await logout();
-		toast.success("Logout successful, redirecting you to the logout page");
+		toast.success("Logged out, Login and Try Agains", { duration: 2000 });
 		navigate({ to: "/login" });
 	};
 

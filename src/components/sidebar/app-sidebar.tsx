@@ -2,9 +2,9 @@ import {
 	AudioWaveform,
 	BookOpen,
 	Bot,
+	Bubbles,
 	Command,
 	Frame,
-	GalleryVerticalEnd,
 	Map,
 	PieChart,
 	Settings2,
@@ -12,10 +12,10 @@ import {
 } from "lucide-react";
 import * as React from "react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { NavMain } from "@/components/sidebar/nav-main";
+import { NavProjects } from "@/components/sidebar/nav-projects";
+import { NavUser } from "@/components/sidebar/nav-user";
+import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import {
 	Sidebar,
 	SidebarContent,
@@ -23,7 +23,7 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { useAuth } from "./context/auth";
+import { useAuth } from "../context/auth";
 
 // This is sample data.
 const data = {
@@ -34,8 +34,8 @@ const data = {
 	},
 	teams: [
 		{
-			name: "Acme Inc",
-			logo: GalleryVerticalEnd,
+			name: "Leofresh Limited",
+			logo: Bubbles,
 			plan: "Enterprise",
 		},
 		{
@@ -156,11 +156,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const { api_token } = useAuth();
 
-	if (!api_token) {
-		return null;
-	}
 	return (
 		<Sidebar
 			collapsible='icon'
