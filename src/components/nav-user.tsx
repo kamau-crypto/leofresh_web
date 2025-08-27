@@ -26,6 +26,8 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "@tanstack/react-router";
+import toast from "react-hot-toast";
+import { useAuth } from "./context";
 
 export function NavUser({
 	user,
@@ -37,7 +39,14 @@ export function NavUser({
 	};
 }) {
 	const { isMobile } = useSidebar();
+	const { logout } = useAuth();
 	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		await logout();
+		toast.success("Logout successful, redirecting you to the logout page");
+		navigate({ to: "/login" });
+	};
 
 	return (
 		<SidebarMenu>
@@ -106,7 +115,7 @@ export function NavUser({
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							className='text-destructive'
-							onClick={() => navigate({ to: "/login" })}>
+							onClick={handleLogout}>
 							<LogOut className='text-destructive' />
 							Log out
 						</DropdownMenuItem>

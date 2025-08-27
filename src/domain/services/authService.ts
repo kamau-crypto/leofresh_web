@@ -11,16 +11,19 @@ export const useLoginService = () => {
 		credentials: Login;
 	}) => {
 		// Use the mutation from the Data Layer to get the raw data
-		const response = await loginMutation.mutateAsync({ username, password });
+		const { message, success, user } = await loginMutation.mutateAsync({
+			username,
+			password,
+		});
 
 		// Here you can add domain-specific validation or logic
-		if (!response.user || !response.user.full_name) {
+		if (!user || success !== 0) {
 			throw new LeofreshError({
-				message: "Authentication failed: No token received.",
+				message: "Authentication failed: Please try again",
 			});
 		}
 		// Return the validated, clean domain data
-		return response.user;
+		return { message, user };
 	};
 
 	return { login, isLoading: loginMutation.isPending };

@@ -1,4 +1,4 @@
-import { useAuth } from "@/components/leofresh/auth";
+import { useAuth } from "@/components/context/auth";
 import { userLoginSchema, type UserLoginInput } from "@/data-access";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
@@ -17,16 +17,16 @@ export const useLoginForm = () => {
 		},
 	});
 
-	const onSubmit = async (data: UserLoginInput) => {
+	const onSubmit = async ({ password, username }: UserLoginInput) => {
 		try {
-			await login(
-                data.username
-            );
+			await login({ password, username });
+
 			toast.success("Login successful");
-			navigate({ to: "/" });
+			navigate({ to: "/", ignoreBlocker: true });
 		} catch (error) {
 			if (error instanceof Error) {
-				form.setError("root", { message: error.message });
+				form.setError("password", { message: "Invalid Credentials" });
+				form.setError("username", { message: "Invalid Credentials" });
 			}
 		}
 	};

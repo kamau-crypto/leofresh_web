@@ -62,9 +62,10 @@ export function LoginForm({
 								<Button
 									type='submit'
 									className='w-full'>
-									{!!form.formState.isSubmitting && <LogIn />}
-									{form.formState.isSubmitting && (
+									{form.formState.isSubmitting ? (
 										<Loader2Icon className='animate-spin' />
+									) : (
+										<LogIn />
 									)}
 									Login
 								</Button>

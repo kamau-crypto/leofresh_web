@@ -5,6 +5,7 @@ import { extractFrappeErrorMessage } from "@/lib/frappe_error_handler";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
 import axios from "axios";
+import { AUTHMUTATIONKEY } from "./keys";
 
 const userLogin = async ({
 	username,
@@ -21,10 +22,6 @@ const userLogin = async ({
 		}
 	);
 	if (response.data.message.success_key === 1) {
-		sessionStorage.setItem(
-			"leo_token",
-			` ${response.data.message.api_key}:${response.data.message.api_secret}`
-		);
 		return {
 			success: 0,
 			message: `${response.data.message.api_key}:${response.data.message.api_secret}`,
@@ -46,5 +43,6 @@ const userLogin = async ({
 export const useLoginMutation = () => {
 	return useMutation({
 		mutationFn: userLogin,
+		mutationKey: AUTHMUTATIONKEY.LOGIN_USER,
 	});
 };

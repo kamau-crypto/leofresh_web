@@ -2,16 +2,21 @@ import type { Login, UserLogged } from "@/domain";
 import { useLoginService } from "@/domain/services/authService";
 import { LeofreshError } from "@/lib/error";
 
-interface LoggedInUser
-	extends Pick<UserLogged, "username" | "email" | "roles" | "role_profiles"> {}
+type UserDetails = Pick<
+	UserLogged,
+	"username" | "email" | "roles" | "role_profiles"
+>;
+export interface LoggedInUser {
+	message: string;
+	user: UserDetails;
+}
 
 export const useLoginUseCase = () => {
 	const { login, isLoading } = useLoginService();
 
 	const loginUser = async (credentials: Login): Promise<LoggedInUser> => {
 		try {
-			const user = await login({ credentials });
-			console.log("Login successful! User:", user);
+			const user: LoggedInUser = await login({ credentials });
 
 			return { ...user };
 		} catch (error) {

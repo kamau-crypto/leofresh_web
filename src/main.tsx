@@ -1,10 +1,11 @@
-import { AuthProvider, useAuth } from "@/components/leofresh/auth";
+import { AuthProvider, useAuth } from "@/components/context/auth";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
@@ -18,7 +19,6 @@ const router = createRouter({
 		auth: undefined!, // This will be set after we wrap the app in an AuthProvider
 	},
 });
-
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
@@ -54,6 +54,7 @@ function AuthenticatedApp() {
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
+		<Toaster />
 		<QueryClientProvider client={queryClient}>
 			<Provider store={store}>
 				<AuthProvider>

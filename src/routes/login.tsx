@@ -2,14 +2,15 @@ import { LoginForm } from "@/components/login-form";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 
-const fallback = "/" as const;
+// const fallback = "/login" as const;
 export const Route = createFileRoute("/login")({
 	validateSearch: z.object({
 		redirect: z.string().optional().catch(""),
 	}),
-	beforeLoad: ({ context, search }) => {
-		if (context.auth.isAuthenticated) {
-			throw redirect({ to: search.redirect || fallback });
+	beforeLoad: ({ context }) => {
+		if (context.auth.api_token) {
+			
+			throw redirect({ to: "/" });
 		}
 	},
 	component: LoeLoginForm,

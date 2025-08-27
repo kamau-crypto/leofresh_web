@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import type { AuthContext } from "@/components/leofresh/auth";
+import type { AuthContext } from "@/components/context/auth";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
