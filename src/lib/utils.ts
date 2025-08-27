@@ -5,8 +5,12 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-
-
 export async function sleep(ms: number) {
 	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function toSentenceCase(str: string) {
+	const lowerCase = str.toLowerCase();
+
+	return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
 }
