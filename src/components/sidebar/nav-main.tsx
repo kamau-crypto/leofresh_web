@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, type LucideIcon, type LucideProps } from "lucide-react";
 
 import {
 	Collapsible,
@@ -30,6 +30,9 @@ export function NavMain({
 		items?: {
 			title: string;
 			url: string;
+			icon?: React.ForwardRefExoticComponent<
+				Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+			>;
 		}[];
 	}[];
 }) {
@@ -54,7 +57,9 @@ export function NavMain({
 									}>
 									{item.icon && <item.icon />}
 									<span>{item.title}</span>
-									<ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+									{item.items && (
+										<ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+									)}
 								</SidebarMenuButton>
 							</CollapsibleTrigger>
 							<CollapsibleContent>
@@ -64,8 +69,11 @@ export function NavMain({
 											<SidebarMenuSubButton asChild>
 												<Link
 													to={subItem.url}
-													className='[&.active]:bg-primary [&.active]:text-white rounded-2xl'>
-													<span>{subItem.title}</span>
+													className='[&.active]:bg-primary [&.active]:text-white rounded-2xl flex-row'>
+													<span className='flex gap-3 items-center'>
+														{subItem.icon && <subItem.icon size={16} />}
+														{subItem.title}
+													</span>
 												</Link>
 											</SidebarMenuSubButton>
 										</SidebarMenuSubItem>

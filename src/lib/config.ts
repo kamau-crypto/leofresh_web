@@ -1,5 +1,5 @@
 // Config credentials for the app. These are end point credentials for the application that allow for the development of app environments within my application. They are placed here for future environment safety.
-const URL = "http://192.168.100.93:8000";
+const URL = "http://192.168.100.18:8000";
 const API = `${URL}/api`;
 
 export const appConfig = {

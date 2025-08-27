@@ -1,19 +1,7 @@
-import {
-	AudioWaveform,
-	BookOpen,
-	Bot,
-	Bubbles,
-	Command,
-	Frame,
-	Map,
-	PieChart,
-	Settings2,
-	SquareTerminal,
-} from "lucide-react";
+import { AudioWaveform, Bubbles, Command } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
-import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import {
@@ -23,14 +11,11 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
+import { leofreshRoutes } from "@/presentation";
+import { useAuth } from "../context";
 
 // This is sample data.
 const data = {
-	user: {
-		name: "shadcn",
-		email: "m@example.com",
-		avatar: "/avatars/shadcn.jpg",
-	},
 	teams: [
 		{
 			name: "Leofresh Limited",
@@ -48,113 +33,19 @@ const data = {
 			plan: "Free",
 		},
 	],
-	navMain: [
-		{
-			title: "Playground",
-			url: "#",
-			icon: SquareTerminal,
-			isActive: true,
-			items: [
-				{
-					title: "History",
-					url: "/",
-				},
-				{
-					title: "Starred",
-					url: "#",
-				},
-				{
-					title: "Settings",
-					url: "/about",
-				},
-			],
-		},
-		{
-			title: "Models",
-			url: "#",
-			icon: Bot,
-			items: [
-				{
-					title: "Genesis",
-					url: "#",
-				},
-				{
-					title: "Explorer",
-					url: "#",
-				},
-				{
-					title: "Quantum",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Documentation",
-			url: "#",
-			icon: BookOpen,
-			items: [
-				{
-					title: "Introduction",
-					url: "#",
-				},
-				{
-					title: "Get Started",
-					url: "#",
-				},
-				{
-					title: "Tutorials",
-					url: "#",
-				},
-				{
-					title: "Changelog",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Settings",
-			url: "#",
-			icon: Settings2,
-			items: [
-				{
-					title: "General",
-					url: "#",
-				},
-				{
-					title: "Team",
-					url: "#",
-				},
-				{
-					title: "Billing",
-					url: "#",
-				},
-				{
-					title: "Limits",
-					url: "#",
-				},
-			],
-		},
-	],
-	projects: [
-		{
-			name: "Design Engineering",
-			url: "#",
-			icon: Frame,
-		},
-		{
-			name: "Sales & Marketing",
-			url: "/",
-			icon: PieChart,
-		},
-		{
-			name: "Travel",
-			url: "#",
-			icon: Map,
-		},
-	],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const auth = useAuth();
+	const user = auth.user && auth.user.user;
+
+	// if (!user) {
+	// 	auth.logout();
+	// 	return <Navigate to='/auth/login' />;
+	// }
+
+	const { email, username } = user!;
+
 	return (
 		<Sidebar
 			collapsible='icon'
@@ -163,11 +54,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<TeamSwitcher teams={data.teams} />
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain items={data.navMain} />
-				<NavProjects projects={data.projects} />
+				<NavMain items={leofreshRoutes} />
 			</SidebarContent>
 			<SidebarFooter>
-				<NavUser user={data.user} />
+				<NavUser user={{ email, name: username }} />
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

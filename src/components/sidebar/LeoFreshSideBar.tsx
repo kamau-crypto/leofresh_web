@@ -1,12 +1,11 @@
 import { toSentenceCase } from "@/lib/utils";
-import { useLocation } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../context";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,
-	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 import { Separator } from "../ui/separator";
@@ -14,8 +13,9 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
 
 export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
-	const { api_token } = useAuth();
+	const { api_token, user } = useAuth();
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	const paths = location.pathname.split("/").filter(Boolean);
 	const leadingPath = paths.length > 0 ? paths.shift() : "Home";
@@ -23,8 +23,8 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 	//
 	//[ ] Add the various profiles within the app at this stage
 
-	if (!api_token) {
-		return null;
+	if (!api_token || !user) {
+		return navigate({ to: "/auth/login" });
 	}
 	return (
 		<SidebarProvider>
@@ -53,9 +53,9 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 										</BreadcrumbLink>
 									</BreadcrumbItem>
 								)}
-								<BreadcrumbItem>
+								{/* <BreadcrumbItem>
 									<BreadcrumbPage>Data Fetching</BreadcrumbPage>
-								</BreadcrumbItem>
+								</BreadcrumbItem> */}
 							</BreadcrumbList>
 						</Breadcrumb>
 					</div>

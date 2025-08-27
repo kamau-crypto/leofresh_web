@@ -16,6 +16,17 @@ export const useLoginService = () => {
 			password,
 		});
 
+		if (loginMutation.error) {
+			throw new LeofreshError({
+				message: loginMutation.error.message,
+			});
+		}
+
+		if (loginMutation.failureReason) {
+			throw new LeofreshError({
+				message: loginMutation.failureReason.message,
+			});
+		}
 		// Here you can add domain-specific validation or logic
 		if (!user || success !== 0) {
 			throw new LeofreshError({
