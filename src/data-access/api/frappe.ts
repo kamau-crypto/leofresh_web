@@ -6,8 +6,8 @@ import { redirect } from "@tanstack/react-router";
 import type { AxiosInstance, AxiosResponse } from "axios";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import type { CreatePurchaseInvoicesDTO } from "../models/purchase-invoice.dto";
-import type { ReadWarehouseDTO } from "../models/warehouse.dto";
+import type { CreatePurchaseInvoicesDTO } from "../dto/purchase-invoice.dto";
+import type { ReadWarehouseDTO } from "../dto/warehouse.dto";
 
 export class FrappeInstance {
 	private request_token?: string;
