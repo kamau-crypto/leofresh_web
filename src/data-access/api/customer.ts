@@ -1,25 +1,30 @@
-import { FrappeInstance } from "./frappe";
 import type { AxiosInstance } from "axios";
+import type {
+	CreateCustomerDTO,
+	DisableCustomerDTO,
+	UpdateCustomerDTO,
+} from "../dto";
+import { FrappeInstance } from "./frappe";
 
-export class Customer extends FrappeInstance{
-    private customerInstance: AxiosInstance;
-    private docType: string;
+export class Customer extends FrappeInstance {
+	private customerInstance: AxiosInstance;
+	private docType: string;
 
-    constructor({docType}: {docType: string}) {
-        super();
-        this.docType = docType;
-        this.customerInstance = this.getFrappeClient();
-    }
+	constructor({ docType }: { docType: string }) {
+		super();
+		this.docType = docType;
+		this.customerInstance = this.getFrappeClient();
+	}
 
-    createCustomer(data: CreateCustomerDto) {
-        return this.customerInstance.post(`/${this.docType}`, data);
-    }
+	createCustomer(data: CreateCustomerDTO) {
+		return this.customerInstance.post(`/${this.docType}`, data);
+	}
 
-    updateCustomer(data: UpdateCustomerDto) {
-        return this.customerInstance.put(`/${this.docType}/${data.id}`, data);
-    }s
+	updateCustomer(data: UpdateCustomerDTO) {
+		return this.customerInstance.put(`/${this.docType}/${data.name}`, data);
+	}
 
-    deleteCustomer(customerId: string) {
-        return this.customerInstance.delete(`/${customerId}`);
-    }
+	deleteCustomer({ name }: DisableCustomerDTO) {
+		return this.customerInstance.delete(`/${name}`);
+	}
 }
