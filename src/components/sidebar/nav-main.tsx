@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/collapsible";
 import {
 	SidebarGroup,
-	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
@@ -17,7 +16,7 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 
 export function NavMain({
 	items,
@@ -37,9 +36,13 @@ export function NavMain({
 		}[];
 	}[];
 }) {
+	const location = useLocation();
+	const menuUrl = location.pathname.split("/").filter(Boolean);
+	const strippedUrl = menuUrl.length > 0 && menuUrl.slice(0, -1).join("/");
+	const newPath = `/${strippedUrl}`;
+
 	return (
 		<SidebarGroup>
-			<SidebarGroupLabel>Functions</SidebarGroupLabel>
 			<SidebarMenu>
 				{items.map(item => (
 					<Collapsible
@@ -52,12 +55,20 @@ export function NavMain({
 								<SidebarMenuButton
 									tooltip={item.title}
 									className={
-										item.isActive
-											? "bg-primary text-white group/collapsible"
+										(
+											menuUrl.length > 2
+												? newPath === item.url
+												: `/${menuUrl.join("/")}` === item.url
+										)
+											? "bg-primary/95 text-white group/collapsible "
 											: ""
 									}>
-									{item.icon && <item.icon />}
-									<span>{item.title}</span>
+									<Link
+										to={item.url}
+										className='flex gap-3 items-center'>
+										{item.icon && <item.icon size={16} />}
+										<span>{item.title}</span>
+									</Link>
 									{item.items && (
 										<ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
 									)}
@@ -70,7 +81,7 @@ export function NavMain({
 											<SidebarMenuSubButton asChild>
 												<Link
 													to={subItem.url}
-													className='[&.active]:bg-primary [&.active]:text-white rounded-2xl flex-row'>
+													className='[&.active]:bg-primary/90 [&.active]:text-white rounded-2xl flex-row'>
 													<span className='flex gap-3 items-center'>
 														{subItem.icon && <subItem.icon size={16} />}
 														{subItem.title}

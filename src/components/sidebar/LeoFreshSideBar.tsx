@@ -49,7 +49,7 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 								{/* [ ] Think of a stucture like /app/about/settings/user. And how you can create breadcrumbs from it, alongisde the proper order* convert it to a tree or a linked list*/}
 								{paths.length > 0 && (
 									<BreadcrumbItem>
-										<BreadcrumbLink href={`${leadingPath}/${paths.join("/")}`}>
+										<BreadcrumbLink href={`${paths.join("/")}`}>
 											{paths.join("/").toLocaleUpperCase()}
 										</BreadcrumbLink>
 									</BreadcrumbItem>

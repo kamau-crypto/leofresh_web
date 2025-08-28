@@ -33,7 +33,7 @@ export interface Route {
 export const leofreshRoutes: Route[] = [
 	{
 		title: "Dashboard",
-		url: "/app/",
+		url: "/app/dashboard",
 		icon: LayoutDashboard,
 		isActive: true,
 	},
