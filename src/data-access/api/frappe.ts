@@ -1,12 +1,13 @@
 //
 //A frappe adapter that is reusable within the application
-import { CreatePurchaseInvoices, ReadWarehouseList } from "@/constants";
 import { appConfig } from "@/lib/config";
 import { LeofreshError } from "@/lib/error";
 import { redirect } from "@tanstack/react-router";
 import type { AxiosInstance, AxiosResponse } from "axios";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import type { CreatePurchaseInvoicesDTO } from "../models/purchase-invoice.dto";
+import type { ReadWarehouseDTO } from "../models/warehouse.dto";
 
 export class FrappeInstance {
 	private request_token?: string;
@@ -113,7 +114,7 @@ export class FrappeInstance {
 		message: string = "Cannot proceed with the action. Login and try again"
 	) {
 		toast(message);
-		redirect({ to: "/login" });
+		throw redirect({ to: "/auth/login" });
 	}
 
 	/*
@@ -208,10 +209,10 @@ export class FrappeInstance {
 		company,
 	}: {
 		company: string;
-	}): Promise<ReadWarehouseList[]> {
+	}): Promise<ReadWarehouseDTO[]> {
 		try {
 			const response: AxiosResponse<{
-				message: { data: ReadWarehouseList[] };
+				message: { data: ReadWarehouseDTO[] };
 			}> = await this.mainClient.post(appConfig.WAREHOUSE_URL, { company });
 
 			return response.data.message.data;
@@ -229,9 +230,9 @@ export class FrappeInstance {
 		purchaseOrder,
 	}: {
 		purchaseOrder: string;
-	}): Promise<CreatePurchaseInvoices> {
+	}): Promise<CreatePurchaseInvoicesDTO> {
 		try {
-			const response: AxiosResponse<{ message: CreatePurchaseInvoices }> =
+			const response: AxiosResponse<{ message: CreatePurchaseInvoicesDTO }> =
 				await this.mainClient.post(
 					appConfig.GET_INVOICE_DATA,
 					{ purchase_order: purchaseOrder },
