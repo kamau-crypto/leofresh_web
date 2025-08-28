@@ -6,7 +6,6 @@ import type { LoggedInUser } from "@/use-cases/loginUseCase";
 import { useLoginUseCase } from "@/use-cases/loginUseCase";
 
 import { useCallback } from "react";
-import toast from "react-hot-toast";
 
 export interface AuthContext {
 	isAuthenticated: boolean;
@@ -20,21 +19,21 @@ const AuthContext = React.createContext<AuthContext | null>(null);
 
 const key = "leo_token";
 
-// function getStoredToken() {
-// 	return sessionStorage.getItem(key);
-// }
+function getStoredToken() {
+	return sessionStorage.getItem(key);
+}
 
-// function setStoredToken(user: string | null) {
-// 	if (user) {
-// 		sessionStorage.setItem(key, user);
-// 	} else {
-// 		sessionStorage.removeItem(key);
-// 	}
-// }
+function setStoredToken(token: string | null) {
+	if (token) {
+		sessionStorage.setItem(key, token);
+	} else {
+		sessionStorage.removeItem(key);
+	}
+}
 
-// function removeStoredToken(key: string) {
-// 	sessionStorage.removeItem(key);
-// }
+function removeStoredToken(key: string) {
+	sessionStorage.removeItem(key);
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [api_token, setToken] = React.useState<string | null>(null);
@@ -59,8 +58,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			message,
 			user: { email, role_profiles, roles, username: name },
 		} = await loginUser({ username, password });
-		toast.success("Login successful");
-		// setStoredToken(message);
+
+		if (getStoredToken()) {
+			removeStoredToken(key);
+		}
+		setStoredToken(message);
 
 		if (message && roles) {
 			setisAuthenticated(prev => !prev);
