@@ -1,8 +1,10 @@
 //
 
 import type { AxiosInstance, AxiosResponse } from "axios";
-import type { ReadProfileDTO } from "../models/profile.dto";
-import { profileSchema } from "../schemas/pos.schema";
+import {
+	profileFieldsDTO,
+	type ReadProfileDTO,
+} from "../dto/profile/profile.dto";
 import { FrappeInstance } from "./frappe";
 
 //Define a POS profile for the app
@@ -20,7 +22,7 @@ export class POSProfile extends FrappeInstance {
 		const data: AxiosResponse<{ data: ReadProfileDTO[] }> =
 			await this.profileInstance.get(this.docType, {
 				params: {
-					fields: JSON.stringify(profileSchema),
+					fields: JSON.stringify(profileFieldsDTO),
 					limit_page_length: 200,
 					order_by: "customer asc",
 				},
