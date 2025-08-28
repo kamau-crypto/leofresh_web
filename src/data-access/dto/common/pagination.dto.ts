@@ -6,3 +6,5 @@ export interface PaginationDTO {
 export interface SortDTO {
 	order_by: string;
 }
+
+// Re-use the above pagination DTOs for data transfer and movement across the app
