@@ -20,24 +20,24 @@ const AuthContext = React.createContext<AuthContext | null>(null);
 
 const key = "leo_token";
 
-function getStoredToken() {
-	return sessionStorage.getItem(key);
-}
+// function getStoredToken() {
+// 	return sessionStorage.getItem(key);
+// }
 
-function setStoredToken(user: string | null) {
-	if (user) {
-		sessionStorage.setItem(key, user);
-	} else {
-		sessionStorage.removeItem(key);
-	}
-}
+// function setStoredToken(user: string | null) {
+// 	if (user) {
+// 		sessionStorage.setItem(key, user);
+// 	} else {
+// 		sessionStorage.removeItem(key);
+// 	}
+// }
 
-function removeStoredToken(key: string) {
-	sessionStorage.removeItem(key);
-}
+// function removeStoredToken(key: string) {
+// 	sessionStorage.removeItem(key);
+// }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [api_token, setToken] = React.useState<string | null>(getStoredToken());
+	const [api_token, setToken] = React.useState<string | null>(null);
 	const [user, setUser] = React.useState<Pick<LoggedInUser, "user"> | null>(
 		null
 	);
@@ -48,9 +48,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const logout = React.useCallback(async () => {
 		await sleep(250);
 
-		setStoredToken(null);
+		// setStoredToken(null);
 		setToken(null);
-		removeStoredToken(key);
+		// removeStoredToken(key);
 		setUser(null);
 	}, []);
 
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			user: { email, role_profiles, roles, username: name },
 		} = await loginUser({ username, password });
 		toast.success("Login successful");
-		setStoredToken(message);
+		// setStoredToken(message);
 
 		if (message && roles) {
 			setisAuthenticated(prev => !prev);
@@ -70,9 +70,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		return { email };
 	}, []);
 
-	React.useEffect(() => {
-		setToken(getStoredToken());
-	}, []);
+	// React.useEffect(() => {
+	// 	setToken(getStoredToken());
+	// }, []);
 
 	return (
 		<AuthContext.Provider

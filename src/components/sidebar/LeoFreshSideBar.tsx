@@ -24,7 +24,8 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 	//[ ] Add the various profiles within the app at this stage
 
 	if (!api_token || !user) {
-		return navigate({ to: "/auth/login" });
+		navigate({ to: "/auth/login" });
+		return;
 	}
 	return (
 		<SidebarProvider>

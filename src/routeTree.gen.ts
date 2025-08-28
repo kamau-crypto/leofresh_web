@@ -9,20 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AppCustomersRouteImport } from './routes/app/customers'
 import { Route as AppAboutRouteImport } from './routes/app/about'
+import { Route as AppStockIndexRouteImport } from './routes/app/stock/index'
+import { Route as AppSalesIndexRouteImport } from './routes/app/sales/index'
+import { Route as AppPurchasesIndexRouteImport } from './routes/app/purchases/index'
+import { Route as AppDashboardIndexRouteImport } from './routes/app/dashboard/index'
+import { Route as AppStockBulkRouteImport } from './routes/app/stock/bulk'
+import { Route as AppStockBalanceRouteImport } from './routes/app/stock/balance'
+import { Route as AppSalesPosRouteImport } from './routes/app/sales/pos'
+import { Route as AppSalesOrdersRouteImport } from './routes/app/sales/orders'
+import { Route as AppSalesInvoiceRouteImport } from './routes/app/sales/invoice'
+import { Route as AppPurchasesOrdersIndexRouteImport } from './routes/app/purchases/orders/index'
 
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/app/',
-  path: '/app/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -35,75 +46,200 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppCustomersRoute = AppCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAboutRoute = AppAboutRouteImport.update({
-  id: '/app/about',
-  path: '/app/about',
-  getParentRoute: () => rootRouteImport,
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockIndexRoute = AppStockIndexRouteImport.update({
+  id: '/stock/',
+  path: '/stock/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSalesIndexRoute = AppSalesIndexRouteImport.update({
+  id: '/sales/',
+  path: '/sales/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPurchasesIndexRoute = AppPurchasesIndexRouteImport.update({
+  id: '/purchases/',
+  path: '/purchases/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockBulkRoute = AppStockBulkRouteImport.update({
+  id: '/stock/bulk',
+  path: '/stock/bulk',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockBalanceRoute = AppStockBalanceRouteImport.update({
+  id: '/stock/balance',
+  path: '/stock/balance',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSalesPosRoute = AppSalesPosRouteImport.update({
+  id: '/sales/pos',
+  path: '/sales/pos',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSalesOrdersRoute = AppSalesOrdersRouteImport.update({
+  id: '/sales/orders',
+  path: '/sales/orders',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSalesInvoiceRoute = AppSalesInvoiceRouteImport.update({
+  id: '/sales/invoice',
+  path: '/sales/invoice',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPurchasesOrdersIndexRoute = AppPurchasesOrdersIndexRouteImport.update({
+  id: '/purchases/orders/',
+  path: '/purchases/orders/',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/app/about': typeof AppAboutRoute
+  '/app/customers': typeof AppCustomersRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
-  '/app': typeof AppIndexRoute
+  '/app/sales/invoice': typeof AppSalesInvoiceRoute
+  '/app/sales/orders': typeof AppSalesOrdersRoute
+  '/app/sales/pos': typeof AppSalesPosRoute
+  '/app/stock/balance': typeof AppStockBalanceRoute
+  '/app/stock/bulk': typeof AppStockBulkRoute
+  '/app/dashboard': typeof AppDashboardIndexRoute
+  '/app/purchases': typeof AppPurchasesIndexRoute
+  '/app/sales': typeof AppSalesIndexRoute
+  '/app/stock': typeof AppStockIndexRoute
+  '/app/purchases/orders': typeof AppPurchasesOrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/app/about': typeof AppAboutRoute
+  '/app/customers': typeof AppCustomersRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
-  '/app': typeof AppIndexRoute
+  '/app/sales/invoice': typeof AppSalesInvoiceRoute
+  '/app/sales/orders': typeof AppSalesOrdersRoute
+  '/app/sales/pos': typeof AppSalesPosRoute
+  '/app/stock/balance': typeof AppStockBalanceRoute
+  '/app/stock/bulk': typeof AppStockBulkRoute
+  '/app/dashboard': typeof AppDashboardIndexRoute
+  '/app/purchases': typeof AppPurchasesIndexRoute
+  '/app/sales': typeof AppSalesIndexRoute
+  '/app/stock': typeof AppStockIndexRoute
+  '/app/purchases/orders': typeof AppPurchasesOrdersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/app/about': typeof AppAboutRoute
+  '/app/customers': typeof AppCustomersRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
-  '/app/': typeof AppIndexRoute
+  '/app/sales/invoice': typeof AppSalesInvoiceRoute
+  '/app/sales/orders': typeof AppSalesOrdersRoute
+  '/app/sales/pos': typeof AppSalesPosRoute
+  '/app/stock/balance': typeof AppStockBalanceRoute
+  '/app/stock/bulk': typeof AppStockBulkRoute
+  '/app/dashboard/': typeof AppDashboardIndexRoute
+  '/app/purchases/': typeof AppPurchasesIndexRoute
+  '/app/sales/': typeof AppSalesIndexRoute
+  '/app/stock/': typeof AppStockIndexRoute
+  '/app/purchases/orders/': typeof AppPurchasesOrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/app/about'
+    | '/app/customers'
     | '/auth/forgot-password'
     | '/auth/login'
-    | '/app'
+    | '/app/sales/invoice'
+    | '/app/sales/orders'
+    | '/app/sales/pos'
+    | '/app/stock/balance'
+    | '/app/stock/bulk'
+    | '/app/dashboard'
+    | '/app/purchases'
+    | '/app/sales'
+    | '/app/stock'
+    | '/app/purchases/orders'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/about' | '/auth/forgot-password' | '/auth/login' | '/app'
+  to:
+    | '/'
+    | '/app'
+    | '/app/about'
+    | '/app/customers'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/app/sales/invoice'
+    | '/app/sales/orders'
+    | '/app/sales/pos'
+    | '/app/stock/balance'
+    | '/app/stock/bulk'
+    | '/app/dashboard'
+    | '/app/purchases'
+    | '/app/sales'
+    | '/app/stock'
+    | '/app/purchases/orders'
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/app/about'
+    | '/app/customers'
     | '/auth/forgot-password'
     | '/auth/login'
-    | '/app/'
+    | '/app/sales/invoice'
+    | '/app/sales/orders'
+    | '/app/sales/pos'
+    | '/app/stock/balance'
+    | '/app/stock/bulk'
+    | '/app/dashboard/'
+    | '/app/purchases/'
+    | '/app/sales/'
+    | '/app/stock/'
+    | '/app/purchases/orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppAboutRoute: typeof AppAboutRoute
+  AppRoute: typeof AppRouteWithChildren
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
-  AppIndexRoute: typeof AppIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app/': {
-      id: '/app/'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/login': {
@@ -120,22 +256,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/customers': {
+      id: '/app/customers'
+      path: '/customers'
+      fullPath: '/app/customers'
+      preLoaderRoute: typeof AppCustomersRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/about': {
       id: '/app/about'
-      path: '/app/about'
+      path: '/about'
       fullPath: '/app/about'
       preLoaderRoute: typeof AppAboutRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/stock/': {
+      id: '/app/stock/'
+      path: '/stock'
+      fullPath: '/app/stock'
+      preLoaderRoute: typeof AppStockIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/sales/': {
+      id: '/app/sales/'
+      path: '/sales'
+      fullPath: '/app/sales'
+      preLoaderRoute: typeof AppSalesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/purchases/': {
+      id: '/app/purchases/'
+      path: '/purchases'
+      fullPath: '/app/purchases'
+      preLoaderRoute: typeof AppPurchasesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard/': {
+      id: '/app/dashboard/'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/stock/bulk': {
+      id: '/app/stock/bulk'
+      path: '/stock/bulk'
+      fullPath: '/app/stock/bulk'
+      preLoaderRoute: typeof AppStockBulkRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/stock/balance': {
+      id: '/app/stock/balance'
+      path: '/stock/balance'
+      fullPath: '/app/stock/balance'
+      preLoaderRoute: typeof AppStockBalanceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/sales/pos': {
+      id: '/app/sales/pos'
+      path: '/sales/pos'
+      fullPath: '/app/sales/pos'
+      preLoaderRoute: typeof AppSalesPosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/sales/orders': {
+      id: '/app/sales/orders'
+      path: '/sales/orders'
+      fullPath: '/app/sales/orders'
+      preLoaderRoute: typeof AppSalesOrdersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/sales/invoice': {
+      id: '/app/sales/invoice'
+      path: '/sales/invoice'
+      fullPath: '/app/sales/invoice'
+      preLoaderRoute: typeof AppSalesInvoiceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/purchases/orders/': {
+      id: '/app/purchases/orders/'
+      path: '/purchases/orders'
+      fullPath: '/app/purchases/orders'
+      preLoaderRoute: typeof AppPurchasesOrdersIndexRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppAboutRoute: typeof AppAboutRoute
+  AppCustomersRoute: typeof AppCustomersRoute
+  AppSalesInvoiceRoute: typeof AppSalesInvoiceRoute
+  AppSalesOrdersRoute: typeof AppSalesOrdersRoute
+  AppSalesPosRoute: typeof AppSalesPosRoute
+  AppStockBalanceRoute: typeof AppStockBalanceRoute
+  AppStockBulkRoute: typeof AppStockBulkRoute
+  AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+  AppPurchasesIndexRoute: typeof AppPurchasesIndexRoute
+  AppSalesIndexRoute: typeof AppSalesIndexRoute
+  AppStockIndexRoute: typeof AppStockIndexRoute
+  AppPurchasesOrdersIndexRoute: typeof AppPurchasesOrdersIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAboutRoute: AppAboutRoute,
+  AppCustomersRoute: AppCustomersRoute,
+  AppSalesInvoiceRoute: AppSalesInvoiceRoute,
+  AppSalesOrdersRoute: AppSalesOrdersRoute,
+  AppSalesPosRoute: AppSalesPosRoute,
+  AppStockBalanceRoute: AppStockBalanceRoute,
+  AppStockBulkRoute: AppStockBulkRoute,
+  AppDashboardIndexRoute: AppDashboardIndexRoute,
+  AppPurchasesIndexRoute: AppPurchasesIndexRoute,
+  AppSalesIndexRoute: AppSalesIndexRoute,
+  AppStockIndexRoute: AppStockIndexRoute,
+  AppPurchasesOrdersIndexRoute: AppPurchasesOrdersIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppAboutRoute: AppAboutRoute,
+  AppRoute: AppRouteWithChildren,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
-  AppIndexRoute: AppIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

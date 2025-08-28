@@ -26,6 +26,7 @@ export interface Route {
 		Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
 	>;
 	isActive?: boolean;
+	isOpen?: boolean;
 	items?: RouteItems[];
 }
 
@@ -41,6 +42,7 @@ export const leofreshRoutes: Route[] = [
 		url: "/app/sales",
 		icon: BadgeDollarSign,
 		isActive: false,
+		isOpen: true,
 		items: [
 			{
 				title: "POS",
@@ -64,6 +66,7 @@ export const leofreshRoutes: Route[] = [
 		url: "/app/stock",
 		icon: Warehouse,
 		isActive: false,
+		isOpen: true,
 		items: [
 			{
 				title: "Balance",
@@ -77,6 +80,7 @@ export const leofreshRoutes: Route[] = [
 		url: "/app/purchases",
 		icon: ShoppingBasket,
 		isActive: false,
+		isOpen: true,
 		items: [
 			{
 				title: "Order",

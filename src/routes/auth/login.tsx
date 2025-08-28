@@ -9,7 +9,7 @@ export const Route = createFileRoute("/auth/login")({
 	}),
 	beforeLoad: ({ context, search }) => {
 		if (context.auth.api_token) {
-			throw redirect({ to: search.redirect || "/app" });
+			throw redirect({ to: search.redirect || "/app/dashboard" });
 		}
 	},
 	component: LoeLoginForm,
