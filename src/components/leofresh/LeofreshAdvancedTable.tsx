@@ -147,7 +147,7 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 	actions = [],
 	exportable = false,
 	onExport,
-	defaultPageSize = 20,
+	defaultPageSize = 10,
 	pageSizeOptions = [10, 20, 50, 100],
 	className = "",
 }: DataTableProps<T>) => {
@@ -155,8 +155,8 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 	const [itemsPerPage, setItemsPerPage] = useState<number>(defaultPageSize);
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [filterValues, setFilterValues] = useState<Record<string, string>>({});
-	const [dateFrom, setDateFrom] = useState<string>("");
-	const [dateTo, setDateTo] = useState<string>("");
+	const [dateFrom, setDateFrom] = useState<Date | null>(null);
+	const [dateTo, setDateTo] = useState<Date | null>(null);
 	const [sortConfig, setSortConfig] = useState<{
 		key: string | null;
 		direction: "asc" | "desc";
@@ -180,49 +180,66 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 		setFilterValues(initialFilters);
 	}, [filters]);
 
-	// Filter and sort data
 	const filteredAndSortedData = useMemo(() => {
-		const filtered = data.filter(item => {
-			// Search filter
-			if (searchable && searchTerm && searchFields.length > 0) {
-				const matchesSearch = searchFields.some(field => {
-					// safe access: cast to any since keys may be dynamic
-					const val = (item as any)[field];
-					return String(val || "")
-						.toLowerCase()
-						.includes(searchTerm.toLowerCase());
-				});
-				if (!matchesSearch) return false;
-			}
+		let filtered = [...data];
 
-			// Custom filters
-			if (filterable && filters.length > 0) {
-				const matchesFilters = filters.every(filter => {
+		// Search filter
+		if (
+			searchable &&
+			searchTerm &&
+			searchTerm.trim() &&
+			searchFields.length > 0
+		) {
+			const trimmedSearchTerm = searchTerm.trim().toLowerCase();
+			filtered = filtered.filter(item => {
+				return searchFields.some(field => {
+					const val = (item as any)[field];
+					const stringValue = String(val || "").toLowerCase();
+					return stringValue.includes(trimmedSearchTerm);
+				});
+			});
+		}
+
+		// Custom filters
+		if (filterable && filters.length > 0) {
+			filtered = filtered.filter(item => {
+				return filters.every(filter => {
 					const filterValue = filterValues[filter.key];
 					if (!filterValue || filterValue === "all") return true;
 					return (item as any)[filter.key] === filterValue;
 				});
-				if (!matchesFilters) return false;
-			}
+			});
+		}
 
-			// Date range filter
-			if (dateRange && dateRangeField && (dateFrom || dateTo)) {
+		// Date range filter - FIXED: Only apply when dates are actually set
+		if (dateRange && dateRangeField && (dateFrom || dateTo)) {
+			filtered = filtered.filter(item => {
 				const itemDate = (item as any)[dateRangeField];
-				// allow string/Date numeric timestamps as well
+
+				if (!itemDate) return false;
+
 				const parsedDate =
-					itemDate instanceof Date
-						? itemDate
-						: itemDate
-							? new Date(itemDate)
-							: null;
-				if (!parsedDate) return true;
+					itemDate instanceof Date ? itemDate : new Date(itemDate);
 
-				if (dateFrom && parsedDate < new Date(dateFrom)) return false;
-				if (dateTo && parsedDate > new Date(dateTo + "T23:59:59")) return false;
-			}
+				if (isNaN(parsedDate.getTime())) return false;
 
-			return true;
-		});
+				// Only check dateFrom if it's actually set
+				if (dateFrom) {
+					const fromDate = new Date(dateFrom);
+					fromDate.setHours(0, 0, 0, 0);
+					if (parsedDate < fromDate) return false;
+				}
+
+				// Only check dateTo if it's actually set
+				if (dateTo) {
+					const toDate = new Date(dateTo);
+					toDate.setHours(23, 59, 59, 999);
+					if (parsedDate > toDate) return false;
+				}
+
+				return true;
+			});
+		}
 
 		// Sort data
 		if (sortable && sortConfig.key) {
@@ -230,34 +247,52 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 				const aRaw = (a as any)[sortConfig.key as string];
 				const bRaw = (b as any)[sortConfig.key as string];
 
+				if (aRaw == null && bRaw == null) return 0;
+				if (aRaw == null) return sortConfig.direction === "asc" ? -1 : 1;
+				if (bRaw == null) return sortConfig.direction === "asc" ? 1 : -1;
+
 				let aValue: any = aRaw;
 				let bValue: any = bRaw;
 
 				if (aValue instanceof Date && bValue instanceof Date) {
 					aValue = aValue.getTime();
 					bValue = bValue.getTime();
+				} else if (typeof aValue === "string" && typeof bValue === "string") {
+					const aDate = new Date(aValue);
+					const bDate = new Date(bValue);
+					if (!isNaN(aDate.getTime()) && !isNaN(bDate.getTime())) {
+						aValue = aDate.getTime();
+						bValue = bDate.getTime();
+					}
 				}
 
-				// handle undefined/null
-				if (aValue == null && bValue == null) return 0;
-				if (aValue == null) return sortConfig.direction === "asc" ? -1 : 1;
-				if (bValue == null) return sortConfig.direction === "asc" ? 1 : -1;
-
-				// numbers
 				if (typeof aValue === "number" && typeof bValue === "number") {
 					return sortConfig.direction === "asc"
 						? aValue - bValue
 						: bValue - aValue;
 				}
 
-				// dates (ts) already handled, fallback to string comparison
-				const aStr = String(aValue);
-				const bStr = String(bValue);
-				return sortConfig.direction === "asc"
-					? aStr.localeCompare(bStr)
-					: bStr.localeCompare(aStr);
+				const aStr = String(aValue).toLowerCase();
+				const bStr = String(bValue).toLowerCase();
+				const comparison = aStr.localeCompare(bStr);
+
+				return sortConfig.direction === "asc" ? comparison : -comparison;
 			});
 		}
+
+		// Enhanced debug logging
+		console.log("Filter Debug:", {
+			originalCount: data.length,
+			filteredCount: filtered.length,
+			searchTerm: searchTerm,
+			hasSearchTerm: !!searchTerm?.trim(),
+			searchFields: searchFields,
+			activeFilters: Object.entries(filterValues).filter(
+				([_, value]) => value && value !== "all"
+			),
+			dateRange: { enabled: dateRange, from: dateFrom, to: dateTo },
+			dateFilterActive: !!(dateRange && dateRangeField && (dateFrom || dateTo)),
+		});
 
 		return filtered;
 	}, [
@@ -275,7 +310,6 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 		dateRangeField,
 		sortable,
 	]);
-
 	// Pagination
 	const totalPages = Math.max(
 		1,
@@ -332,8 +366,8 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 			clearedFilters[filter.key] = filter.defaultValue || "all";
 		});
 		setFilterValues(clearedFilters);
-		setDateFrom("");
-		setDateTo("");
+		setDateFrom(new Date());
+		setDateTo(new Date());
 		setSortConfig({ key: null, direction: "asc" });
 		setCurrentPage(1);
 	};
@@ -357,10 +391,10 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 
 			{/* Filters and Actions */}
 			{(searchable || filterable || dateRange || exportable) && (
-				<div className='mb-6 space-y-4'>
-					<div className='flex flex-col sm:flex-row gap-4'>
+				<div className='mb-6 space-y-4 flex flex-wrap gap-4 justify-center h-18'>
+					<div className='flex flex-col justify-center sm:flex-row gap-4'>
 						{searchable && (
-							<div className='flex-1 relative'>
+							<div className='relative w-1/2'>
 								<Search className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
 								{/* keep generic typing for Input onChange usage */}
 								<input
@@ -369,7 +403,7 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 									onChange={e =>
 										setSearchTerm((e.target as HTMLInputElement).value)
 									}
-									className='pl-10 h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm'
+									className='pl-10 h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm w-/4'
 								/>
 							</div>
 						)}
@@ -399,21 +433,17 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 						<div className='flex flex-col sm:flex-row gap-4 items-end'>
 							{dateRange && (
 								<>
-									<div>
-										<label className='block text-sm font-medium mb-2'>
-											Date From
-										</label>
+									<div className='grid w-1/2'>
 										<LeoDatePicker
+											label='Date From'
 											value={dateFrom}
 											onChange={setDateFrom}
 										/>
 									</div>
 
 									<div>
-										<label className='block text-sm font-medium mb-2'>
-											Date To
-										</label>
 										<LeoDatePicker
+											label='Date To'
 											value={dateTo}
 											onChange={setDateTo}
 										/>
@@ -640,7 +670,7 @@ const LeofreshDataTable = <T extends Record<string, any>>({
 };
 
 // Example Usage Component
-export default function TableExample() {
+export function TableExample() {
 	// Mock data
 	const mockData = Array.from({ length: 100 }, (_, i) => ({
 		id: i + 1,
@@ -801,9 +831,10 @@ export default function TableExample() {
 	};
 
 	return (
-		<div className='max-w-7xl mx-auto p-6'>
+		<div className='container mx-auto py-10 overflow-hidden'>
 			<LeofreshDataTable
 				data={mockData}
+				className='overflow-y-scroll '
 				columns={columns}
 				title='User Management'
 				description='Manage and monitor user accounts with advanced filtering and pagination.'
