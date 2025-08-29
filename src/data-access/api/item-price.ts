@@ -1,17 +1,14 @@
 //
 
-import {
-	FrappeCreateRequirement,
-	PurchaseProducts,
-	SalesProducts,
-} from "@/constants";
-import { AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type { PurchaseProductsModel, SalesProductsModel } from "../models/";
 import { FrappeInstance } from "./frappe";
 
-const ItemPriceEnum = {
-	item_code: "item_code",
-	price_list_rate: "price_list_rate",
-} as const;
+// const ItemPriceEnum = {
+// 	item_code: "item_code",
+// 	price_list_rate: "price_list_rate",
+// } as const;
 
 export class ItemPrice
 	extends FrappeInstance
@@ -30,7 +27,7 @@ export class ItemPrice
 	}
 
 	async retrieveSellingItemPrices() {
-		const response: AxiosResponse<SalesProducts, any> =
+		const response: AxiosResponse<SalesProductsModel, any> =
 			await this.ItemSellingPriceInstance.post(
 				"",
 				{
@@ -56,7 +53,7 @@ export class ItemPrice
 		return naming_series.data.data;
 	}
 	async retrieveBuyingItemPrices() {
-		const response: AxiosResponse<PurchaseProducts, any> =
+		const response: AxiosResponse<PurchaseProductsModel, any> =
 			await this.ItemBuyingPriceInstance.post(
 				"",
 				{
