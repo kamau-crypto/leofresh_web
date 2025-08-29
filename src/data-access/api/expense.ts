@@ -1,10 +1,12 @@
-import {
-	FrappeCreateRequirement,
-	ReadExpenseAccounts,
-	RetrievedJournalEntry,
-} from "@/constants";
-import { appConfig } from "@/utils/config";
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { appConfig } from "@/lib/config";
+import type { AxiosInstance, AxiosResponse } from "axios";
+import axios from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type { ReadExpenseAccountsDTO, ReadExpensesDTO } from "../dto";
+import type {
+	ReadExpenseAccountsModel,
+	RetrievedJournalEntryModel,
+} from "../models";
 import { FrappeInstance } from "./frappe";
 
 export class Expense extends FrappeInstance implements FrappeCreateRequirement {
@@ -28,8 +30,8 @@ export class Expense extends FrappeInstance implements FrappeCreateRequirement {
 	}
 
 	//Retrieve all the expense accounts associated with this order...
-	async retrieveExpenseAccounts({ page_length }: { page_length: number }) {
-		const accounts: AxiosResponse<{ data: ReadExpenseAccounts[] }> =
+	async retrieveExpenseAccounts({ limit_page_length }: ReadExpenseAccountsDTO) {
+		const accounts: AxiosResponse<{ data: ReadExpenseAccountsModel[] }> =
 			await this.expenseInstance.get(this.docType, {
 				params: {
 					filters: JSON.stringify([
@@ -39,21 +41,15 @@ export class Expense extends FrappeInstance implements FrappeCreateRequirement {
 						["Account", "name", "NOT LIKE", "%COGS%"],
 						["Account", "name", "NOT LIKE", "%Goods Sold%"],
 					]),
-					limit_page_length: page_length,
+					limit_page_length: limit_page_length,
 				},
 			});
 		return accounts.data.data;
 	}
 
-	async retrieveExpenses({
-		limit,
-		cost_center,
-	}: {
-		limit: number;
-		cost_center: string;
-	}) {
+	async retrieveExpenses({ cost_center, limit }: ReadExpensesDTO) {
 		//This is a custom end point, filtering here will not work instead affect the api
-		const expenses: AxiosResponse<{ message: RetrievedJournalEntry }> =
+		const expenses: AxiosResponse<{ message: RetrievedJournalEntryModel }> =
 			await axios.post(appConfig.EXPENSES_URL, {
 				cost_center: cost_center,
 				limit: limit,
