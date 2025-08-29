@@ -11,4 +11,4 @@ export const userLoginSchema = z.object({
 		.max(15, { error: "Password must be less than 15 characters" }),
 });
 
-export type UserLoginInput = z.infer<typeof userLoginSchema>;
+export type UserLoginDTO = z.infer<typeof userLoginSchema>;
