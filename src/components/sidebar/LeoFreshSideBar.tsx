@@ -19,7 +19,6 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 
 	const paths = location.pathname.split("/").filter(Boolean);
 	const leadingPath = paths.length > 0 ? paths.shift() : "Home";
-	console.log("Leadiing paths are", paths);
 
 	//
 	//[ ] Add the various profiles within the app at this stage
@@ -29,11 +28,11 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 		return;
 	}
 	return (
-		<SidebarProvider>
+		<SidebarProvider className='shadow-xl shadow-primary/30'>
 			<AppSidebar />
 			<SidebarInset>
-				<header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12'>
-					<div className='flex items-center gap-2 px-4'>
+				<header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 shadow-lg shadow-primary/10 relative'>
+					<div className='flex items-center gap-2 px-4  inset-0 z-10 top-0'>
 						<SidebarTrigger className='-ml-1' />
 						<Separator
 							orientation='vertical'
@@ -69,7 +68,9 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 						</Breadcrumb>
 					</div>
 				</header>
-				<div className='flex flex-1 flex-col gap-4 p-4 pt-0'>{children}</div>
+				<div className='flex-1 h-full w-full p-2 overflow-hidden'>
+					{children}
+				</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);
