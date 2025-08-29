@@ -1,5 +1,5 @@
 import { POSProfile } from "@/data-access/api/profile";
-import type { ReadProfileDTO } from "@/data-access/models/profile.dto";
+import type { ReadProfileDTO } from "@/data-access/dto/profile/profile.dto";
 
 export interface ProfileRepository {
 	retrievePOSProfile(email?: string): Promise<ReadProfileDTO[]>;
