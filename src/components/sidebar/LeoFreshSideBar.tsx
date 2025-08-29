@@ -19,6 +19,7 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 
 	const paths = location.pathname.split("/").filter(Boolean);
 	const leadingPath = paths.length > 0 ? paths.shift() : "Home";
+	console.log("Leadiing paths are", paths);
 
 	//
 	//[ ] Add the various profiles within the app at this stage
@@ -47,13 +48,20 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className='hidden md:block' />
 								{/* [ ] Think of a stucture like /app/about/settings/user. And how you can create breadcrumbs from it, alongisde the proper order* convert it to a tree or a linked list*/}
-								{paths.length > 0 && (
-									<BreadcrumbItem>
-										<BreadcrumbLink href={`${paths.join("/")}`}>
-											{paths.join("/").toLocaleUpperCase()}
-										</BreadcrumbLink>
-									</BreadcrumbItem>
-								)}
+								{paths.length > 0 &&
+									paths.map((path, index) => (
+										<div
+											key={`${path}_${index}`}
+											className='flex gap-2 flex-row items-center'>
+											<BreadcrumbItem>
+												<BreadcrumbLink
+													href={`/${leadingPath}/${paths.slice(0, index + 1).join("/")}`}>
+													{toSentenceCase(path)}
+												</BreadcrumbLink>
+											</BreadcrumbItem>
+											{index < paths.length - 1 && <BreadcrumbSeparator />}
+										</div>
+									))}
 								{/* <BreadcrumbItem>
 									<BreadcrumbPage>Data Fetching</BreadcrumbPage>
 								</BreadcrumbItem> */}
