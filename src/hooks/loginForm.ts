@@ -1,5 +1,5 @@
 import { useAuth } from "@/components/context/auth";
-import { userLoginSchema, type UserLoginInput } from "@/data-access";
+import { userLoginSchema, type UserLoginDTO } from "@/data-access";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
@@ -9,7 +9,7 @@ export const useLoginForm = () => {
 	const navigate = useNavigate();
 	const { login } = useAuth();
 
-	const form = useForm<UserLoginInput>({
+	const form = useForm<UserLoginDTO>({
 		resolver: zodResolver(userLoginSchema),
 		defaultValues: {
 			username: "",
@@ -17,7 +17,7 @@ export const useLoginForm = () => {
 		},
 	});
 
-	const onSubmit = async ({ password, username }: UserLoginInput) => {
+	const onSubmit = async ({ password, username }: UserLoginDTO) => {
 		try {
 			await login({ password, username });
 
