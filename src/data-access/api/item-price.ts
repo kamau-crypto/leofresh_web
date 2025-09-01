@@ -10,7 +10,7 @@ import { FrappeInstance } from "./frappe";
 // 	price_list_rate: "price_list_rate",
 // } as const;
 
-export class ItemPrice
+export class ItemPriceDataSource
 	extends FrappeInstance
 	implements FrappeCreateRequirement
 {
