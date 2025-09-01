@@ -3,7 +3,7 @@
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { type Table } from "@tanstack/react-table";
 import { Settings2 } from "lucide-react";
-import { Button } from "../ui/button";
+import { LeoButton } from "../leofresh/LeoButton";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -20,13 +20,13 @@ export function DataTableViewOptions<TData>({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
+				<LeoButton
 					variant='outline'
 					size='sm'
 					className='ml-auto hidden h-8 lg:flex'>
 					<Settings2 />
 					View
-				</Button>
+				</LeoButton>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				align='end'

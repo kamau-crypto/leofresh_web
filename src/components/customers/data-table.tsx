@@ -23,17 +23,24 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { Input } from "../ui/input";
+import { Skeleton } from "../ui/skeleton";
 import { DataTableViewOptions } from "./columnvisibility";
 import { DataTablePagination } from "./pagination";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	isLoading: boolean;
+	filterPlaceHolder: string;
+	primaryFilter: string;
 }
 
 export function DataTable<TData, TValue>({
+	isLoading,
 	columns,
 	data,
+	filterPlaceHolder,
+	primaryFilter,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -63,23 +70,27 @@ export function DataTable<TData, TValue>({
 		<div>
 			<div className='flex items-center py-4'>
 				<Input
-					placeholder='Filter emails...'
-					value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+					placeholder={filterPlaceHolder}
+					value={
+						(table.getColumn(primaryFilter)?.getFilterValue() as string) ?? ""
+					}
 					onChange={event =>
-						table.getColumn("email")?.setFilterValue(event.target.value)
+						table.getColumn(primaryFilter)?.setFilterValue(event.target.value)
 					}
 					className='max-w-sm'
 				/>
 				<DataTableViewOptions table={table} />
 			</div>
-			<div className='overflow-y-scroll rounded-md border'>
-				<Table>
-					<TableHeader>
+			<div className='rounded-md border'>
+				<Table className='relative'>
+					<TableHeader className='bg-primary/20'>
 						{table.getHeaderGroups().map(headerGroup => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map(header => {
 									return (
-										<TableHead key={header.id}>
+										<TableHead
+											key={header.id}
+											className='font-bold'>
 											{header.isPlaceholder
 												? null
 												: flexRender(
@@ -93,7 +104,9 @@ export function DataTable<TData, TValue>({
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{isLoading ? (
+							<DataTableLoadingSkeleton />
+						) : table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map(row => (
 								<TableRow
 									key={row.id}
@@ -126,3 +139,24 @@ export function DataTable<TData, TValue>({
 		</div>
 	);
 }
+
+// [ ]Adjust thid relative to the number of columns
+const DataTableLoadingSkeleton = () => {
+	return (
+		<>
+			{Array.from({ length: 10 }).map((_, i) => (
+				<TableRow key={i}>
+					<TableCell>
+						<Skeleton className='h-4 w-[150px]' />
+					</TableCell>
+					<TableCell>
+						<Skeleton className='h-4 w-[10px]' />
+					</TableCell>
+					<TableCell>
+						<Skeleton className='h-4 w-[100px]' />
+					</TableCell>
+				</TableRow>
+			))}
+		</>
+	);
+};

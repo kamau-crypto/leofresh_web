@@ -5,7 +5,7 @@ import {
 	ChevronsLeft,
 	ChevronsRight,
 } from "lucide-react";
-import { Button } from "../ui/button";
+import { LeoButton } from "../leofresh/LeoButton";
 import {
 	Select,
 	SelectContent,
@@ -22,7 +22,7 @@ export function DataTablePagination<TData>({
 	table,
 }: DataTablePaginationProps<TData>) {
 	return (
-		<div className='flex items-center justify-between px-2'>
+		<div className='flex items-center justify-between px-2 pt-2'>
 			<div className='text-muted-foreground flex-1 text-sm'>
 				{table.getFilteredSelectedRowModel().rows.length} of{" "}
 				{table.getFilteredRowModel().rows.length} row(s) selected.
@@ -54,7 +54,7 @@ export function DataTablePagination<TData>({
 					{table.getPageCount()}
 				</div>
 				<div className='flex items-center space-x-2'>
-					<Button
+					<LeoButton
 						variant='outline'
 						size='icon'
 						className='hidden size-8 lg:flex'
@@ -62,8 +62,8 @@ export function DataTablePagination<TData>({
 						disabled={!table.getCanPreviousPage()}>
 						<span className='sr-only'>Go to first page</span>
 						<ChevronsLeft />
-					</Button>
-					<Button
+					</LeoButton>
+					<LeoButton
 						variant='outline'
 						size='icon'
 						className='size-8'
@@ -71,8 +71,8 @@ export function DataTablePagination<TData>({
 						disabled={!table.getCanPreviousPage()}>
 						<span className='sr-only'>Go to previous page</span>
 						<ChevronLeft />
-					</Button>
-					<Button
+					</LeoButton>
+					<LeoButton
 						variant='outline'
 						size='icon'
 						className='size-8'
@@ -80,8 +80,8 @@ export function DataTablePagination<TData>({
 						disabled={!table.getCanNextPage()}>
 						<span className='sr-only'>Go to next page</span>
 						<ChevronRight />
-					</Button>
-					<Button
+					</LeoButton>
+					<LeoButton
 						variant='outline'
 						size='icon'
 						className='hidden size-8 lg:flex'
@@ -89,7 +89,7 @@ export function DataTablePagination<TData>({
 						disabled={!table.getCanNextPage()}>
 						<span className='sr-only'>Go to last page</span>
 						<ChevronsRight />
-					</Button>
+					</LeoButton>
 				</div>
 			</div>
 		</div>
