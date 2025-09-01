@@ -25,7 +25,7 @@ export const LeoButton = ({
 	const variants: Record<ButtonVariant, string> = {
 		default: "bg-primary text-slate-50 hover:bg-slate-900/90",
 		outline:
-			"border border-primary/80 text-primary bg-white hover:bg-slate-200 hover:text-slate-900 hover:border-slate-900",
+			"border border-primary/90 text-primary bg-white hover:bg-slate-200 hover:bg-primary/80 hover:text-white",
 		ghost: "hover:bg-slate-100 hover:text-slate-900",
 		secondary: "bg-slate-100 text-slate-900 hover:bg-slate-100/80",
 	};
