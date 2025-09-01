@@ -19,7 +19,6 @@ export interface SalesItemsModel {
 	tax_type: string | null;
 }
 
-
 export interface PurchaseProductsModel {
 	message: PurchaseMessageModel;
 }
@@ -39,4 +38,14 @@ export interface PurchaseItemsModel {
 	image: null | string;
 	price_list_rate: number | null;
 	price_list: string | null;
+}
+
+export interface PurchaseItemModel
+	extends Omit<
+		PurchaseItemsModel,
+		"stock_uom" | "uom" | "conversion_factor" | ""
+	> {
+	standard_selling_uom: string | null;
+	qty: number;
+	item_tax_template: string | null;
 }
