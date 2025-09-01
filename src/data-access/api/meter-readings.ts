@@ -1,11 +1,10 @@
-import {
-	CreatedMeterReading,
-	CreateMeterReading,
-	FrappeCreateRequirement,
-	ReadMeterReadings,
-	tankMeterReadings,
-} from "@/constants";
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type { CreateMeterReadingDTO, MeterReadingDTO } from "../dto";
+import type {
+	CreatedMeterReadingModel,
+	ReadMeterReadingsModel,
+} from "../models";
 import { FrappeInstance } from "./frappe";
 
 export class Meter extends FrappeInstance implements FrappeCreateRequirement {
@@ -17,11 +16,11 @@ export class Meter extends FrappeInstance implements FrappeCreateRequirement {
 		this.meterInstance = this.getFrappeClient();
 	}
 
-	async retrive_meter_readings({ tank_name }: { tank_name: string }) {
-		const readings: AxiosResponse<ReadMeterReadings> =
+	async retrive_meter_readings({ tank_name, fields }: MeterReadingDTO) {
+		const readings: AxiosResponse<ReadMeterReadingsModel> =
 			await this.meterInstance.get(this.docType, {
 				params: {
-					fields: JSON.stringify(tankMeterReadings),
+					fields: JSON.stringify(fields),
 					order_by: "date desc",
 					filters: JSON.stringify([["tank", "=", `${tank_name}`]]),
 					limit: 1,
@@ -39,8 +38,8 @@ export class Meter extends FrappeInstance implements FrappeCreateRequirement {
 			});
 		return naming_series.data.data;
 	}
-	async addMeterReadings({ data }: { data: CreateMeterReading }) {
-		const reading: AxiosResponse<CreatedMeterReading> =
+	async addMeterReadings({ data }: { data: CreateMeterReadingDTO }) {
+		const reading: AxiosResponse<CreatedMeterReadingModel> =
 			await this.meterInstance.post(this.docType, {
 				data,
 			});
