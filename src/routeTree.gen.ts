@@ -15,16 +15,20 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AppCustomersRouteImport } from './routes/app/customers'
 import { Route as AppAboutRouteImport } from './routes/app/about'
+import { Route as AppSupplierIndexRouteImport } from './routes/app/supplier/index'
 import { Route as AppStockIndexRouteImport } from './routes/app/stock/index'
 import { Route as AppSalesIndexRouteImport } from './routes/app/sales/index'
-import { Route as AppPurchasesIndexRouteImport } from './routes/app/purchases/index'
 import { Route as AppDashboardIndexRouteImport } from './routes/app/dashboard/index'
-import { Route as AppStockBulkRouteImport } from './routes/app/stock/bulk'
-import { Route as AppStockBalanceRouteImport } from './routes/app/stock/balance'
 import { Route as AppSalesPosRouteImport } from './routes/app/sales/pos'
 import { Route as AppSalesOrdersRouteImport } from './routes/app/sales/orders'
 import { Route as AppSalesInvoiceRouteImport } from './routes/app/sales/invoice'
-import { Route as AppPurchasesOrdersIndexRouteImport } from './routes/app/purchases/orders/index'
+import { Route as AppSupplierReceiveIndexRouteImport } from './routes/app/supplier/receive/index'
+import { Route as AppSupplierOrdersIndexRouteImport } from './routes/app/supplier/orders/index'
+import { Route as AppSupplierInvoiceIndexRouteImport } from './routes/app/supplier/invoice/index'
+import { Route as AppStockRecordIndexRouteImport } from './routes/app/stock/record/index'
+import { Route as AppStockItemsIndexRouteImport } from './routes/app/stock/items/index'
+import { Route as AppStockBulkIndexRouteImport } from './routes/app/stock/bulk/index'
+import { Route as AppStockBalanceIndexRouteImport } from './routes/app/stock/balance/index'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -56,6 +60,11 @@ const AppAboutRoute = AppAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSupplierIndexRoute = AppSupplierIndexRouteImport.update({
+  id: '/supplier/',
+  path: '/supplier/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppStockIndexRoute = AppStockIndexRouteImport.update({
   id: '/stock/',
   path: '/stock/',
@@ -66,24 +75,9 @@ const AppSalesIndexRoute = AppSalesIndexRouteImport.update({
   path: '/sales/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPurchasesIndexRoute = AppPurchasesIndexRouteImport.update({
-  id: '/purchases/',
-  path: '/purchases/',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppStockBulkRoute = AppStockBulkRouteImport.update({
-  id: '/stock/bulk',
-  path: '/stock/bulk',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppStockBalanceRoute = AppStockBalanceRouteImport.update({
-  id: '/stock/balance',
-  path: '/stock/balance',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSalesPosRoute = AppSalesPosRouteImport.update({
@@ -101,9 +95,39 @@ const AppSalesInvoiceRoute = AppSalesInvoiceRouteImport.update({
   path: '/sales/invoice',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPurchasesOrdersIndexRoute = AppPurchasesOrdersIndexRouteImport.update({
-  id: '/purchases/orders/',
-  path: '/purchases/orders/',
+const AppSupplierReceiveIndexRoute = AppSupplierReceiveIndexRouteImport.update({
+  id: '/supplier/receive/',
+  path: '/supplier/receive/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSupplierOrdersIndexRoute = AppSupplierOrdersIndexRouteImport.update({
+  id: '/supplier/orders/',
+  path: '/supplier/orders/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSupplierInvoiceIndexRoute = AppSupplierInvoiceIndexRouteImport.update({
+  id: '/supplier/invoice/',
+  path: '/supplier/invoice/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockRecordIndexRoute = AppStockRecordIndexRouteImport.update({
+  id: '/stock/record/',
+  path: '/stock/record/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockItemsIndexRoute = AppStockItemsIndexRouteImport.update({
+  id: '/stock/items/',
+  path: '/stock/items/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockBulkIndexRoute = AppStockBulkIndexRouteImport.update({
+  id: '/stock/bulk/',
+  path: '/stock/bulk/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockBalanceIndexRoute = AppStockBalanceIndexRouteImport.update({
+  id: '/stock/balance/',
+  path: '/stock/balance/',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -117,13 +141,17 @@ export interface FileRoutesByFullPath {
   '/app/sales/invoice': typeof AppSalesInvoiceRoute
   '/app/sales/orders': typeof AppSalesOrdersRoute
   '/app/sales/pos': typeof AppSalesPosRoute
-  '/app/stock/balance': typeof AppStockBalanceRoute
-  '/app/stock/bulk': typeof AppStockBulkRoute
   '/app/dashboard': typeof AppDashboardIndexRoute
-  '/app/purchases': typeof AppPurchasesIndexRoute
   '/app/sales': typeof AppSalesIndexRoute
   '/app/stock': typeof AppStockIndexRoute
-  '/app/purchases/orders': typeof AppPurchasesOrdersIndexRoute
+  '/app/supplier': typeof AppSupplierIndexRoute
+  '/app/stock/balance': typeof AppStockBalanceIndexRoute
+  '/app/stock/bulk': typeof AppStockBulkIndexRoute
+  '/app/stock/items': typeof AppStockItemsIndexRoute
+  '/app/stock/record': typeof AppStockRecordIndexRoute
+  '/app/supplier/invoice': typeof AppSupplierInvoiceIndexRoute
+  '/app/supplier/orders': typeof AppSupplierOrdersIndexRoute
+  '/app/supplier/receive': typeof AppSupplierReceiveIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -135,13 +163,17 @@ export interface FileRoutesByTo {
   '/app/sales/invoice': typeof AppSalesInvoiceRoute
   '/app/sales/orders': typeof AppSalesOrdersRoute
   '/app/sales/pos': typeof AppSalesPosRoute
-  '/app/stock/balance': typeof AppStockBalanceRoute
-  '/app/stock/bulk': typeof AppStockBulkRoute
   '/app/dashboard': typeof AppDashboardIndexRoute
-  '/app/purchases': typeof AppPurchasesIndexRoute
   '/app/sales': typeof AppSalesIndexRoute
   '/app/stock': typeof AppStockIndexRoute
-  '/app/purchases/orders': typeof AppPurchasesOrdersIndexRoute
+  '/app/supplier': typeof AppSupplierIndexRoute
+  '/app/stock/balance': typeof AppStockBalanceIndexRoute
+  '/app/stock/bulk': typeof AppStockBulkIndexRoute
+  '/app/stock/items': typeof AppStockItemsIndexRoute
+  '/app/stock/record': typeof AppStockRecordIndexRoute
+  '/app/supplier/invoice': typeof AppSupplierInvoiceIndexRoute
+  '/app/supplier/orders': typeof AppSupplierOrdersIndexRoute
+  '/app/supplier/receive': typeof AppSupplierReceiveIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -154,13 +186,17 @@ export interface FileRoutesById {
   '/app/sales/invoice': typeof AppSalesInvoiceRoute
   '/app/sales/orders': typeof AppSalesOrdersRoute
   '/app/sales/pos': typeof AppSalesPosRoute
-  '/app/stock/balance': typeof AppStockBalanceRoute
-  '/app/stock/bulk': typeof AppStockBulkRoute
   '/app/dashboard/': typeof AppDashboardIndexRoute
-  '/app/purchases/': typeof AppPurchasesIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/stock/': typeof AppStockIndexRoute
-  '/app/purchases/orders/': typeof AppPurchasesOrdersIndexRoute
+  '/app/supplier/': typeof AppSupplierIndexRoute
+  '/app/stock/balance/': typeof AppStockBalanceIndexRoute
+  '/app/stock/bulk/': typeof AppStockBulkIndexRoute
+  '/app/stock/items/': typeof AppStockItemsIndexRoute
+  '/app/stock/record/': typeof AppStockRecordIndexRoute
+  '/app/supplier/invoice/': typeof AppSupplierInvoiceIndexRoute
+  '/app/supplier/orders/': typeof AppSupplierOrdersIndexRoute
+  '/app/supplier/receive/': typeof AppSupplierReceiveIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -174,13 +210,17 @@ export interface FileRouteTypes {
     | '/app/sales/invoice'
     | '/app/sales/orders'
     | '/app/sales/pos'
-    | '/app/stock/balance'
-    | '/app/stock/bulk'
     | '/app/dashboard'
-    | '/app/purchases'
     | '/app/sales'
     | '/app/stock'
-    | '/app/purchases/orders'
+    | '/app/supplier'
+    | '/app/stock/balance'
+    | '/app/stock/bulk'
+    | '/app/stock/items'
+    | '/app/stock/record'
+    | '/app/supplier/invoice'
+    | '/app/supplier/orders'
+    | '/app/supplier/receive'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -192,13 +232,17 @@ export interface FileRouteTypes {
     | '/app/sales/invoice'
     | '/app/sales/orders'
     | '/app/sales/pos'
-    | '/app/stock/balance'
-    | '/app/stock/bulk'
     | '/app/dashboard'
-    | '/app/purchases'
     | '/app/sales'
     | '/app/stock'
-    | '/app/purchases/orders'
+    | '/app/supplier'
+    | '/app/stock/balance'
+    | '/app/stock/bulk'
+    | '/app/stock/items'
+    | '/app/stock/record'
+    | '/app/supplier/invoice'
+    | '/app/supplier/orders'
+    | '/app/supplier/receive'
   id:
     | '__root__'
     | '/'
@@ -210,13 +254,17 @@ export interface FileRouteTypes {
     | '/app/sales/invoice'
     | '/app/sales/orders'
     | '/app/sales/pos'
-    | '/app/stock/balance'
-    | '/app/stock/bulk'
     | '/app/dashboard/'
-    | '/app/purchases/'
     | '/app/sales/'
     | '/app/stock/'
-    | '/app/purchases/orders/'
+    | '/app/supplier/'
+    | '/app/stock/balance/'
+    | '/app/stock/bulk/'
+    | '/app/stock/items/'
+    | '/app/stock/record/'
+    | '/app/supplier/invoice/'
+    | '/app/supplier/orders/'
+    | '/app/supplier/receive/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -270,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAboutRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/supplier/': {
+      id: '/app/supplier/'
+      path: '/supplier'
+      fullPath: '/app/supplier'
+      preLoaderRoute: typeof AppSupplierIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/stock/': {
       id: '/app/stock/'
       path: '/stock'
@@ -284,32 +339,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSalesIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/purchases/': {
-      id: '/app/purchases/'
-      path: '/purchases'
-      fullPath: '/app/purchases'
-      preLoaderRoute: typeof AppPurchasesIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/dashboard/': {
       id: '/app/dashboard/'
       path: '/dashboard'
       fullPath: '/app/dashboard'
       preLoaderRoute: typeof AppDashboardIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/stock/bulk': {
-      id: '/app/stock/bulk'
-      path: '/stock/bulk'
-      fullPath: '/app/stock/bulk'
-      preLoaderRoute: typeof AppStockBulkRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/stock/balance': {
-      id: '/app/stock/balance'
-      path: '/stock/balance'
-      fullPath: '/app/stock/balance'
-      preLoaderRoute: typeof AppStockBalanceRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/sales/pos': {
@@ -333,11 +367,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSalesInvoiceRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/purchases/orders/': {
-      id: '/app/purchases/orders/'
-      path: '/purchases/orders'
-      fullPath: '/app/purchases/orders'
-      preLoaderRoute: typeof AppPurchasesOrdersIndexRouteImport
+    '/app/supplier/receive/': {
+      id: '/app/supplier/receive/'
+      path: '/supplier/receive'
+      fullPath: '/app/supplier/receive'
+      preLoaderRoute: typeof AppSupplierReceiveIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/supplier/orders/': {
+      id: '/app/supplier/orders/'
+      path: '/supplier/orders'
+      fullPath: '/app/supplier/orders'
+      preLoaderRoute: typeof AppSupplierOrdersIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/supplier/invoice/': {
+      id: '/app/supplier/invoice/'
+      path: '/supplier/invoice'
+      fullPath: '/app/supplier/invoice'
+      preLoaderRoute: typeof AppSupplierInvoiceIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/stock/record/': {
+      id: '/app/stock/record/'
+      path: '/stock/record'
+      fullPath: '/app/stock/record'
+      preLoaderRoute: typeof AppStockRecordIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/stock/items/': {
+      id: '/app/stock/items/'
+      path: '/stock/items'
+      fullPath: '/app/stock/items'
+      preLoaderRoute: typeof AppStockItemsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/stock/bulk/': {
+      id: '/app/stock/bulk/'
+      path: '/stock/bulk'
+      fullPath: '/app/stock/bulk'
+      preLoaderRoute: typeof AppStockBulkIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/stock/balance/': {
+      id: '/app/stock/balance/'
+      path: '/stock/balance'
+      fullPath: '/app/stock/balance'
+      preLoaderRoute: typeof AppStockBalanceIndexRouteImport
       parentRoute: typeof AppRoute
     }
   }
@@ -349,13 +425,17 @@ interface AppRouteChildren {
   AppSalesInvoiceRoute: typeof AppSalesInvoiceRoute
   AppSalesOrdersRoute: typeof AppSalesOrdersRoute
   AppSalesPosRoute: typeof AppSalesPosRoute
-  AppStockBalanceRoute: typeof AppStockBalanceRoute
-  AppStockBulkRoute: typeof AppStockBulkRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
-  AppPurchasesIndexRoute: typeof AppPurchasesIndexRoute
   AppSalesIndexRoute: typeof AppSalesIndexRoute
   AppStockIndexRoute: typeof AppStockIndexRoute
-  AppPurchasesOrdersIndexRoute: typeof AppPurchasesOrdersIndexRoute
+  AppSupplierIndexRoute: typeof AppSupplierIndexRoute
+  AppStockBalanceIndexRoute: typeof AppStockBalanceIndexRoute
+  AppStockBulkIndexRoute: typeof AppStockBulkIndexRoute
+  AppStockItemsIndexRoute: typeof AppStockItemsIndexRoute
+  AppStockRecordIndexRoute: typeof AppStockRecordIndexRoute
+  AppSupplierInvoiceIndexRoute: typeof AppSupplierInvoiceIndexRoute
+  AppSupplierOrdersIndexRoute: typeof AppSupplierOrdersIndexRoute
+  AppSupplierReceiveIndexRoute: typeof AppSupplierReceiveIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -364,13 +444,17 @@ const AppRouteChildren: AppRouteChildren = {
   AppSalesInvoiceRoute: AppSalesInvoiceRoute,
   AppSalesOrdersRoute: AppSalesOrdersRoute,
   AppSalesPosRoute: AppSalesPosRoute,
-  AppStockBalanceRoute: AppStockBalanceRoute,
-  AppStockBulkRoute: AppStockBulkRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
-  AppPurchasesIndexRoute: AppPurchasesIndexRoute,
   AppSalesIndexRoute: AppSalesIndexRoute,
   AppStockIndexRoute: AppStockIndexRoute,
-  AppPurchasesOrdersIndexRoute: AppPurchasesOrdersIndexRoute,
+  AppSupplierIndexRoute: AppSupplierIndexRoute,
+  AppStockBalanceIndexRoute: AppStockBalanceIndexRoute,
+  AppStockBulkIndexRoute: AppStockBulkIndexRoute,
+  AppStockItemsIndexRoute: AppStockItemsIndexRoute,
+  AppStockRecordIndexRoute: AppStockRecordIndexRoute,
+  AppSupplierInvoiceIndexRoute: AppSupplierInvoiceIndexRoute,
+  AppSupplierOrdersIndexRoute: AppSupplierOrdersIndexRoute,
+  AppSupplierReceiveIndexRoute: AppSupplierReceiveIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
