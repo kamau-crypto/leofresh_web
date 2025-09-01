@@ -60,7 +60,7 @@ export function NavMain({
 												? newPath === item.url
 												: `/${menuUrl.join("/")}` === item.url
 										)
-											? "bg-primary/95 text-white group/collapsible "
+											? "border-r-4 border-primary bg-primary/20 group/collapsible "
 											: ""
 									}>
 									<Link
@@ -81,7 +81,7 @@ export function NavMain({
 											<SidebarMenuSubButton asChild>
 												<Link
 													to={subItem.url}
-													className='[&.active]:bg-primary/90 [&.active]:text-white rounded-2xl flex-row'>
+													className='[&.active]:border-r-2 [&.active]:border-primary [&.active]:bg-primary/20 rounded-2xl flex-row'>
 													<span className='flex gap-3 items-center'>
 														{subItem.icon && <subItem.icon size={16} />}
 														{subItem.title}
