@@ -3,6 +3,7 @@ import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
 export interface ListMaterialRequestDTO extends PaginationDTO, SortDTO {
 	warehouse: string;
 	material_request_type: string;
+	fields: string[]
 }
 
 export type SingleMaterialRequestDTO = {

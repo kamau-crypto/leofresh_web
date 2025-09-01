@@ -2,6 +2,7 @@ import type {
 	CancelMaterialRequestDTO,
 	CreateMaterialRequestDTO,
 	DeleteMaterialRequestDTO,
+	ListMaterialRequestDTO,
 	ResendMaterialRequestDTO,
 	SingleMaterialRequestDTO,
 	SubmitMaterialRequestDTO,
@@ -11,6 +12,20 @@ import type {
 	SingleMaterialRequestDataModel,
 } from "@/data-access/models";
 
+/**
+ * 
+ * export const materialRequestFields: string[] = [
+	"name",
+	"set_from_warehouse as from_warehouse",
+	"material_request_type",
+	"set_warehouse",
+	"status",
+	"per_ordered",
+	"transaction_date",
+	"items",
+	"creation",
+];
+ */
 export interface IMaterialRequest {
 	getMaterialRequests: () => Promise<ReadMultipleMaterialRequestsModel[]>;
 	getMaterialRequest: (
@@ -24,7 +39,7 @@ export interface IMaterialRequest {
 }
 
 export class MaterialRequestRepository implements IMaterialRequest {
-	getMaterialRequests = async () => {
+	getMaterialRequests = async (list: ListMaterialRequestDTO) => {
 		return await MaterialRequest.find();
 	};
 
