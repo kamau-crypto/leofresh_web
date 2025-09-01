@@ -130,7 +130,7 @@ export interface DataTableProps<T = Record<string, any>> {
 }
 
 // Reusable Data Table Component
-const LeofreshDataTable = <T extends Record<string, any>>({
+const CustomLeofreshDataTable = <T extends Record<string, any>>({
 	data = [],
 	columns = [],
 	title,
@@ -832,7 +832,7 @@ export function TableExample() {
 
 	return (
 		<div className='container mx-auto py-10 overflow-hidden'>
-			<LeofreshDataTable
+			<CustomLeofreshDataTable
 				data={mockData}
 				className='overflow-y-scroll '
 				columns={columns}
