@@ -9,6 +9,7 @@ import {
 	HandCoins,
 	LayoutDashboard,
 	ListOrdered,
+	Milk,
 	Package,
 	ShoppingCart,
 	Siren,
@@ -126,7 +127,7 @@ export const leofreshRoutes: Route[] = [
 	{
 		title: "Items",
 		url: "/app/items",
-		icon: UsersRound,
+		icon: Milk,
 		isActive: false,
 	},
 	{
