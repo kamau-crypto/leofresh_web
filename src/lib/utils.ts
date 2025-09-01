@@ -15,7 +15,7 @@ export function toSentenceCase(str: string) {
 	return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
 }
 
-export function convertToLocalCurrency(num: number) {
+export function formatToLocalCurrency(num: number) {
 	return new Intl.NumberFormat("en-KE", {
 		style: "currency",
 		currency: "KES",
