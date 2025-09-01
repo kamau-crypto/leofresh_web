@@ -1,14 +1,21 @@
-import {
-	CreatedMaterialRequest,
-	CreateMaterialRequest,
-	materialRequestFields,
-	ReadMultipleMaterialRequests,
-	ReadSingleMaterialRequest,
-	ReadSubmittedMaterialRequest,
-} from "@/constants";
-import { HillFreshError } from "@/utils/customError";
-import { extractFrappeErrorMessage } from "@/utils/error_handler";
+import { materialRequestFields } from "@/constants";
+
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type {
+	CancelMaterialRequestDTO,
+	CreateMaterialRequestDTO,
+	DeleteMaterialRequestDTO,
+	ListMaterialRequestDTO,
+	ResendMaterialRequestDTO,
+	SingleMaterialRequestDTO,
+	SubmitMaterialRequestDTO,
+} from "../dto";
+import type {
+	CreatedMaterialRequestModel,
+	ReadMultipleMaterialRequestsModel,
+	ReadSubmittedMaterialRequestModel,
+	SingleMaterialRequestModel,
+} from "../models";
 import { FrappeInstance } from "./frappe";
 
 export class MaterialRequest extends FrappeInstance {
@@ -22,16 +29,13 @@ export class MaterialRequest extends FrappeInstance {
 
 	async retrieveMaterialRequests({
 		warehouse,
-		limit,
-	}: {
-		warehouse: string;
-		limit: number;
-	}) {
-		const requests: AxiosResponse<ReadMultipleMaterialRequests> =
+		limit_page_length,
+	}: ListMaterialRequestDTO) {
+		const requests: AxiosResponse<ReadMultipleMaterialRequestsModel> =
 			await this.materialRequestInstance.get(this.docType, {
 				params: {
 					fields: JSON.stringify(materialRequestFields),
-					limit: limit,
+					limit: limit_page_length,
 					order_by: "transaction_date desc",
 					filters: JSON.stringify([
 						["set_warehouse", "=", `${warehouse}`],
@@ -44,44 +48,40 @@ export class MaterialRequest extends FrappeInstance {
 
 	//
 	//Develop a method to show the number of items associated with an order
-	async retrieveMaterialRequest({ material_req }: { material_req: string }) {
-		const res: AxiosResponse<ReadSingleMaterialRequest> =
+	async retrieveMaterialRequest({ material_req }: SingleMaterialRequestDTO) {
+		const res: AxiosResponse<SingleMaterialRequestModel> =
 			await this.materialRequestInstance.get(`${this.docType}/${material_req}`);
 		return res.data.data;
 	}
 
-	async resendRequest({ name }: { name: string }) {
-		try {
-			const res = await this.materialRequestInstance.get(
-				`${this.docType}/${name}`
-			);
-			return res.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({ message: "Failed to resend Order. " + msg });
-		}
+	async resendRequest({ name }: ResendMaterialRequestDTO) {
+		const res = await this.materialRequestInstance.get(
+			`${this.docType}/${name}`
+		);
+		return res.data.data;
 	}
 
-	async cancelRequest({ name }: { name: string }) {
+	async cancelRequest({ name }: CancelMaterialRequestDTO) {
 		return await this.frappeCancel({ doctype: this.docType, name });
 	}
 
-	async deleteMaterialRequest({ name }: { name: string }) {
+	async deleteMaterialRequest({ name }: DeleteMaterialRequestDTO) {
 		const res: AxiosResponse<{ data: "ok" }> =
 			await this.materialRequestInstance.delete(`${this.docType}/${name}`);
+		return res.data.data;
 	}
 
-	async createMaterialRequest({ data }: { data: CreateMaterialRequest }) {
-		const materialRequest: AxiosResponse<CreatedMaterialRequest> =
+	async createMaterialRequest({ data }: { data: CreateMaterialRequestDTO }) {
+		const materialRequest: AxiosResponse<CreatedMaterialRequestModel> =
 			await this.materialRequestInstance.post(this.docType, {
 				data,
 			});
 		return materialRequest.data.data;
 	}
 
-	async submitMaterialRequest({ name }: { name: string }) {
+	async submitMaterialRequest({ name }: SubmitMaterialRequestDTO) {
 		const doc = await this.retrieveMaterialRequest({ material_req: name });
-		const materialReq: AxiosResponse<ReadSubmittedMaterialRequest> =
+		const materialReq: AxiosResponse<ReadSubmittedMaterialRequestModel> =
 			await this.frappeSubmit({ doc });
 		return materialReq.data.message;
 	}
