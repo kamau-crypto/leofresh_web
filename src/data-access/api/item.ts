@@ -1,10 +1,9 @@
-import { ItemFieldsEnum, PurchaseItem } from "@/constants";
-import { HillFreshError } from "@/utils/customError";
-import { extractFrappeErrorMessage } from "@/utils/error_handler";
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type { GetItemsDTO } from "../dto";
+import type { PurchaseItemModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
-export class ItemsForSale extends FrappeInstance {
+export class ItemsForSaleDataSource extends FrappeInstance {
 	private docType: string;
 	private purchaseItemInstance: AxiosInstance;
 	constructor({ docType }: { docType: string }) {
@@ -13,42 +12,26 @@ export class ItemsForSale extends FrappeInstance {
 		this.purchaseItemInstance = this.getFrappeClient();
 	}
 
-	async getFinishedProductsToSellOrBuy() {
-		try {
-			const items: AxiosResponse<{ data: PurchaseItem[] }> =
-				await this.purchaseItemInstance(this.docType, {
-					params: {
-						fields: JSON.stringify(Object.values(ItemFieldsEnum)),
-						filters: JSON.stringify([["item_group", "=", "Products"]]),
-					},
-				});
-			return items.data.data;
-		} catch (error: any) {
-			const msg = extractFrappeErrorMessage(error);
-			throw new HillFreshError({ message: msg });
-		}
+	async getFinishedProductsToSellOrBuy({ fields }: { fields: GetItemsDTO }) {
+		const items: AxiosResponse<{ data: PurchaseItemModel[] }> =
+			await this.purchaseItemInstance(this.docType, {
+				params: {
+					fields: JSON.stringify(fields),
+					filters: JSON.stringify([["item_group", "=", "Products"]]),
+				},
+			});
+		return items.data.data;
 	}
 	async retrieveNamingSeries() {
-		try {
-			const naming_series: AxiosResponse<{ data: { naming_series: string } }> =
-				await this.purchaseItemInstance.get(this.docType, {
-					params: {
-						fields: JSON.stringify(["naming_series"]),
-						limit: 1,
-					},
-				});
-			return naming_series.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Items For Sales Naming series not found " + msg,
+		const naming_series: AxiosResponse<{ data: { naming_series: string } }> =
+			await this.purchaseItemInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify(["naming_series"]),
+					limit: 1,
+				},
 			});
-		}
+		return naming_series.data.data;
 	}
-}
-
-export interface PurchaseItemsWithRate extends PurchaseItem {
-	rate: number;
 }
 
 export const ItemGroup = {
