@@ -1,10 +1,10 @@
-import {
-	CreatedPurchaseReceipt,
-	CreatePurchaseReceipt,
-	FrappeCreateRequirement,
-	SubmittedPurchaseReceiptMessage,
-} from "@/constants";
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type { CreatePurchaseReceiptDTO } from "../dto";
+import type {
+	CreatedPurchaseReceiptModel,
+	SubmittedPurchaseReceiptMessageModel,
+} from "../models";
 import { FrappeInstance } from "./frappe";
 
 export class PurchaseReceipt
@@ -31,8 +31,8 @@ export class PurchaseReceipt
 		return { naming_series: naming_series.data.data[0].naming_series };
 	}
 
-	async createPurchaseReceipt({ data }: { data: CreatePurchaseReceipt }) {
-		const res: AxiosResponse<{ data: CreatedPurchaseReceipt }> =
+	async createPurchaseReceipt({ data }: { data: CreatePurchaseReceiptDTO }) {
+		const res: AxiosResponse<{ data: CreatedPurchaseReceiptModel }> =
 			await this.receiptInstance.post(this.docType, { data });
 		return res.data.data;
 	}
@@ -40,11 +40,12 @@ export class PurchaseReceipt
 	async createAndSubmitPurchaseReceipt({
 		data,
 	}: {
-		data: CreatePurchaseReceipt;
+		data: CreatePurchaseReceiptDTO;
 	}) {
 		const createdPR = await this.createPurchaseReceipt({ data });
-		const res: AxiosResponse<{ message: SubmittedPurchaseReceiptMessage }> =
-			await this.frappeSubmit({ doc: createdPR });
+		const res: AxiosResponse<{
+			message: SubmittedPurchaseReceiptMessageModel;
+		}> = await this.frappeSubmit({ doc: createdPR });
 		return res.data.message;
 	}
 }
