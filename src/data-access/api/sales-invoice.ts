@@ -1,10 +1,12 @@
-import {
-	CreateSalesInvoiceRecord,
-	PurchaseInvoiceFieldsEnum,
-	PurchaseInvoiceResult,
-	ResultInvoice,
-} from "@/constants";
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type {
+	CancelSalesInvoice,
+	CreateSalesInvoiceRecordDTO,
+	DeleteSalesInvoice,
+	RetreiveSalesInvoices,
+	RetrieveSalesInvoice,
+} from "../dto";
+import type { PurchaseInvoiceResultModel, ResultInvoiceModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
 export class SalesInvoice extends FrappeInstance {
@@ -16,7 +18,7 @@ export class SalesInvoice extends FrappeInstance {
 		this.salesDocType = docType;
 	}
 
-	async createSalesInvoice({ inv }: { inv: CreateSalesInvoiceRecord }) {
+	async createSalesInvoice({ inv }: { inv: CreateSalesInvoiceRecordDTO }) {
 		const createdInvoice = await this.salesInvoiceInstance.post(
 			this.salesDocType,
 			{
@@ -25,9 +27,10 @@ export class SalesInvoice extends FrappeInstance {
 		);
 		return createdInvoice.data.data;
 	}
-
-	async retrieveSalesInvoice({ name }: { name: string }) {
-		const order: AxiosResponse<PurchaseInvoiceResult> =
+	//
+	async retrieveSalesInvoice({ name }: RetrieveSalesInvoice) {
+		//  [ ] Confirm and countercheck this for the app
+		const order: AxiosResponse<PurchaseInvoiceResultModel> =
 			await this.salesInvoiceInstance.get(`${this.salesDocType}/${name}`);
 		return order.data.data;
 	}
@@ -38,7 +41,7 @@ export class SalesInvoice extends FrappeInstance {
 		return response.data;
 	}
 
-	async cancelSalesInvoice({ name }: { name: string }) {
+	async cancelSalesInvoice({ name }: CancelSalesInvoice) {
 		const res = await this.frappeCancel({ doctype: this.salesDocType, name });
 		return res;
 	}
@@ -53,7 +56,7 @@ export class SalesInvoice extends FrappeInstance {
 		return naming_series.data.data;
 	}
 
-	async deleteSalesInvoice({ name }: { name: string }) {
+	async deleteSalesInvoice({ name }: DeleteSalesInvoice) {
 		const res: AxiosResponse<{ data: "ok" }> =
 			await this.salesInvoiceInstance.delete(`${this.salesDocType}/${name}`);
 		return res.data.data;
@@ -61,20 +64,15 @@ export class SalesInvoice extends FrappeInstance {
 
 	//order the purchase invoices in descending order per project
 	async retrieveSalesInvoices({
-		page_length,
+		limit_page_length,
 		project,
-	}: {
-		page_length: number;
-		project: string;
-	}) {
-		const fields = ["mpesa_amount", "cash_amount"].concat(
-			Object.values(PurchaseInvoiceFieldsEnum)
-		);
-		const orders: AxiosResponse<{ data: ResultInvoice[] }> =
+		fields,
+	}: RetreiveSalesInvoices) {
+		const orders: AxiosResponse<{ data: ResultInvoiceModel[] }> =
 			await this.salesInvoiceInstance.get(this.salesDocType, {
 				params: {
 					fields: JSON.stringify(fields),
-					limit_page_length: page_length,
+					limit_page_length,
 					filters: JSON.stringify([["project", "=", project]]),
 					order_by: "name desc",
 				},
