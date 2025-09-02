@@ -1,12 +1,15 @@
-import {
-	FrappeCreateRequirement,
-	GetPurchaseOrder,
-	PurchaseOrderDetails,
-	purchaseOrderFields,
-} from "@/constants";
-import { HillFreshError } from "@/utils/customError";
-import { extractFrappeErrorMessage } from "@/utils/error_handler";
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type {
+	CancelPurchaseOrderDTO,
+	DeletePurchaseOrderDTO,
+	ResendPurchaseOrderDTO,
+	RetrievePurchaseOrderDTO,
+	RetrievePurchaseOrdersDTO,
+	SubmitPurchaseOrderDTO,
+	UpdatePurchaseOrderDTO,
+} from "../dto";
+import type { GetPurchaseOrderModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
 export interface RetrievedPurchaseOrders {
@@ -46,150 +49,78 @@ export class PurchaseOrder
 	async createPurchaseOrder({
 		order,
 	}: {
-		order: PurchaseOrderDetails;
-	}): Promise<{ data: GetPurchaseOrder }> {
-		try {
-			const response = await this.purchaseOrderInstance.post(
-				this.docType,
-				JSON.stringify(order)
-			);
-			return response.data;
-		} catch (error: any) {
-			const msg = extractFrappeErrorMessage(error);
-			throw new HillFreshError({
-				message: "Failed to create Purchase Order. " + msg,
-			});
-		}
+		order: RetrievePurchaseOrdersDTO;
+	}): Promise<{ data: GetPurchaseOrderModel }> {
+		const response = await this.purchaseOrderInstance.post(
+			this.docType,
+			JSON.stringify(order)
+		);
+		return response.data;
 	}
 
 	async retrievePurchaseOrders({
-		limit,
+		limit_page_length,
 		cost_center,
-	}: {
-		limit: number;
-		cost_center: string;
-	}) {
-		try {
-			const response: AxiosResponse<RetrievedPurchaseOrders> =
-				await this.purchaseOrderInstance.get(this.docType, {
-					params: {
-						fields: JSON.stringify(purchaseOrderFields),
-						limit,
-						filters: JSON.stringify([["cost_center", "=", `${cost_center}`]]),
-						order_by: "name desc",
-					},
-				});
-			return response.data.data;
-		} catch (error: any) {
-			const msg = extractFrappeErrorMessage(error);
-			throw new HillFreshError({
-				message: "Failed to Retrieve Purchase Order. " + msg,
+		fields,
+		order_by,
+	}: RetrievePurchaseOrdersDTO) {
+		const response: AxiosResponse<RetrievedPurchaseOrders> =
+			await this.purchaseOrderInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify(fields),
+					limit: limit_page_length,
+					filters: JSON.stringify([["cost_center", "=", `${cost_center}`]]),
+					order_by,
+				},
 			});
-		}
+		return response.data.data;
 	}
+
 	async retrieveNamingSeries() {
-		try {
-			const naming_series: AxiosResponse<{ data: { naming_series: string } }> =
-				await this.purchaseOrderInstance.get(this.docType, {
-					params: {
-						fields: JSON.stringify(["naming_series"]),
-						limit: 1,
-					},
-				});
-			return naming_series.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Purchase Order Naming series not found. " + msg,
+		const naming_series: AxiosResponse<{ data: { naming_series: string } }> =
+			await this.purchaseOrderInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify(["naming_series"]),
+					limit: 1,
+				},
 			});
-		}
+		return naming_series.data.data;
 	}
 
-	async retrievePurchaseOrder({ name }: { name: string }) {
-		try {
-			const response: AxiosResponse<{ data: GetPurchaseOrder }> =
-				await this.purchaseOrderInstance.get(`${this.docType}/${name}`);
-			return response.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to retrieve Purchase Orders. " + msg,
-			});
-		}
+	async retrievePurchaseOrder({ name }: RetrievePurchaseOrderDTO) {
+		const response: AxiosResponse<{ data: GetPurchaseOrderModel }> =
+			await this.purchaseOrderInstance.get(`${this.docType}/${name}`);
+		return response.data.data;
 	}
 
-	async submitPurchaseOrder({ name }: { name: string }) {
+	async submitPurchaseOrder({ name }: SubmitPurchaseOrderDTO) {
 		const order = await this.retrievePurchaseOrder({
 			name,
 		});
-		try {
-			const response = await this.frappeSubmit({ doc: order });
-			return response.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to submit purchase Order. " + msg,
-			});
-		}
+		const response = await this.frappeSubmit({ doc: order });
+		return response.data;
 	}
 
-	receiveAndBillPurchaseOrder() {
-		throw new HillFreshError({ message: "Method Not implemented" });
+	async cancelPurchaseOrder({ name }: CancelPurchaseOrderDTO) {
+		const res = await this.frappeCancel({ doctype: this.docType, name });
+		return res;
 	}
 
-	async cancelPurchaseOrder({ name }: { name: string }) {
-		try {
-			const res = await this.frappeCancel({ doctype: this.docType, name });
-			return res;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Cannot Cancel Purchase Order. " + msg,
-			});
-		}
+	async deletePurchaseOrder({ name }: DeletePurchaseOrderDTO) {
+		const res: AxiosResponse<{ data: "ok" }> =
+			await this.purchaseOrderInstance.delete(`${this.docType}/${name}`);
+		return res.data.data;
 	}
 
-	async deletePurchaseOrder({ name }: { name: string }) {
-		try {
-			const res: AxiosResponse<{ data: "ok" }> =
-				await this.purchaseOrderInstance.delete(`${this.docType}/${name}`);
-			return res.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to Delete Purchase order. " + msg,
-			});
-		}
+	async resendPurchaseOrder({ name }: ResendPurchaseOrderDTO) {
+		const order = await this.retrievePurchaseOrder({ name });
+
+		return order;
 	}
 
-	async resendPurchaseOrder({ name }: { name: string }) {
-		try {
-			const order = await this.retrievePurchaseOrder({ name });
-
-			return order;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to resend Purchase Order" + msg,
-			});
-		}
-	}
-
-	async updatePurchaseOrder({
-		name,
-		data,
-	}: {
-		name: string;
-		data: { status: string; per_received: number };
-	}) {
-		try {
-			const updatedOrder: AxiosResponse<any> =
-				await this.purchaseOrderInstance.put(`${this.docType}/${name}`, data);
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to Update Purcahse Order" + msg,
-			});
-		}
+	async updatePurchaseOrder({ name, data }: UpdatePurchaseOrderDTO) {
+		const updatedOrder: AxiosResponse<any> =
+			await this.purchaseOrderInstance.put(`${this.docType}/${name}`, data);
+		return updatedOrder.data;
 	}
 }
