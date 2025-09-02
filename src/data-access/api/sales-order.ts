@@ -1,10 +1,8 @@
-import { FrappeCreateRequirement, SalesOrderEnum } from "@/constants";
-import { AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type { RetrieveSalesOrderDTO } from "../dto";
+import type { RetrieveSalesOrdersModel } from "../models";
 import { FrappeInstance } from "./frappe";
-
-type TypedSalesOrder = keyof typeof SalesOrderEnum;
-export type TypedSalesOrders = { [key in TypedSalesOrder]: string };
-
 export class SalesOrder
 	extends FrappeInstance
 	implements FrappeCreateRequirement
@@ -16,14 +14,14 @@ export class SalesOrder
 		this.salesOrderInstance = this.getFrappeClient();
 		this.docType = docType;
 	}
-	// [ ] Create a Sales Order method
+	// [ ] Create a Sales Order method. TODO
 	createSalesOrder() {
-		const salesConstants = {
-			naming_series: "SAL-ORD-.YYYY.-",
-			order_type: "Sales",
-			currency: "KES",
-			selling_price_list: "Standard Selling",
-		};
+		// const _salesConstants = {
+		// 	naming_series: "SAL-ORD-.YYYY.-",
+		// 	order_type: "Sales",
+		// 	currency: "KES",
+		// 	selling_price_list: "Standard Selling",
+		// };
 		throw new Error("This method is not implemented yet");
 	}
 
@@ -42,12 +40,15 @@ export class SalesOrder
 		return naming_series.data.data;
 	}
 
-	async retrieveSalesOrders({ page_length }: { page_length: number }) {
-		const orders: AxiosResponse<{ data: TypedSalesOrders[] }> =
+	async retrieveSalesOrders({
+		limit_page_length,
+		fields,
+	}: RetrieveSalesOrderDTO) {
+		const orders: AxiosResponse<{ data: RetrieveSalesOrdersModel[] }> =
 			await this.salesOrderInstance.get(this.docType, {
 				params: {
-					fields: JSON.stringify(Object.values(SalesOrderEnum)),
-					limit_page_length: page_length,
+					fields: JSON.stringify(fields),
+					limit_page_length,
 				},
 			});
 		return orders.data.data;
