@@ -1,9 +1,7 @@
-import {
-	CreatedStockMovement,
-	CreateStockMovementEntry,
-	FrappeCreateRequirement,
-} from "@/constants";
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type { CreateStockMovementEntryDTO } from "../dto";
+import type { CreatedStockMovementModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
 //Stock enty is a Stock Entry type of Material Transfer from the Stock Entry DocType
@@ -30,18 +28,18 @@ export class StockTransfer
 		return naming_series.data.data;
 	}
 
-	async createStockTransfer({ data }: { data: CreateStockMovementEntry }) {
-		const res: AxiosResponse<{ data: CreatedStockMovement }> =
+	async createStockTransfer({ data }: { data: CreateStockMovementEntryDTO }) {
+		const res: AxiosResponse<{ data: CreatedStockMovementModel }> =
 			await this.stockTransferInstance.post(this.docType, { data });
 		return res.data.data;
 	}
 
-	async submitStockTransfer({ data }: { data: CreatedStockMovement }) {
-		const submitStock: AxiosResponse<{ message: CreatedStockMovement }> =
+	async submitStockTransfer({ data }: { data: CreatedStockMovementModel }) {
+		const submitStock: AxiosResponse<{ message: CreatedStockMovementModel }> =
 			await this.frappeSubmit({ doc: data });
 		return submitStock.data.message;
 	}
-	async transferStock({ data }: { data: CreateStockMovementEntry }) {
+	async transferStock({ data }: { data: CreateStockMovementEntryDTO }) {
 		const transferStock = await this.createStockTransfer({ data });
 		return await this.submitStockTransfer({ data: transferStock });
 	}
