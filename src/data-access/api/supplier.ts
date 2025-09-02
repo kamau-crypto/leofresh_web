@@ -1,19 +1,7 @@
 import type { AxiosInstance, AxiosResponse } from "axios";
+import type { RetrieveSuppliersDTO } from "../dto";
+import type { AllSuppliersModel } from "../models";
 import { FrappeInstance } from "./frappe";
-
-export interface AllSuppliers {
-	data: TypedSupplier[];
-}
-
-export interface TypedSupplier {
-	supplier_name: string;
-	supplier_type: string;
-}
-
-export const SupplierEnum = {
-	supplier_name: "supplier_name",
-	supplier_type: "supplier_type",
-} as const;
 
 export class Supplier extends FrappeInstance {
 	private supplierInstance: AxiosInstance;
@@ -24,15 +12,20 @@ export class Supplier extends FrappeInstance {
 		this.supplierInstance = this.getFrappeClient();
 	}
 
-	async getAllSuppliers({ limit }: { limit: number }) {
-		const response: AxiosResponse<AllSuppliers> =
+	async getAllSuppliers({
+		fields,
+		limit_page_length,
+		order_by,
+	}: RetrieveSuppliersDTO) {
+		const response: AxiosResponse<{ data: AllSuppliersModel }> =
 			await this.supplierInstance.get(this.docType, {
 				params: {
-					fields: JSON.stringify(Object.values(SupplierEnum)),
+					fields: JSON.stringify(fields),
 					// filters: JSON.stringify([
 					// 	["supplier_group", "=", "Leofresh Supplier"],
 					// ]), // Only show the suppliers who are in a company
-					limit_page_length: limit,
+					limit_page_length,
+					order_by,
 				},
 			});
 		return response.data.data;
