@@ -1,16 +1,12 @@
-//
-
-import {
-	CreatedStockReconciliations,
-	CreateStockReconciliation,
-	FrappeCreateRequirement,
-	ReadStockReconiliation,
-	RetrievedStockReconciliationRecord,
-	SubmittedStockReconciliation,
-} from "@/constants";
-import { HillFreshError } from "@/utils/customError";
-import { extractFrappeErrorMessage } from "@/utils/error_handler";
-import { AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
+import type { FrappeCreateRequirement } from "../common/frappe.create";
+import type { CreateStockReconciliationDTO } from "../dto";
+import type {
+	CreatedStockReconciliationsModel,
+	ReadStockReconiliationModel,
+	RetrievedStockReconciliationModel,
+	SubmittedStockReconciliationModel,
+} from "../models";
 import { FrappeInstance } from "./frappe";
 
 //Stock Updates occur through a stock reconciliation
@@ -26,44 +22,32 @@ export class StockReconciliation
 		this.stockReconciliationInstance = this.getFrappeClient();
 	}
 
-	async reconcile_stock({ data }: { data: CreateStockReconciliation }) {
-		try {
-			const stock: AxiosResponse<CreatedStockReconciliations> =
-				await this.stockReconciliationInstance.post(this.docType, {
-					data,
-				});
-			return stock.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({ message: "Failed to post stock. " + msg });
-		}
+	async reconcile_stock({ data }: { data: CreateStockReconciliationDTO }) {
+		const stock: AxiosResponse<CreatedStockReconciliationsModel> =
+			await this.stockReconciliationInstance.post(this.docType, {
+				data,
+			});
+		return stock.data.data;
 	}
 
 	async retrieveNamingSeries() {
-		try {
-			const naming_series: AxiosResponse<{ data: { naming_series: string } }> =
-				await this.stockReconciliationInstance.get(this.docType, {
-					params: {
-						fields: JSON.stringify(["naming_series"]),
-						limit: 1,
-					},
-				});
-			return naming_series.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Stock Reconciliation Naming series not found. " + msg,
+		const naming_series: AxiosResponse<{ data: { naming_series: string } }> =
+			await this.stockReconciliationInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify(["naming_series"]),
+					limit: 1,
+				},
 			});
-		}
+		return naming_series.data.data;
 	}
 
 	async submit_stock_reconciliation({
 		data,
 	}: {
-		data: CreateStockReconciliation;
+		data: CreateStockReconciliationDTO;
 	}) {
 		const stock = await this.reconcile_stock({ data });
-		const submit: AxiosResponse<SubmittedStockReconciliation> =
+		const submit: AxiosResponse<SubmittedStockReconciliationModel> =
 			await this.frappeSubmit({
 				doc: stock,
 			});
@@ -72,7 +56,7 @@ export class StockReconciliation
 
 	async retrive_last_stock() {
 		const stock_name: AxiosResponse<{
-			data: RetrievedStockReconciliationRecord[];
+			data: RetrievedStockReconciliationModel[];
 		}> = await this.stockReconciliationInstance.get(this.docType, {
 			params: {
 				fields: JSON.stringify(["name", "posting_date", "posting_time"]),
@@ -81,7 +65,7 @@ export class StockReconciliation
 				limit: 1,
 			},
 		});
-		const stock_items: AxiosResponse<{ data: ReadStockReconiliation }> =
+		const stock_items: AxiosResponse<{ data: ReadStockReconiliationModel }> =
 			await this.stockReconciliationInstance.get(
 				`${this.docType}/${stock_name.data.data[0].name}`
 			);
