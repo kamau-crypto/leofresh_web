@@ -1,10 +1,13 @@
-import {
-	CreatedPurchaseInvoice,
-	CreatedPurchaseInvoiceData,
-	CreatePurchaseInvoices,
-	ReadCreatedPurchaseInvoice,
-} from "@/constants";
-import { AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
+import type {
+	CreatedPurchaseInvoiceDataDTO,
+	CreatePurchaseInvoicesDTO,
+	GetPurchaseInvoiceDTO,
+} from "../dto";
+import type {
+	CreatedPurchaseInvoiceModel,
+	ReadCreatedPurchaseInvoiceModel,
+} from "../models";
 import { FrappeInstance } from "./frappe";
 
 export class PurchaseInvoice extends FrappeInstance {
@@ -16,29 +19,28 @@ export class PurchaseInvoice extends FrappeInstance {
 		this.purchaseInvoiceInstance = this.getFrappeClient();
 	}
 
-	async createPurchaseInvoice({ data }: { data: CreatePurchaseInvoices }) {
-		const res: AxiosResponse<CreatedPurchaseInvoice> =
+	async createPurchaseInvoice({ data }: { data: CreatePurchaseInvoicesDTO }) {
+		const res: AxiosResponse<CreatedPurchaseInvoiceModel> =
 			await this.purchaseInvoiceInstance.post(this.docType, data);
 		return res.data.data;
 	}
-
-	async getPurchcaseInvoiceData({ purchaseOrder }: { purchaseOrder: string }) {
-		return await this.frappeConstructInvoiceData({ purchaseOrder });
+	async getPurchcaseInvoiceData({ purchase_invoice }: GetPurchaseInvoiceDTO) {
+		return await this.frappeConstructInvoiceData({ purchase_invoice });
 	}
 
 	async submitPurchaseInvoice({
 		purchaseInv,
 	}: {
-		purchaseInv: CreatedPurchaseInvoiceData;
+		purchaseInv: CreatedPurchaseInvoiceDataDTO;
 	}) {
-		const res: AxiosResponse<{ message: ReadCreatedPurchaseInvoice }> =
+		const res: AxiosResponse<{ message: ReadCreatedPurchaseInvoiceModel }> =
 			await this.frappeSubmit({ doc: purchaseInv });
 		return res.data.message;
 	}
 
 	//Create the purchase invoice from a purchase order. this only occurs when the purchase order is successfully submitted,
-	async purchasesInvoiceCycle({ purchaseOrder }: { purchaseOrder: string }) {
-		const poI = await this.getPurchcaseInvoiceData({ purchaseOrder });
+	async purchasesInvoiceCycle({ purchase_invoice }: GetPurchaseInvoiceDTO) {
+		const poI = await this.getPurchcaseInvoiceData({ purchase_invoice });
 		const createPI = await this.createPurchaseInvoice({ data: poI });
 		const submitPI = await this.submitPurchaseInvoice({
 			purchaseInv: createPI,
