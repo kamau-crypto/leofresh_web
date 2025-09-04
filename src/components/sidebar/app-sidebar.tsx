@@ -1,4 +1,4 @@
-import { AudioWaveform, Bubbles, Command } from "lucide-react";
+import { Droplets } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
@@ -14,23 +14,12 @@ import {
 import { leofreshRoutes } from "@/presentation";
 import { useAuth } from "../context";
 
-// This is sample data.
 const data = {
 	teams: [
 		{
 			name: "Leofresh Limited",
-			logo: Bubbles,
+			logo: Droplets,
 			plan: "Enterprise",
-		},
-		{
-			name: "Acme Corp.",
-			logo: AudioWaveform,
-			plan: "Startup",
-		},
-		{
-			name: "Evil Corp.",
-			logo: Command,
-			plan: "Free",
 		},
 	],
 };
