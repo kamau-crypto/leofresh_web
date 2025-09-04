@@ -1,8 +1,10 @@
 import { LeoFreshBadge } from "@/components/leofresh/LeoBadge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { ListItemsEntity } from "@/domain";
 import { formatToLocalCurrency } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
 
 export const itemColumns: ColumnDef<ListItemsEntity>[] = [
 	{
@@ -27,7 +29,25 @@ export const itemColumns: ColumnDef<ListItemsEntity>[] = [
 	},
 	{
 		accessorKey: "item_name",
-		header: "Item Name",
+		header: ({ column }) => {
+			console.log("Column Is Sorted", column.getIsSorted());
+			return (
+				<Button
+					variant='ghost'
+					size='sm'
+					className='data-[state=open]:bg-accent -ml-3 h-8'
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+					<span className='font-bold'>Item Name</span>
+					{column.getIsSorted() === "desc" ? (
+						<ArrowDown />
+					) : column.getIsSorted() === "asc" ? (
+						<ArrowUp />
+					) : (
+						<ChevronsUpDown />
+					)}
+				</Button>
+			);
+		},
 		cell: ({ row }) => (
 			<div className='font-medium'>{row.getValue("item_name")}</div>
 		),
@@ -66,6 +86,11 @@ export const itemColumns: ColumnDef<ListItemsEntity>[] = [
 					row.getValue("sellingUom")}
 			</div>
 		),
+	},
+	{
+		accessorKey: "sellingUom",
+		header: "Selling Units",
+		cell: ({ row }) => <div>{row.getValue("sellingUom")}</div>,
 	},
 	{
 		accessorKey: "item_tax_template",
