@@ -1,23 +1,6 @@
-export interface ReadProfileDTO {
-	customer: string;
-	company: string;
-	warehouse_name: string;
-	source_warehouse: string;
-	cost_center: string;
-	currency: string;
-	selling_price_list: string;
-	user_email: string;
-	project: string;
-	lnmo: string | null;
-	bank_no: string | null;
-	bank_account: string;
-	expense_account: string;
-	income_account: string;
-	debtor_account: string;
-	unrealized_profit: string;
-	waste_water: number;
-	write_off_account: string;
-}
+import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
+
+
 
 export const profileFieldsDTO: string[] = [
 	"customer",
@@ -38,3 +21,7 @@ export const profileFieldsDTO: string[] = [
 	"unrealized_profit",
 	"waste_water",
 ];
+
+export interface ReadProfilesDTO extends PaginationDTO, SortDTO {
+	email?: string;
+}
