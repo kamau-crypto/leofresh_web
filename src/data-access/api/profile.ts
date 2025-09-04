@@ -3,8 +3,9 @@
 import type { AxiosInstance, AxiosResponse } from "axios";
 import {
 	profileFieldsDTO,
-	type ReadProfileDTO,
+	type ReadProfilesDTO,
 } from "../dto/profile/profile.dto";
+import type { ReadProfileModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
 //Define a POS profile for the app
@@ -18,8 +19,9 @@ export class POSProfile extends FrappeInstance {
 		this.profileInstance = this.getFrappeClient();
 	}
 
-	async retrievePOSProfile({ email }: { email?: string }) {
-		const data: AxiosResponse<{ data: ReadProfileDTO[] }> =
+	// [ ] Move filters to the Repository for implementation after creating a DTO for the filters
+	async retrievePOSProfile({ email }: ReadProfilesDTO) {
+		const data: AxiosResponse<{ data: ReadProfileModel[] }> =
 			await this.profileInstance.get(this.docType, {
 				params: {
 					fields: JSON.stringify(profileFieldsDTO),
