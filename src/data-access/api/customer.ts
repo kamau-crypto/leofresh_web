@@ -1,12 +1,14 @@
-import type { AxiosInstance } from "axios";
-import type {
-	CreateCustomerDTO,
-	DisableCustomerDTO,
-	UpdateCustomerDTO,
+import type { AxiosInstance, AxiosResponse } from "axios";
+import {
+	type CreateCustomerDTO,
+	type DisableCustomerDTO,
+	type GetCustomerDTO,
+	type UpdateCustomerDTO,
 } from "../dto";
+import type { CustomerModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
-export class Customer extends FrappeInstance {
+export class CustomerDataSource extends FrappeInstance {
 	private customerInstance: AxiosInstance;
 	private docType: string;
 
@@ -15,16 +17,34 @@ export class Customer extends FrappeInstance {
 		this.docType = docType;
 		this.customerInstance = this.getFrappeClient();
 	}
-
-	createCustomer(data: CreateCustomerDTO) {
-		return this.customerInstance.post(`/${this.docType}`, data);
+	async getAllCustomers({
+		fields,
+		limit_page_length,
+		limit_start,
+		order_by,
+	}: GetCustomerDTO): Promise<AxiosResponse<{ data: CustomerModel[] }>> {
+		return await this.customerInstance.get(`/${this.docType}`, {
+			params: {
+				fields: JSON.stringify(fields),
+				limit_page_length,
+				limit_start,
+				order_by,
+			},
+		});
 	}
 
-	updateCustomer(data: UpdateCustomerDTO) {
-		return this.customerInstance.put(`/${this.docType}/${data.name}`, data);
+	async createCustomer(data: CreateCustomerDTO) {
+		return await this.customerInstance.post(`/${this.docType}`, data);
 	}
 
-	deleteCustomer({ name }: DisableCustomerDTO) {
-		return this.customerInstance.delete(`/${name}`);
+	async updateCustomer(data: UpdateCustomerDTO) {
+		return await this.customerInstance.put(
+			`/${this.docType}/${data.name}`,
+			data
+		);
+	}
+
+	async deleteCustomer({ name }: DisableCustomerDTO) {
+		return await this.customerInstance.delete(`/${name}`);
 	}
 }

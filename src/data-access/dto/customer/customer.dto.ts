@@ -1,3 +1,5 @@
+import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
+
 export type CustomerType = "Company" | "Individual" | "Partnership";
 
 export interface CreateCustomerDTO {
@@ -15,3 +17,7 @@ export interface UpdateCustomerDTO extends Partial<CreateCustomerDTO> {
 export interface DisableCustomerDTO extends Pick<UpdateCustomerDTO, "name"> {}
 // [ ] Add a customer Location
 // [ ] Add a customer phone number
+
+export interface GetCustomerDTO extends PaginationDTO, SortDTO {
+	fields: string[];
+}
