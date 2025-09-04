@@ -1,7 +1,7 @@
 import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
 
 
-
+// [ ] Move to a distant location.
 export const profileFieldsDTO: string[] = [
 	"customer",
 	"company",
