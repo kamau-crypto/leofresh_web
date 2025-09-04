@@ -140,7 +140,7 @@ export function DataTable<TData, TValue>({
 	);
 }
 
-// [ ]Adjust thid relative to the number of columns
+// [ ]Adjust this relative to the number of columns
 const DataTableLoadingSkeleton = () => {
 	return (
 		<>

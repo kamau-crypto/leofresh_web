@@ -30,7 +30,6 @@ export const itemColumns: ColumnDef<ListItemsEntity>[] = [
 	{
 		accessorKey: "item_name",
 		header: ({ column }) => {
-			console.log("Column Is Sorted", column.getIsSorted());
 			return (
 				<Button
 					variant='ghost'

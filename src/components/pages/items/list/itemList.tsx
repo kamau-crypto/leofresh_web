@@ -11,8 +11,6 @@ export function ItemList() {
 		return data;
 	}, [data]);
 
-	console.log("Memoized Data", memoizedData);
-
 	return (
 		<LeofreshDataTable
 			data={memoizedData}
