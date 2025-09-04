@@ -1,16 +1,17 @@
-import {
-	CreatedTankReading,
-	CreateTankReading,
-	customerTankDetals,
-	customerTanks,
-	ReadCustomerTank,
-	ReadTankDetails,
-	ReadTankReading,
-	tankReadings,
-} from "@/constants";
-import { HillFreshError } from "@/utils/customError";
-import { extractFrappeErrorMessage } from "@/utils/error_handler";
-import { AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
+import type {
+	CreateTankReadingDTO,
+	GetLatestTankReadingDTO,
+	GetTankDetailsDTO,
+	GetTankDTO,
+	GetTankReadingTypeDTO,
+} from "../dto";
+import type {
+	CreatedTankReadingModel,
+	ReadCustomerTankModel,
+	ReadTankDetailsModel,
+	ReadTankReadingModel,
+} from "../models/tank.model";
 import { FrappeInstance } from "./frappe";
 
 export class Tanks extends FrappeInstance {
@@ -21,86 +22,56 @@ export class Tanks extends FrappeInstance {
 		this.docType = docType;
 		this.tankInstance = this.getFrappeClient();
 	}
+	//
+	//Get Water Tanks
+	async getTanks() {}
 	//Retrieve the water tanks needed within the app, they can be more than one water tank
 	//available within a shop
-	async getTank({ tank_name }: { tank_name: string }) {
-		try {
-			const tank: AxiosResponse<{ data: ReadCustomerTank[] }> =
-				await this.tankInstance.get("Customer", {
-					params: {
-						fields: JSON.stringify(customerTanks),
-						filters: JSON.stringify([["name", "=", `${tank_name}`]]),
-					},
-				});
-			return tank.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({ message: "Failed to get tank. " + msg });
-		}
+	async getTank({ tank_name, fields }: GetTankDTO) {
+		const tank: AxiosResponse<{ data: ReadCustomerTankModel[] }> =
+			await this.tankInstance.get("Customer", {
+				params: {
+					fields: JSON.stringify(fields),
+					filters: JSON.stringify([["name", "=", `${tank_name}`]]),
+				},
+			});
+		return tank.data.data;
 	}
 	//available within a shop
-	async getTankDetails({ tank_name }: { tank_name: string }) {
-		try {
-			const tank: AxiosResponse<{ data: ReadTankDetails[] }> =
-				await this.tankInstance.get(this.docType, {
-					params: {
-						fields: JSON.stringify(customerTankDetals),
-						filters: JSON.stringify([["name", "=", `${tank_name}`]]),
-					},
-				});
-			return tank.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to get Tank Details. " + msg,
+	async getTankDetails({ tank_name, fields }: GetTankDetailsDTO) {
+		const tank: AxiosResponse<{ data: ReadTankDetailsModel[] }> =
+			await this.tankInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify(fields),
+					filters: JSON.stringify([["name", "=", `${tank_name}`]]),
+				},
 			});
-		}
+		return tank.data.data;
 	}
-	async getLatestTankReading({ tank }: { tank: string }) {
-		try {
-			const res: AxiosResponse<{ data: ReadTankReading[] }> =
-				await this.tankInstance.get(this.docType, {
-					params: {
-						filters: JSON.stringify([["tank", "=", tank]]),
-						fields: JSON.stringify(tankReadings),
-						order_by: "date desc",
-						limit: 1,
-					},
-				});
-			return res.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to get the Latest Tank Readings. " + msg,
+	async getLatestTankReading({ tank, fields }: GetLatestTankReadingDTO) {
+		const res: AxiosResponse<{ data: ReadTankReadingModel[] }> =
+			await this.tankInstance.get(this.docType, {
+				params: {
+					filters: JSON.stringify([["tank", "=", tank]]),
+					fields: JSON.stringify(fields), // [ ]Tank reading fields came from here
+					order_by: "date desc",
+					limit: 1,
+				},
 			});
-		}
+		return res.data.data;
 	}
-	async createTankReading({ data }: { data: CreateTankReading }) {
-		try {
-			const res: AxiosResponse<{ data: CreatedTankReading }> =
-				await this.tankInstance.post(this.docType, { data });
-			return res.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to create Tank Reading. " + msg,
-			});
-		}
+	async createTankReading({ data }: { data: CreateTankReadingDTO }) {
+		const res: AxiosResponse<{ data: CreatedTankReadingModel }> =
+			await this.tankInstance.post(this.docType, { data });
+		return res.data;
 	}
-	async getTankReadingType({ tank }: { tank: string }) {
-		try {
-			const res: AxiosResponse<{ data: ReadTankReading }> =
-				await this.tankInstance.get(this.docType, {
-					params: {
-						fields: JSON.stringify(["reading_type"]),
-					},
-				});
-			return res.data.data;
-		} catch (e: any) {
-			const msg = extractFrappeErrorMessage(e);
-			throw new HillFreshError({
-				message: "Failed to fetch Tank Reading Type. " + msg,
+	async getTankReadingType({ tank }: GetTankReadingTypeDTO) {
+		const res: AxiosResponse<{ data: ReadTankReadingModel }> =
+			await this.tankInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify(["reading_type"]),
+				},
 			});
-		}
+		return res.data.data;
 	}
 }
