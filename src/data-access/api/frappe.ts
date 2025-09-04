@@ -6,7 +6,7 @@ import { redirect } from "@tanstack/react-router";
 import type { AxiosInstance, AxiosResponse } from "axios";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import type { CreatePurchaseInvoicesDTO } from "../dto/purchase-invoice.dto";
+import type { CreatePurchaseInvoicesDTO, GetPurchaseInvoiceDTO } from "../dto";
 import type { ReadWarehouseDTO } from "../dto/warehouse.dto";
 
 export class FrappeInstance {
@@ -227,15 +227,14 @@ export class FrappeInstance {
 	 * Construct invoice data from purchase order
 	 */
 	public async frappeConstructInvoiceData({
-		purchaseOrder,
-	}: {
-		purchaseOrder: string;
-	}): Promise<CreatePurchaseInvoicesDTO> {
+		purchase_invoice,
+	}: GetPurchaseInvoiceDTO): Promise<CreatePurchaseInvoicesDTO> {
 		try {
+			// [ ]Check this Response and clear it of any errors that might arise
 			const response: AxiosResponse<{ message: CreatePurchaseInvoicesDTO }> =
 				await this.mainClient.post(
 					appConfig.GET_INVOICE_DATA,
-					{ purchase_order: purchaseOrder },
+					{ purchase_order: purchase_invoice },
 					{
 						timeout: 5000,
 						timeoutErrorMessage: "Failed to pull invoice data",
