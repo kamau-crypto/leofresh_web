@@ -447,3 +447,164 @@ export interface PIPaymentScheduleModel {
 	parenttype: string;
 	doctype: string;
 }
+
+type PurchaseInvoiceStatusEnum =
+	| "Draft"
+	| "Return"
+	| "Debit Note Issued"
+	| "Submitted"
+	| "Paid"
+	| "Partly Paid"
+	| "Unpaid"
+	| "Overdue"
+	| "Cancelled"
+	| "Internal Transfer";
+
+export interface PurchaseInvoiceModel {
+	title: string;
+	name: string;
+	modified: string;
+	naming_series: string;
+	supplier: string;
+	supplier_name?: string;
+	tax_id?: string;
+	company: string;
+	posting_date: string;
+	posting_time?: string;
+	due_date?: string;
+	is_paid?: 1 | 0;
+	is_return?: 1 | 0;
+	return_against?: string;
+	tax_withholding_category?: string;
+	amended_from?: string;
+	bill_no?: string;
+	bill_date?: string;
+	cost_center?: string;
+	project?: string;
+	currency?: string;
+	conversion_rate?: number;
+	buying_price_list?: string;
+	price_list_currency?: string;
+	plc_conversion_rate?: number;
+	scan_barcode?: string;
+	update_stock?: 1 | 0;
+	set_warehouse?: string;
+	set_from_warehouse?: string;
+	is_subcontracted?: 1 | 0;
+	rejected_warehouse?: string;
+	supplier_warehouse?: string;
+	items: PurchaseInvoiceItemModel[];
+	total_qty?: number;
+	total_net_weight?: number;
+	base_total?: number;
+	base_net_total?: number;
+	total?: number;
+	net_total?: number;
+	tax_withholding_net_total?: number;
+	base_tax_withholding_net_total?: number;
+	tax_category?: string;
+	taxes_and_charges?: string;
+	shipping_rule?: string;
+	incoterm?: string;
+	named_place?: string;
+	taxes?: Record<string, string>[];
+	base_taxes_and_charges_added?: number;
+	base_taxes_and_charges_deducted?: number;
+	base_total_taxes_and_charges?: number;
+	taxes_and_charges_added?: number;
+	taxes_and_charges_deducted?: number;
+	total_taxes_and_charges?: number;
+	base_grand_total?: number;
+	base_rounding_adjustment?: number;
+	base_rounded_total?: number;
+	base_in_words?: string;
+	grand_total?: number;
+	rounding_adjustment?: number;
+	rounded_total?: number;
+	in_words?: string;
+	total_advance?: number;
+	outstanding_amount?: number;
+	base_discount_amount?: number;
+	additional_discount_percentage?: number;
+	other_charges_calculation?: string;
+	pricing_rules?: Record<string, string>[];
+	supplied_items?: Record<string, string>[];
+	payments_tab?: string;
+	mode_of_payment?: string;
+	base_paid_amount?: number;
+	clearance_date?: string;
+	cash_bank_account?: string;
+	paid_amount?: number;
+	write_off_amount?: number;
+	base_write_off_amount?: number;
+	write_off_account?: string;
+	write_off_cost_center?: string;
+	address_and_contact_tab?: string;
+	supplier_address?: string;
+	contact_person?: string;
+	contact_mobile?: string;
+	contact_email?: string;
+	shipping_address?: string;
+	tc_name?: string;
+	terms?: string;
+	more_info_tab?: string;
+	status?: PurchaseInvoiceStatusEnum;
+	per_received?: number;
+	credit_to: string;
+	party_account_currency?: string;
+	is_opening?: 1 | 0;
+	against_expense_account?: string;
+	unrealized_profit_loss_account?: string;
+	subscription?: string;
+	auto_repeat?: string;
+	update_auto_repeat_reference?: string;
+	from_date?: string;
+	to_date?: string;
+	letter_head?: string;
+	select_print_heading?: string;
+	supplier_group?: string;
+	sender?: string;
+	inter_company_invoice_reference?: string;
+	remarks?: string;
+}
+
+type PurchaseInvoiceItemModel = {
+	item_code?: string;
+	item_name: string;
+	description?: string;
+	brand?: string;
+	item_group?: string;
+	received_qty?: number;
+	qty: number;
+	rejected_qty?: number;
+	stock_qty: number;
+	price_list_rate?: number;
+	discount_percentage?: number;
+	discount_amount?: number;
+	rate: number;
+	amount: number;
+	item_tax_template?: string;
+	base_rate: number;
+	base_amount: number;
+	net_rate?: number;
+	net_amount?: number;
+	base_net_rate?: number;
+	base_net_amount?: number;
+	valuation_rate?: number;
+	sales_incoming_rate?: number;
+	warehouse?: string;
+	from_warehouse?: string;
+	purchase_invoice_item?: string;
+	purchase_order?: string;
+	po_detail?: string;
+	purchase_receipt?: string;
+	pr_detail?: string;
+	sales_invoice_item?: string;
+	material_request?: string;
+	material_request_item?: string;
+	weight_per_unit?: number;
+	total_weight?: number;
+	weight_uom?: string;
+	project?: string;
+	cost_center?: string;
+};
