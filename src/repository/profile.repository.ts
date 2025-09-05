@@ -1,14 +1,15 @@
 import { POSProfile } from "@/data-access/api/profile";
-import type { ReadProfileDTO } from "@/data-access/dto/profile/profile.dto";
+import type { ReadProfileModel } from "@/data-access/models";
+import type { ReadProfileEntity } from "@/domain";
 
 export interface ProfileRepository {
-	retrievePOSProfile(email?: string): Promise<ReadProfileDTO[]>;
+	retrievePOSProfile(email?: string): Promise<ReadProfileEntity[]>;
 }
 
 export class UserProfileRepository implements ProfileRepository {
 	constructor() {}
-	async retrievePOSProfile(email?: string): Promise<ReadProfileDTO[]> {
+	async retrievePOSProfile(email?: string): Promise<ReadProfileModel[]> {
 		const profile = new POSProfile({ docType: "POS Profile" });
-		return profile.retrievePOSProfile({ email });
+		return profile.retrievePOSProfile({ email: email ?? "" });
 	}
 }
