@@ -20,12 +20,12 @@ export class POSProfile extends FrappeInstance {
 	}
 
 	// [ ] Move filters to the Repository for implementation after creating a DTO for the filters
-	async retrievePOSProfile({ email }: ReadProfilesDTO) {
+	async retrievePOSProfile({ email }: Partial<ReadProfilesDTO>) {
 		const data: AxiosResponse<{ data: ReadProfileModel[] }> =
 			await this.profileInstance.get(this.docType, {
 				params: {
 					fields: JSON.stringify(profileFieldsDTO),
-					limit_page_length: 200,
+					limit_page_length: 100,
 					order_by: "customer asc",
 				},
 			});
