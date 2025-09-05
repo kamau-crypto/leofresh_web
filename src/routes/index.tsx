@@ -1,8 +1,12 @@
 "use client";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
 	component: Index,
+	beforeLoad: async () => {
+		const navigate = useNavigate();
+		navigate({ to: "/auth/login" });
+	},
 });
 
 function Index() {
