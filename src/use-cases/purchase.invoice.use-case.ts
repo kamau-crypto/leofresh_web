@@ -18,6 +18,22 @@ export class PurchaseInvoiceUseCase {
 		order_by,
 	}: Omit<PurchaseInvoiceFilterEntityFilter, "fields">) {
 		try {
+			// const _allFields = [
+			// 	"name",
+			// 	"supplier",
+			// 	"title",
+			// 	"supplier_name",
+			// 	"company",
+			// 	"posting_date",
+			// 	"posting_time",
+			// 	"modified",
+			// 	"cost_center",
+			// 	"due_date",
+			// 	"is_paid",
+			// 	"total",
+			// 	"status",
+			// 	"grand_total",
+			// ];
 			return this.purchaseInvoiceRepository.getAllPurchaseInvoices({
 				params: {
 					cost_center,
