@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/hooks/reduxHooks";
+import { useAppSelector } from "@/hooks/appHooks";
 import { toSentenceCase } from "@/lib/utils";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Factory, Store } from "lucide-react";

@@ -17,8 +17,8 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import type { ReadProfileEntity } from "@/domain";
+import { useAppDispatch } from "@/hooks/appHooks";
 import { usePOSProfile } from "@/hooks/profile";
-import { useAppDispatch } from "@/hooks/reduxHooks";
 import { setCustomer } from "@/store/profile";
 
 type ProfileWithLogo = ReadProfileEntity & { logo: React.ElementType };
