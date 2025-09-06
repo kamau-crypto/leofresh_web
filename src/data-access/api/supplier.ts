@@ -3,7 +3,7 @@ import type { RetrieveSuppliersDTO } from "../dto";
 import type { AllSuppliersModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
-export class Supplier extends FrappeInstance {
+export class SupplierDataSource extends FrappeInstance {
 	private supplierInstance: AxiosInstance;
 	private docType: string;
 	constructor({ docType }: { docType: string }) {
@@ -17,7 +17,7 @@ export class Supplier extends FrappeInstance {
 		limit_page_length,
 		order_by,
 	}: RetrieveSuppliersDTO) {
-		const response: AxiosResponse<{ data: AllSuppliersModel }> =
+		const response: AxiosResponse<{ data: AllSuppliersModel[] }> =
 			await this.supplierInstance.get(this.docType, {
 				params: {
 					fields: JSON.stringify(fields),
