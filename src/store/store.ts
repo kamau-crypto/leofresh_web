@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { profileStorageMiddleware } from "./middleware/profileStorage";
 import profileReducer from "./profile";
-// Example slice (replace with actual slices)
-// import { workOrderSlice } from "../domain/entities/WorkOrder";
 
 export const store = configureStore({
 	reducer: {
 		profile: profileReducer,
+		// Add other reducers here
 	},
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware().concat(profileStorageMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
