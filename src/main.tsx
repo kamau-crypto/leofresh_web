@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
-import { store } from "./store";
+import { store } from "./store/store";
 
 const router = createRouter({
 	routeTree,
