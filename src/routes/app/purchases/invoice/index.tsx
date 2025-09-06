@@ -1,3 +1,4 @@
+import { PurchaseInvoice } from "@/components";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/purchases/invoice/")({
@@ -5,5 +6,10 @@ export const Route = createFileRoute("/app/purchases/invoice/")({
 });
 
 function RouteComponent() {
-	return <div>Hello "/app/suppliers/invoice/"!</div>;
+	return (
+		<PurchaseInvoice
+			description='Manage Purchase Invoices'
+			title='Purchase Invoices'
+		/>
+	);
 }
