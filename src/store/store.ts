@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-
+import profileReducer from "./profile";
 // Example slice (replace with actual slices)
 // import { workOrderSlice } from "../domain/entities/WorkOrder";
 
 export const store = configureStore({
 	reducer: {
-		// bom: bomSlice.reducer,
-		// workOrder: workOrderSlice.reducer,
+		profile: profileReducer,
 	},
 });
 
