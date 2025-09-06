@@ -1,3 +1,5 @@
+import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
+
 export interface CreatePurchaseInvoicesDTO {
 	supplier: string;
 	items: CreatePurchaseInvoiceItemDTO[];
@@ -18,7 +20,6 @@ export interface CreatePurchaseInvoiceItemDTO {
 export interface GetPurchaseInvoiceDTO {
 	purchase_invoice: string;
 }
-
 
 export interface CreatedPurchaseInvoiceDataDTO {
 	name: string;
@@ -199,3 +200,9 @@ export interface CreatedPurchaseInvoicePaymentScheduleDTO {
 	parenttype: string;
 	doctype: string;
 }
+
+export type PurchaseInvoiceDTO = PaginationDTO &
+	SortDTO & {
+		cost_center: string;
+		fields: string[];
+	};
