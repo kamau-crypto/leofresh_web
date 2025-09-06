@@ -2,7 +2,8 @@ import type { SVGProps } from "react";
 export const NotFoundError = (props: SVGProps<SVGSVGElement>) => (
 	<svg
 		xmlns='http://www.w3.org/2000/svg'
-		viewBox='0 0 400 400'
+		className='mx-auto h-[600px] w-full'
+		viewBox='0 0 500 500'
 		{...props}>
 		<g id='freepik--background-complete--inject-39'>
 			<rect
