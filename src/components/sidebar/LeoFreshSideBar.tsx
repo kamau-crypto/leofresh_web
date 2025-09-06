@@ -1,5 +1,7 @@
+import { useAppSelector } from "@/hooks/reduxHooks";
 import { toSentenceCase } from "@/lib/utils";
 import { useLocation, useNavigate } from "@tanstack/react-router";
+import { Factory, Store } from "lucide-react";
 import { useAuth } from "../context";
 import {
 	Breadcrumb,
@@ -16,6 +18,8 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 	const { api_token, user } = useAuth();
 	const location = useLocation();
 	const navigate = useNavigate();
+
+	const currentProfile = useAppSelector(state => state.profile);
 
 	const paths = location.pathname.split("/").filter(Boolean);
 	const leadingPath = paths.length > 0 ? paths.shift() : "Home";
@@ -66,6 +70,27 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 								</BreadcrumbItem> */}
 							</BreadcrumbList>
 						</Breadcrumb>
+						<div className='absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium flex flex-row items-center gap-2 border border-outline px-2 py-1 rounded-md'>
+							<div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
+								{!currentProfile.profile?.customer ? (
+									<Store className='size-4' />
+								) : (
+									<Factory className='size-4' />
+								)}
+							</div>
+							<div className='grid flex-1 text-left text-sm leading-tight'>
+								<span className='truncate font-medium'>
+									{!currentProfile.profile
+										? user.user.username
+										: currentProfile.profile.customer}
+								</span>
+								<span className='truncate text-xs'>
+									{!currentProfile.profile
+										? user.user.username
+										: currentProfile.profile.company}
+								</span>
+							</div>
+						</div>
 					</div>
 				</header>
 				<div className='flex-1 h-full w-full p-2 overflow-hidden'>
