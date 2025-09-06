@@ -24,3 +24,28 @@ export const LeoFreshBadge = ({
 		</Badge>
 	);
 };
+
+export const PIStatusBadge = ({ status }: { status: string }) => {
+	const statusVariantMap: Record<string, HBLBadgeVariants> = {
+		Draft: "default",
+		Approved: "success",
+		Rejected: "error",
+		Pending: "warning",
+		Completed: "info",
+		Return: "warning",
+		"Debit Note Issued": "info",
+		Submitted: "default",
+		Paid: "success",
+		"Partly Paid": "warning",
+		Unpaid: "error",
+		Overdue: "error",
+		Cancelled: "error",
+		"Internal Transfer": "info",
+	};
+
+	return (
+		<LeoFreshBadge variant={statusVariantMap[status] || "default"}>
+			{status}
+		</LeoFreshBadge>
+	);
+};
