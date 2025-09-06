@@ -22,7 +22,7 @@ export interface PurchaseInvoiceFilterEntityFilter extends CommonEntity {
 	cost_center: string;
 }
 
-type PurchaseInvoiceEntityStatus =
+export type PurchaseInvoiceEntityStatus =
 	| "Draft"
 	| "Return"
 	| "Debit Note Issued"
