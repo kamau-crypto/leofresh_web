@@ -1,3 +1,7 @@
 export * from "./customer/customer.entity";
 export * from "./item/item-price.entity";
+export * from "./profile/profile.entity";
+export * from "./purchase/purchase.invoice.entity";
+export * from "./purchase/purchase.order.entity";
+export * from "./supplier/supplier.entity";
 export * from "./user/user.entity";
