@@ -6,8 +6,8 @@ import {
 	DropdownMenuContent,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { type Table } from "@tanstack/react-table";
 import { Settings2 } from "lucide-react";
 import { LeoButton } from "../LeoButton";
@@ -30,7 +30,7 @@ export function DataTableViewOptions<TData>({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				align='end'
-				className='w-[150px]'>
+				className='px-4'>
 				<DropdownMenuLabel>Show Columns</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{table
