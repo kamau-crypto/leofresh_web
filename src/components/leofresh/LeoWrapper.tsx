@@ -12,7 +12,7 @@ export function LeoWrapper({
 	Content,
 }: LeoWrapperProps) {
 	return (
-		<div className='container mx-auto py-10 shadow-xl shadow-primary/10 rounded-xl p-3 overflow-y-hidden'>
+		<div className='container mx-auto py-10 shadow-xl shadow-primary/10 rounded-xl p-3 size-full overflow-y-hidden md:px-4'>
 			{(title || description) && (
 				<div className='mb-6 w-full flex flex-col'>
 					{title && (
