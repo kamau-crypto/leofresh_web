@@ -13,6 +13,7 @@ import {
 	type VisibilityState,
 } from "@tanstack/react-table";
 
+import { EmptyBox } from "@/components/illustrations/EmptyBox";
 import {
 	Table,
 	TableBody,
@@ -125,9 +126,9 @@ export function LeofreshDataTable<TData, TValue>({
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
-									className='h-24 text-center'>
-									{/* [ ] Use a better looking component at this stage */}
-									No results.
+									className='text-center '>
+									<EmptyBox />
+									No Results
 								</TableCell>
 							</TableRow>
 						)}
