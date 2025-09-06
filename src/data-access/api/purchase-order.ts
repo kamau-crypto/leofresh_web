@@ -9,32 +9,12 @@ import type {
 	SubmitPurchaseOrderDTO,
 	UpdatePurchaseOrderDTO,
 } from "../dto";
-import type { GetPurchaseOrderModel } from "../models";
+import type {
+	GetPurchaseOrderModel,
+	RetrievedPurchaseOrdersModel,
+} from "../models";
 import { FrappeInstance } from "./frappe";
-
-export interface RetrievedPurchaseOrders {
-	data: ReturnedPurchaseOrder[];
-}
-
-export interface ReturnedPurchaseOrder {
-	name: string;
-	company: string;
-	supplier: string;
-	transaction_date: string;
-	schedule_date: Date;
-	status: string;
-	project: null;
-	buying_price_list: string;
-	total: number;
-	grand_total: number;
-	advance_paid: number;
-	cost_center: null | string;
-	currency: string;
-	per_received: number;
-	creation: string;
-}
-
-export class PurchaseOrder
+export class PurchaseOrderDataSource
 	extends FrappeInstance
 	implements FrappeCreateRequirement
 {
@@ -64,7 +44,7 @@ export class PurchaseOrder
 		fields,
 		order_by,
 	}: RetrievePurchaseOrdersDTO) {
-		const response: AxiosResponse<RetrievedPurchaseOrders> =
+		const response: AxiosResponse<RetrievedPurchaseOrdersModel> =
 			await this.purchaseOrderInstance.get(this.docType, {
 				params: {
 					fields: JSON.stringify(fields),
