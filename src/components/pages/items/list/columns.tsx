@@ -67,13 +67,19 @@ export const itemColumns: ColumnDef<ListItemsEntity>[] = [
 	{
 		accessorKey: "buyingPrice",
 		header: "Standard Buying Price",
-		cell: ({ row }) => (
-			<div>
-				{formatToLocalCurrency(row.getValue("buyingPrice") ?? 0) +
-					" per " +
-					(row.original.buyingUom ?? "piece")}
-			</div>
-		),
+		cell: ({ row }) => {
+			return (
+				<div>
+					{formatToLocalCurrency(row.getValue("buyingPrice") ?? 0) +
+						" per " +
+						(row.original.buyingUom ??
+							(row.original.item_name.toLowerCase().includes("bulk") ||
+							row.original.item_name.toLowerCase().includes("purified water")
+								? "Litre"
+								: "piece"))}
+				</div>
+			);
+		},
 	},
 	{
 		accessorKey: "sellingPrice",
