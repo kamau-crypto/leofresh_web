@@ -2,7 +2,7 @@ import { LeofreshDataTable } from "@/components/leofresh";
 import type { PurchaseInvoiceFilterEntityFilter } from "@/domain";
 import { useAppSelector } from "@/hooks/appHooks";
 import { usePurchaseInvoiceList } from "@/hooks/purchase.invoice";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react"; // Import useEffect
 import { pInvoiceColums } from "./columns";
 
 export function PurchaseInvoiceList() {
@@ -15,6 +15,15 @@ export function PurchaseInvoiceList() {
 		limit_start: 0,
 		order_by: "creation desc",
 	});
+
+	useEffect(() => {
+		if (profile?.cost_center !== invFilter.cost_center) {
+			setInvoiceFilter(prevFilter => ({
+				...prevFilter,
+				cost_center: profile?.cost_center ?? "",
+			}));
+		}
+	}, [profile?.cost_center, invFilter.cost_center]);
 
 	const { data, isLoading } = usePurchaseInvoiceList({
 		params: invFilter,
