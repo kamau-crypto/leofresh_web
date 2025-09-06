@@ -46,7 +46,7 @@ export class PurchaseInvoice extends FrappeInstance {
 		const res: AxiosResponse<{ data: PurchaseInvoiceModel[] }> =
 			await this.purchaseInvoiceInstance.get(this.docType, {
 				params: {
-					fields: JSON.stringify([fields]),
+					fields: JSON.stringify(fields),
 					filters: JSON.stringify([["cost_center", "=", cost_center]]), // Only show the purchase invoices who are in a cost center
 					limit_page_length,
 					limit_start,
