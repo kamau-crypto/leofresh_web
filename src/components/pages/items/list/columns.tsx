@@ -71,7 +71,7 @@ export const itemColumns: ColumnDef<ListItemsEntity>[] = [
 			<div>
 				{formatToLocalCurrency(row.getValue("buyingPrice") ?? 0) +
 					" per " +
-					row.getValue("buyingUom")}
+					(row.original.buyingUom ?? "piece")}
 			</div>
 		),
 	},
@@ -82,7 +82,7 @@ export const itemColumns: ColumnDef<ListItemsEntity>[] = [
 			<div>
 				{formatToLocalCurrency(row.getValue("sellingPrice") ?? 0) +
 					" per " +
-					row.getValue("sellingUom")}
+					(row.original.sellingUom ?? "piece")}
 			</div>
 		),
 	},
