@@ -4,21 +4,25 @@ import { Button } from "../ui/button";
 type ButtonVariant = "default" | "outline" | "ghost" | "secondary";
 type ButtonSize = "default" | "sm" | "icon";
 
-export const LeoButton = ({
-	children,
-	variant = "default",
-	size = "default",
-	className = "",
-	onClick,
-	disabled,
-}: {
+interface LeoButtonProps extends React.ComponentProps<"button"> {
 	children: React.ReactNode;
 	variant?: ButtonVariant;
 	size?: ButtonSize;
 	className?: string;
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	disabled?: boolean;
-}) => {
+}
+
+export const LeoButton = (props: LeoButtonProps) => {
+	const {
+		children,
+		variant = "default",
+		size = "default",
+		className = "",
+		onClick,
+		disabled,
+		...rest
+	} = props;
 	const baseClasses =
 		"inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
@@ -40,7 +44,8 @@ export const LeoButton = ({
 		<Button
 			className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
 			onClick={onClick}
-			disabled={disabled}>
+			disabled={disabled}
+			{...rest}>
 			{children}
 		</Button>
 	);
