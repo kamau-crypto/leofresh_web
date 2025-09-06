@@ -146,7 +146,7 @@ const DataTableLoadingSkeleton = ({ columns }: { columns: number }) => {
 		<>
 			{Array.from({ length: 10 }).map((_, i) => (
 				<TableRow key={i}>
-					{Array.from({ length: columns }).map((_, j) => (
+					{Array.from({ length: columns - 2 }).map((_, j) => (
 						<TableCell key={`cell_${i}_${j}`}>
 							<Skeleton className='h-4 w-[150px]' />
 						</TableCell>
