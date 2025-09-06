@@ -1,11 +1,10 @@
 "use client";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
 	component: Index,
 	beforeLoad: async () => {
-		const navigate = useNavigate();
-		navigate({ to: "/auth/login" });
+		throw redirect({ to: "/auth/login" });
 	},
 });
 
