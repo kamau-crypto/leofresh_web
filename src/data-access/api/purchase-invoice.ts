@@ -3,9 +3,11 @@ import type {
 	CreatedPurchaseInvoiceDataDTO,
 	CreatePurchaseInvoicesDTO,
 	GetPurchaseInvoiceDTO,
+	PurchaseInvoiceDTO,
 } from "../dto";
 import type {
 	CreatedPurchaseInvoiceModel,
+	PurchaseInvoiceModel,
 	ReadCreatedPurchaseInvoiceModel,
 } from "../models";
 import { FrappeInstance } from "./frappe";
@@ -36,6 +38,21 @@ export class PurchaseInvoice extends FrappeInstance {
 		const res: AxiosResponse<{ message: ReadCreatedPurchaseInvoiceModel }> =
 			await this.frappeSubmit({ doc: purchaseInv });
 		return res.data.message;
+	}
+
+	//Get the purchase Invoices
+	async getPurchaseInvoices({ params }: { params: PurchaseInvoiceDTO }) {
+		const { cost_center, fields, limit_page_length, limit_start } = params;
+		const res: AxiosResponse<{ data: PurchaseInvoiceModel[] }> =
+			await this.purchaseInvoiceInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify([fields]),
+					filters: JSON.stringify([["cost_center", "=", cost_center]]), // Only show the purchase invoices who are in a cost center
+					limit_page_length,
+					limit_start,
+				},
+			});
+		return res.data.data;
 	}
 
 	//Create the purchase invoice from a purchase order. this only occurs when the purchase order is successfully submitted,
