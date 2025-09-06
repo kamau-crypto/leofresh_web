@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/hooks/appHooks";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/dashboard/")({
@@ -5,5 +6,15 @@ export const Route = createFileRoute("/app/dashboard/")({
 });
 
 function RouteComponent() {
-	return <div>Hello "/app/dashboard/"!</div>;
+	const currentProfile = useAppSelector(state => state.profile);
+	return (
+		<div>
+			<p>
+				{!currentProfile?.profile
+					? "Unknown User"
+					: currentProfile.profile.customer}
+			</p>
+			The dashboard of the application
+		</div>
+	);
 }
