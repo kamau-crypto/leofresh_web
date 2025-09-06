@@ -1,4 +1,20 @@
 //Models are the responses of what you receive from the server, easier for data
 export type * from "./banking.model";
+export type * from "./customer.model";
 export type * from "./expenses.model";
+export type * from "./item.price.model";
+export type * from "./je.model";
+export type * from "./material-req.model";
+export type * from "./meter-reading.model";
 export type * from "./payment.model";
+export type * from "./profile.model";
+export type * from "./purchase.invoice.model";
+export type * from "./purchase.order.model";
+export type * from "./purchase.receipt.model";
+export type * from "./sales.invoice.model";
+export type * from "./sales.order.model";
+export type * from "./stock.reconciliation.model";
+export type * from "./stock.transfer.model";
+export type * from "./supplier.model";
+export type * from "./tank.model";
+export type * from "./warehouse.model";

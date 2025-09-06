@@ -158,3 +158,26 @@ export interface PaymentScheduleModel {
 	parenttype: string;
 	doctype: string;
 }
+
+export interface RetrievedPurchaseOrdersModel {
+	data: ReturnedPurchaseOrderModel[];
+}
+
+export interface ReturnedPurchaseOrderModel {
+	name: string;
+	company: string;
+	supplier: string;
+	transaction_date: string;
+	schedule_date: Date;
+	status: string;
+	project: null;
+	buying_price_list: string;
+	total: number;
+	grand_total: number;
+	advance_paid: number;
+	cost_center: null | string;
+	currency: string;
+	per_received: number;
+	creation: string;
+}
+
