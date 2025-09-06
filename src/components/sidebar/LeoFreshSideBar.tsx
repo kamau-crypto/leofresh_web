@@ -73,9 +73,9 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 						<div className='absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium flex flex-row items-center gap-2 border border-outline px-2 py-1 rounded-md'>
 							<div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
 								{!currentProfile.profile?.customer ? (
-									<Store className='size-4' />
-								) : (
 									<Factory className='size-4' />
+								) : (
+									<Store className='size-4' />
 								)}
 							</div>
 							<div className='grid flex-1 text-left text-sm leading-tight'>
