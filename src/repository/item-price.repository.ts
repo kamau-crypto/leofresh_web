@@ -4,6 +4,7 @@ import type {
 	PurchaseItemEntity,
 	SalesItemEntity,
 } from "@/domain/entities";
+import { appConfig } from "@/lib/config";
 
 export interface IItemPriceRepository {
 	retrieveSellingItemPrices: () => Promise<SalesItemEntity[]>;
@@ -45,13 +46,14 @@ export class ItemPriceRepository implements IItemPriceRepository {
 		sellingItems: SalesItemEntity[];
 		buyingItems: PurchaseItemEntity[];
 	}): ListItemsEntity[] {
+
 		return sellingItems.map(item => {
 			return {
 				//
 				id: item.item_code,
 				item_name: item.item_name,
 				item_code: item.item_code,
-				image: item.image,
+				image: `${appConfig.PUBLIC_URL}${item.image}`,
 				sellingPrice: item.price_list_rate,
 				buyingPrice: buyingItems.find(
 					buyingItem => buyingItem.item_name === item.item_name
@@ -59,7 +61,7 @@ export class ItemPriceRepository implements IItemPriceRepository {
 				sellingUom: item.standard_selling_uom,
 				buyingUom: buyingItems.find(
 					buyingItem => buyingItem.item_name === item.item_name
-				)?.standard_buying_uom,
+				)!.standard_buying_uom,
 				item_group: item.item_group,
 				item_tax_template: item.item_tax_template,
 				tax_rate: item.tax_rate,
