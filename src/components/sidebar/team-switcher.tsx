@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/sidebar";
 import type { ReadProfileEntity } from "@/domain";
 import { usePOSProfile } from "@/hooks/profile";
+import { useAppDispatch } from "@/hooks/reduxHooks";
+import { setCustomer } from "@/store/profile";
 
 type ProfileWithLogo = ReadProfileEntity & { logo: React.ElementType };
 
@@ -30,6 +32,7 @@ export function TeamSwitcher({
 		plan: string;
 	}[];
 }) {
+	const dispatch = useAppDispatch();
 	const { isMobile } = useSidebar();
 	const [activeTeam, setActiveTeam] = useState<ProfileWithLogo>(
 		() =>
@@ -65,6 +68,7 @@ export function TeamSwitcher({
 		}));
 
 		setActiveTeam(prev => all[0] ?? prev);
+		dispatch(setCustomer(all[0] ?? null));
 		console.log(activeTeam);
 		return all;
 	}, [data]);
