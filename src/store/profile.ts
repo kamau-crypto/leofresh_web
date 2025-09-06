@@ -19,9 +19,12 @@ const profileSlice = createSlice({
 		clearProfile: state => {
 			state.profile = null;
 		},
+		loadProfileFromStorage: (state, action) => {
+			state.profile = action.payload;
+		},
 	},
 });
 
-export const { setCustomer } = profileSlice.actions;
+export const { setCustomer, loadProfileFromStorage } = profileSlice.actions;
 
 export default profileSlice.reducer;
