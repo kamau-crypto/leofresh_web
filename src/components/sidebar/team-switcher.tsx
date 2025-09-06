@@ -111,7 +111,10 @@ export function TeamSwitcher({
 						{profiles.map((profile, index) => (
 							<DropdownMenuItem
 								key={profile.customer}
-								onClick={() => setActiveTeam(profile)}
+								onClick={() => {
+									setActiveTeam(profile);
+									dispatch(setCustomer(profile));
+								}}
 								className='gap-2 p-2'>
 								<div className='flex size-6 items-center justify-center rounded-md border'>
 									<profile.logo className='size-3.5 shrink-0 text-primary' />
