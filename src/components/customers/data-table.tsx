@@ -22,6 +22,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
+import { EmptyBox } from "../illustrations/EmptyBox";
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
 import { DataTableViewOptions } from "./columnvisibility";
@@ -81,9 +82,10 @@ export function DataTable<TData, TValue>({
 				/>
 				<DataTableViewOptions table={table} />
 			</div>
-			<div className='rounded-md border'>
-				<Table className='relative'>
-					<TableHeader className='bg-primary/20'>
+
+			<div className='max-h-[800px] overflow-auto rounded-md border'>
+				<Table className='min-w-full'>
+					<TableHeader className='bg-primary/20 sticky top-0 z-10'>
 						{table.getHeaderGroups().map(headerGroup => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map(header => {
@@ -126,14 +128,14 @@ export function DataTable<TData, TValue>({
 								<TableCell
 									colSpan={columns.length}
 									className='h-24 text-center'>
-									No results.
+									<EmptyBox />
 								</TableCell>
 							</TableRow>
 						)}
 					</TableBody>
 				</Table>
 			</div>
-			<div className='text-muted-foreground flex-1 text-sm'>
+			<div className='text-muted-foreground flex-1 text-sm mt-4'>
 				<DataTablePagination table={table} />
 			</div>
 		</div>
