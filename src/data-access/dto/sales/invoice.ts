@@ -58,5 +58,5 @@ export type CancelSalesInvoice = RetrieveSalesInvoice;
 
 export interface RetreiveSalesInvoices extends PaginationDTO, SortDTO {
 	fields: string[];
-	project: string;
+	cost_center: string;
 }

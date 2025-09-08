@@ -1,3 +1,4 @@
+import { SalesInvoice } from "@/components";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute('/app/sales/invoice')({
@@ -5,5 +6,5 @@ export const Route = createFileRoute('/app/sales/invoice')({
 });
 
 function RouteComponent() {
-	return <div>Hello "/app/sales/invoice"!</div>;
+	return <SalesInvoice />
 }
