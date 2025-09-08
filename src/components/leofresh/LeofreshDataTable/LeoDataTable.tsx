@@ -82,7 +82,7 @@ export function LeofreshDataTable<TData, TValue>({
 				/>
 				<DataTableViewOptions table={table} />
 			</div>
-			<div className='max-h-[800px] overflow-auto rounded-md border'>
+			<div className='max-h-[750px] overflow-auto rounded-md border'>
 				<Table className='min-w-full'>
 					<TableHeader className='bg-primary/20 sticky top-0 z-10'>
 						{table.getHeaderGroups().map(headerGroup => (
