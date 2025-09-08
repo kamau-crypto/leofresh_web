@@ -45,7 +45,7 @@ export class PurchaseReceiptDataSource
 					fields: JSON.stringify(fields),
 					limit_page_length,
 					limit_start,
-					filter: JSON.stringify([["cost_center", "=", cost_center]]),
+					filters: JSON.stringify([["cost_center", "=", cost_center]]),
 					order_by,
 				},
 			});
