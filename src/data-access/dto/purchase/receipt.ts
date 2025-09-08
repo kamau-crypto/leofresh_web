@@ -1,3 +1,5 @@
+import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
+
 export interface CreatePurchaseReceiptDTO {
 	supplier: string;
 	items: PurchaseReceiptItemsDTO[];
@@ -17,4 +19,9 @@ export interface PurchaseReceiptItemsDTO {
 	against_purchase_order: string;
 	purchase_order: string;
 	warehouse: string;
+}
+
+export interface ReadPurchaseReceiptsDTO extends PaginationDTO, SortDTO {
+	fields: string[];
+	cost_center: string;
 }
