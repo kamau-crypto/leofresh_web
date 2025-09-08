@@ -1,13 +1,13 @@
 import { PurchaseOrderDataSource } from "@/data-access/api/purchase-order";
 import type { RetrievePurchaseOrdersDTO } from "@/data-access/dto";
-import type { PurchaseOrderEntity } from "@/domain";
+import type { PurchaseOrderListEntity } from "@/domain";
 
 export interface IPurchaseOrderRepository {
 	getAllPurchaseOrders: ({
 		params,
 	}: {
 		params: RetrievePurchaseOrdersDTO;
-	}) => Promise<PurchaseOrderEntity[]>;
+	}) => Promise<PurchaseOrderListEntity[]>;
 }
 
 export class PurchaseOrderRepository implements IPurchaseOrderRepository {
@@ -17,7 +17,7 @@ export class PurchaseOrderRepository implements IPurchaseOrderRepository {
 		params,
 	}: {
 		params: RetrievePurchaseOrdersDTO;
-	}): Promise<PurchaseOrderEntity[]> {
+	}): Promise<PurchaseOrderListEntity[]> {
 		const { limit_page_length, fields, cost_center, order_by, limit_start } =
 			params;
 		const purchaseOrders = new PurchaseOrderDataSource({

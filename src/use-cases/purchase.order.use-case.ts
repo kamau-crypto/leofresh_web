@@ -31,7 +31,7 @@ export class PurchaseOrderUseCase {
 				"cost_center",
 				"currency",
 				"items",
-				"creation",
+				"modified",
 			];
 			return await this.purchaseOrderRepository.getAllPurchaseOrders({
 				params: { ...params, fields },

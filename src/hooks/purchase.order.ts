@@ -2,7 +2,7 @@ import { useAuth } from "@/components";
 import type { PurchaseOrderFilterEntity } from "@/domain";
 import { LeofreshError } from "@/lib/error";
 import { PurchaseOrderRepository } from "@/repository/purchase.order.repository";
-import { PurchaseOrderUseCase } from "@/use-cases/purchase.order.use-cse";
+import { PurchaseOrderUseCase } from "@/use-cases/purchase.order.use-case";
 import { useQuery } from "@tanstack/react-query";
 
 export function useListPurchaseOrders({

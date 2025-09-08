@@ -178,6 +178,5 @@ export interface ReturnedPurchaseOrderModel {
 	cost_center: null | string;
 	currency: string;
 	per_received: number;
-	creation: string;
+	modified: string;
 }
-
