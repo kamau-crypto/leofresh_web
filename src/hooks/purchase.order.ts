@@ -12,7 +12,7 @@ export function useListPurchaseOrders({
 }) {
 	const { user } = useAuth();
 	const { data, error, isLoading } = useQuery({
-		queryKey: ["purchaseOrders", user?.user?.email],
+		queryKey: ["purchaseOrders", user?.user?.email, params],
 		queryFn: async () => {
 			const poRepository = new PurchaseOrderRepository();
 			const purchaseOrderUseCase = new PurchaseOrderUseCase({
