@@ -1,6 +1,6 @@
 import type { CommonEntity } from "../common/common.entities";
 
-export interface PurchaseOrderEntity {
+export interface PurchaseOrderListEntity {
 	name: string;
 	company: string;
 	supplier: string;
