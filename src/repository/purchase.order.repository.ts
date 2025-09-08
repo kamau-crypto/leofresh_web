@@ -23,12 +23,25 @@ export class PurchaseOrderRepository implements IPurchaseOrderRepository {
 		const purchaseOrders = new PurchaseOrderDataSource({
 			docType: "Purchase Order",
 		});
-		return await purchaseOrders.retrievePurchaseOrders({
+		const orders = await purchaseOrders.retrievePurchaseOrders({
 			limit_page_length,
 			fields,
 			cost_center,
 			order_by,
 			limit_start,
 		});
+
+		return this.mapPurchaseOrdertoDomain({ orders });
+	}
+
+	mapPurchaseOrdertoDomain({
+		orders,
+	}: {
+		orders: PurchaseOrderListEntity[];
+	}): PurchaseOrderListEntity[] {
+		return orders.map(order => ({
+			id: order.name,
+			...order,
+		}));
 	}
 }

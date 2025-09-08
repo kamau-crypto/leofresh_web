@@ -34,6 +34,21 @@ export class PurchaseReceiptRepository implements IPurchaseReceiptRepository {
 		const dataSource = new PurchaseReceiptDataSource({
 			docType: "Purchase Receipt",
 		});
-		return await dataSource.retrievePurchaseReceipts({ ...filter, fields });
+		const receipts = await dataSource.retrievePurchaseReceipts({
+			...filter,
+			fields,
+		});
+		return this.mapPurchaseReceiptToDomain({ orders: receipts });
+	}
+
+	mapPurchaseReceiptToDomain({
+		orders,
+	}: {
+		orders: PurchaseReceiptsListEntity[];
+	}): PurchaseReceiptsListEntity[] {
+		return orders.map(order => ({
+			id: order.name,
+			...order,
+		}));
 	}
 }
