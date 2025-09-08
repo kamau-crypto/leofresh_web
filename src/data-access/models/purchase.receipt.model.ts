@@ -356,3 +356,15 @@ export interface SubmittedPurchaseReceiptItemModel {
 	parenttype: string;
 	doctype: string;
 }
+
+export interface PurchaseReceiptsModel {
+	name: string;
+	modified: string;
+	creation: string;
+	owner: string;
+	docstatus: number;
+	cost_center: string;
+	supplier: string;
+	grand_total: number;
+	status: string;
+}
