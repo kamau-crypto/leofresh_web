@@ -3,5 +3,7 @@ export * from "./item/item-price.entity";
 export * from "./profile/profile.entity";
 export * from "./purchase/purchase.invoice.entity";
 export * from "./purchase/purchase.order.entity";
+export * from "./sales/invoice/sales.invoice.entity";
+export * from "./sales/order/sales.order.entity";
 export * from "./supplier/supplier.entity";
 export * from "./user/user.entity";
