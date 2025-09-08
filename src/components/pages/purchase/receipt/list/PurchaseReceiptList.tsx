@@ -11,7 +11,7 @@ export function PurchaseReceiptList() {
 	const [receiptFilter, setReceiptFilter] = React.useState<
 		Omit<PurchaseReceiptsFilterEntity, "fields">
 	>(() => ({
-		cost_center: profile ? profile.cost_center : "Main",
+		cost_center: profile ? profile.cost_center : "unknown",
 		limit_page_length: 100,
 		limit_start: 0,
 		order_by: "creation desc",
@@ -21,7 +21,7 @@ export function PurchaseReceiptList() {
 		if (profile?.cost_center !== receiptFilter.cost_center) {
 			setReceiptFilter(prevFilter => ({
 				...prevFilter,
-				cost_center: profile?.cost_center ?? "",
+				cost_center: profile?.cost_center ?? "unknown",
 			}));
 		}
 	}, [profile?.cost_center, receiptFilter.cost_center]);
