@@ -1,13 +1,14 @@
 import type { AxiosInstance, AxiosResponse } from "axios";
 import type { FrappeCreateRequirement } from "../common/frappe.create";
-import type { CreatePurchaseReceiptDTO } from "../dto";
+import type { CreatePurchaseReceiptDTO, ReadPurchaseReceiptsDTO } from "../dto";
 import type {
 	CreatedPurchaseReceiptModel,
+	PurchaseReceiptsModel,
 	SubmittedPurchaseReceiptMessageModel,
 } from "../models";
 import { FrappeInstance } from "./frappe";
 
-export class PurchaseReceipt
+export class PurchaseReceiptDataSource
 	extends FrappeInstance
 	implements FrappeCreateRequirement
 {
@@ -29,6 +30,26 @@ export class PurchaseReceipt
 			},
 		});
 		return { naming_series: naming_series.data.data[0].naming_series };
+	}
+
+	async retrievePurchaseReceipts({
+		fields,
+		limit_page_length,
+		limit_start,
+		cost_center,
+		order_by,
+	}: ReadPurchaseReceiptsDTO): Promise<PurchaseReceiptsModel[]> {
+		const res: AxiosResponse<{ data: PurchaseReceiptsModel[] }> =
+			await this.receiptInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify(fields),
+					limit_page_length,
+					limit_start,
+					filter: JSON.stringify([["cost_center", "=", cost_center]]),
+					order_by,
+				},
+			});
+		return res.data.data;
 	}
 
 	async createPurchaseReceipt({ data }: { data: CreatePurchaseReceiptDTO }) {
