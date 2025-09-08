@@ -43,12 +43,18 @@ export class SalesOrder
 	async retrieveSalesOrders({
 		limit_page_length,
 		fields,
+		cost_center,
+		limit_start,
+		order_by,
 	}: RetrieveSalesOrderDTO) {
 		const orders: AxiosResponse<{ data: RetrieveSalesOrdersModel[] }> =
 			await this.salesOrderInstance.get(this.docType, {
 				params: {
 					fields: JSON.stringify(fields),
+					filters: JSON.stringify([["cost_center", "=", cost_center]]),
 					limit_page_length,
+					limit_start,
+					order_by,
 				},
 			});
 		return orders.data.data;
