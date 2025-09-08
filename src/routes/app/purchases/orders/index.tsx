@@ -1,5 +1,5 @@
 "use client";
-import { CustomersSearchableDataTable } from "@/components/customers/page";
+import { PurchaseOrder } from "@/components";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/purchases/orders/")({
@@ -8,11 +8,9 @@ export const Route = createFileRoute("/app/purchases/orders/")({
 
 function RouteComponent() {
 	return (
-		<div className='flex flex-col'>
-			<CustomersSearchableDataTable
-				title='Supplier Orders'
-				description='Orders Sent to the Supplier'
-			/>
-		</div>
-	)
+		<PurchaseOrder
+			title='Orders'
+			description='Manage Orders made to suppliers'
+		/>
+	);
 }
