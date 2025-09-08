@@ -78,7 +78,7 @@ export function LeofreshDataTable<TData, TValue>({
 					onChange={event =>
 						table.getColumn(primaryFilter)?.setFilterValue(event.target.value)
 					}
-					className='max-w-sm'
+					className='max-w-md'
 				/>
 				<DataTableViewOptions table={table} />
 			</div>
