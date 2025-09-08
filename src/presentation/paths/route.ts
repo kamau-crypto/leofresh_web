@@ -109,7 +109,7 @@ export const leofreshRoutes: Route[] = [
 			},
 			{
 				title: "Receive",
-				url: "/app/purchases/receive",
+				url: "/app/purchases/receipt",
 				icon: Truck,
 			},
 			{
