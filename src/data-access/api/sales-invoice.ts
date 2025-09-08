@@ -9,7 +9,7 @@ import type {
 import type { PurchaseInvoiceResultModel, ResultInvoiceModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
-export class SalesInvoice extends FrappeInstance {
+export class SalesInvoiceDataSource extends FrappeInstance {
 	private salesInvoiceInstance: AxiosInstance;
 	private salesDocType: string;
 	constructor({ docType }: { docType: string }) {
@@ -65,7 +65,7 @@ export class SalesInvoice extends FrappeInstance {
 	//order the purchase invoices in descending order per project
 	async retrieveSalesInvoices({
 		limit_page_length,
-		project,
+		cost_center,
 		fields,
 	}: RetreiveSalesInvoices) {
 		const orders: AxiosResponse<{ data: ResultInvoiceModel[] }> =
@@ -73,7 +73,7 @@ export class SalesInvoice extends FrappeInstance {
 				params: {
 					fields: JSON.stringify(fields),
 					limit_page_length,
-					filters: JSON.stringify([["project", "=", project]]),
+					filters: JSON.stringify([["cost_center", "=", cost_center]]),
 					order_by: "name desc",
 				},
 			});
