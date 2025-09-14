@@ -3,13 +3,24 @@ export interface Login {
 	username: string;
 	password: string;
 }
-export interface LoginResponse {
-	message: UserLogged;
+export interface LoginResponseEntity {
+	message: LoggedInUserResponseEntity;
 	home_page: string;
 	full_name: string;
 }
 
-export interface UserLogged {
+export interface RefreshTokenResponse {
+	success_key: number;
+	api_key: string;
+	api_secret: string;
+	username: string;
+	email: string;
+	roles: Record<string, string>;
+	role_profiles: RoleProfile[];
+	enabled: number;
+	message?: string;
+}
+export interface LoggedInUserResponseEntity {
 	success_key: number;
 	message: string;
 	sid: string;
@@ -20,6 +31,25 @@ export interface UserLogged {
 	enabled: number;
 	role_profiles: RoleProfile[];
 	roles: UserRoles[];
+}
+
+export interface LoggedInUserEntity {
+	success: number;
+	message: string;
+	user: Pick<
+		LoggedInUserResponseEntity,
+		"username" | "email" | "roles" | "role_profiles"
+	> & {
+		full_name: string;
+	};
+}
+
+export interface RefreshUserTokenEntity
+	extends Pick<LoggedInUserEntity, "message" | "success"> {
+	user: Pick<
+		LoggedInUserResponseEntity,
+		"username" | "email" | "roles" | "role_profiles"
+	>;
 }
 
 export interface RoleProfile {
