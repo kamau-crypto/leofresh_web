@@ -24,9 +24,6 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 	const paths = location.pathname.split("/").filter(Boolean);
 	const leadingPath = paths.length > 0 ? paths.shift() : "Home";
 
-	//
-	//[ ] Add the various profiles within the app at this stage
-
 	if (!api_token || !user) {
 		navigate({ to: "/auth/login" });
 		return;
@@ -81,12 +78,12 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 							<div className='grid flex-1 text-left text-sm leading-tight'>
 								<span className='truncate font-medium'>
 									{!currentProfile.profile
-										? user.user.username
+										? user?.user.username
 										: currentProfile.profile.customer}
 								</span>
 								<span className='truncate text-xs'>
 									{!currentProfile.profile
-										? user.user.username
+										? user?.user.username
 										: currentProfile.profile.company}
 								</span>
 							</div>
