@@ -1,10 +1,9 @@
 import * as React from "react";
 
-import type { Login } from "@/domain";
+import type { LoggedInUserEntity, Login } from "@/domain";
 import { sleep } from "@/lib/utils";
-import type { LoggedInUser } from "@/use-cases/loginUseCase";
-import { useLoginUseCase } from "@/use-cases/loginUseCase";
 
+import { useLoginMutation } from "@/hooks/auth";
 import { useCallback } from "react";
 
 export interface AuthContext {
@@ -12,7 +11,7 @@ export interface AuthContext {
 	login: ({ username, password }: Login) => Promise<{ email: string }>;
 	api_token: string | null;
 	logout: () => Promise<void>;
-	user: Pick<LoggedInUser, "user"> | null;
+	user: Pick<LoggedInUserEntity, "user"> | null;
 }
 
 const AuthContext = React.createContext<AuthContext | null>(null);
@@ -37,13 +36,13 @@ function removeStoredToken(key: string) {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [api_token, setToken] = React.useState<string | null>(null);
-	const [user, setUser] = React.useState<Pick<LoggedInUser, "user"> | null>(
-		null
-	);
+	const [user, setUser] = React.useState<Pick<
+		LoggedInUserEntity,
+		"user"
+	> | null>(null);
 	const [isAuthenticated, setisAuthenticated] = React.useState<boolean>(false);
 
-	const { loginUser } = useLoginUseCase();
-
+	const { loginUser } = useLoginMutation();
 	const logout = React.useCallback(async () => {
 		await sleep(250);
 
@@ -68,13 +67,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setisAuthenticated(prev => !prev);
 		}
 		setToken(message);
-		setUser({ user: { email, role_profiles, roles, username: name } });
+		setUser({
+			user: { email, role_profiles, roles, username: name, full_name: name },
+		});
 		return { email };
 	}, []);
-
-	// React.useEffect(() => {
-	// 	setToken(getStoredToken());
-	// }, []);
 
 	return (
 		<AuthContext.Provider
