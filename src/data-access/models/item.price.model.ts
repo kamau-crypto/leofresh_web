@@ -40,11 +40,7 @@ export interface PurchaseItemsModel {
 	price_list: string | null;
 }
 
-export interface PurchaseItemModel
-	extends Omit<
-		PurchaseItemsModel,
-		"stock_uom" | "uom" | "conversion_factor" | ""
-	> {
+export interface PurchaseItemModel extends PurchaseItemsModel {
 	standard_selling_uom: string | null;
 	qty: number;
 	item_tax_template: string | null;

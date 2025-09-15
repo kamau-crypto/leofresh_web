@@ -3,8 +3,10 @@
 
 import { useAuth } from "@/components";
 import { LeofreshError } from "@/lib/error";
+import { ItemRepository } from "@/repository";
 import { ItemPriceRepository } from "@/repository/item-price.repository";
 import { ItemPriceUseCase } from "@/use-cases/item-price.use-case";
+import { ItemUseCase } from "@/use-cases/item.use-case";
 import { useQuery } from "@tanstack/react-query";
 
 //
@@ -66,4 +68,51 @@ export function useSellingPriceProducts() {
 	}
 
 	return { isLoading, data };
+}
+
+export function useListItems() {
+	const { user } = useAuth();
+
+	const { error, isLoading, data } = useQuery({
+		queryKey: ["Items", user?.user.email],
+		queryFn: async () => {
+			const itemRepo = new ItemRepository();
+			const itemUseCase = new ItemUseCase({ itemRepository: itemRepo });
+
+			return itemUseCase.getItemsList();
+		},
+		enabled: !!user?.user.email,
+	});
+
+	if (error instanceof Error) {
+		throw new LeofreshError({ message: error.message });
+	}
+
+	return { data, isLoading };
+}
+
+export function useListManufacturingMaterials({
+	limit_page_length,
+}: {
+	limit_page_length?: number;
+}) {
+	const { user } = useAuth();
+	const { error, isLoading, data } = useQuery({
+		queryKey: ["ManufacturingMaterials", user?.user.email],
+		queryFn: async () => {
+			const itemRepo = new ItemRepository();
+			const itemUseCase = new ItemUseCase({ itemRepository: itemRepo });
+
+			return itemUseCase.compileItemListData({
+				limit_page_length: limit_page_length ?? 100,
+			});
+		},
+		enabled: !!user?.user.email,
+	});
+
+	if (error instanceof Error) {
+		throw new LeofreshError({ message: error.message });
+	}
+
+	return { data, isLoading };
 }

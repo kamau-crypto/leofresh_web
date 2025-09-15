@@ -32,6 +32,10 @@ export class ItemsForSaleDataSource extends FrappeInstance {
 			});
 		return naming_series.data.data;
 	}
+
+	async getAllItems(): Promise<AxiosResponse<{ data: { name: string }[] }>> {
+		return await this.purchaseItemInstance("Item");
+	}
 }
 
 export const ItemGroup = {
