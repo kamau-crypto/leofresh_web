@@ -28,7 +28,7 @@ export function LeoFreshDialogForm({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{DialogTriggerChild}</DialogTrigger>
-			<DialogContent className='md:max-w-4xl overflow-y-scroll max-h-[80vh] absolute'>
+			<DialogContent className='md:max-w-4xl overflow-y-scroll max-h-[90vh] absolute'>
 				<DialogHeader className='sticky'>
 					<DialogTitle>{title}</DialogTitle>
 					<DialogDescription>{description}</DialogDescription>
