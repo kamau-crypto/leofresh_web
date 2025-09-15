@@ -1,3 +1,4 @@
+export * from "./bom/BOM";
 export * from "./customer/Customer";
 export * from "./items/Items";
 export * from "./purchase/invoice/PurchaseInvoice";
@@ -5,4 +6,5 @@ export * from "./purchase/order/PurchaseOrder";
 export * from "./purchase/receipt/PurchaseReceipt";
 export * from "./sales/invoice/SalesInvoice";
 export * from "./sales/order/SalesOrder";
+export * from "./sales/pos/POS";
 export * from "./supplier/Suppliers";
