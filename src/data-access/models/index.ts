@@ -1,5 +1,6 @@
 //Models are the responses of what you receive from the server, easier for data
 export type * from "./banking.model";
+export type * from "./bom.model";
 export type * from "./customer.model";
 export type * from "./expenses.model";
 export type * from "./item.price.model";
