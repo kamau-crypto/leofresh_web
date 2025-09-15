@@ -15,8 +15,6 @@ export class ProductionItemRepository implements IProductionItemRepository {
 
 	async listAllProductionItems(): Promise<ListProductionItemEntity[]> {
 		const itemFields = [
-			"id",
-			"item",
 			"created_item",
 			"production_materials.item_name",
 			"production_materials.qty",

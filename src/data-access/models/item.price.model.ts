@@ -40,6 +40,23 @@ export interface PurchaseItemsModel {
 	price_list: string | null;
 }
 
+interface CommonItemModel {
+	item_name: string;
+	item_code: string;
+	item_group: string;
+	stock_uom: string;
+	uoms: string;
+	image: string;
+}
+
+export interface ItemsListModel extends CommonItemModel {
+	conversion_factor: number;
+	uom: string;
+	purchase_uom: string;
+}
+
+export interface ManufacturingItemsListModel extends ItemsListModel {}
+
 export interface PurchaseItemModel extends PurchaseItemsModel {
 	standard_selling_uom: string | null;
 	qty: number;
