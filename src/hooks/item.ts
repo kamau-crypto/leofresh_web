@@ -3,10 +3,11 @@
 
 import { useAuth } from "@/components";
 import { LeofreshError } from "@/lib/error";
-import { ItemRepository } from "@/repository";
+import { ItemRepository, ProductionItemRepository } from "@/repository";
 import { ItemPriceRepository } from "@/repository/item-price.repository";
 import { ItemPriceUseCase } from "@/use-cases/item-price.use-case";
 import { ItemUseCase } from "@/use-cases/item.use-case";
+import { ProductionItemUseCase } from "@/use-cases/production.item.use-case";
 import { useQuery } from "@tanstack/react-query";
 
 //
@@ -79,7 +80,10 @@ export function useListItems() {
 			const itemRepo = new ItemRepository();
 			const itemUseCase = new ItemUseCase({ itemRepository: itemRepo });
 
-			return itemUseCase.getItemsList();
+			return itemUseCase.getItemsList({
+				limit_page_length: 200,
+				limit_start: 0,
+			});
 		},
 		enabled: !!user?.user.email,
 	});
@@ -98,7 +102,7 @@ export function useListManufacturingMaterials({
 }) {
 	const { user } = useAuth();
 	const { error, isLoading, data } = useQuery({
-		queryKey: ["ManufacturingMaterials", user?.user.email],
+		queryKey: ["ManufacturingMaterials", user?.user.email, limit_page_length],
 		queryFn: async () => {
 			const itemRepo = new ItemRepository();
 			const itemUseCase = new ItemUseCase({ itemRepository: itemRepo });
@@ -106,6 +110,34 @@ export function useListManufacturingMaterials({
 			return itemUseCase.compileItemListData({
 				limit_page_length: limit_page_length ?? 100,
 			});
+		},
+		enabled: !!user?.user.email,
+	});
+
+	if (error instanceof Error) {
+		throw new LeofreshError({ message: error.message });
+	}
+
+	return { data, isLoading };
+}
+
+export function useListManufactureMaterials() {
+	const { user } = useAuth();
+
+	const { error, isLoading, data } = useQuery({
+		queryKey: ["ManufactureMaterials", user?.user.email],
+		queryFn: async () => {
+			const itemRepo = new ItemRepository();
+			const productionRepo = new ProductionItemRepository();
+
+			const productionUseCase = new ProductionItemUseCase({
+				itemRepo,
+				productionRepo,
+			});
+
+			const { materials } =
+				await productionUseCase.combineMaterialsForProduction();
+			return materials;
 		},
 		enabled: !!user?.user.email,
 	});
