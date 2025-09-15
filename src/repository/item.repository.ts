@@ -41,22 +41,18 @@ export class ItemRepository implements IItemRepository {
 			"item_name",
 			"item_code",
 			"item_group",
-			"standard_buying_uom",
 			"stock_uom",
-			"uom",
-			"conversion_factor",
+			"uoms",
+			"uoms.conversion_factor",
+			"uoms.uom",
 			"image",
-			"price_list_rate",
-			"price_list",
-			"qty",
-			"item_tax_template",
+			"purchase_uom",
 		];
 		return await this.ItemDataSource.getFinishedProductsToSellOrBuy({
 			fields: {
 				fields,
 				limit_page_length,
 				limit_start: 0,
-				order_by: "modified asc",
 			},
 		});
 	}
