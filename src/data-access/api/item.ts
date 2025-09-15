@@ -12,12 +12,19 @@ export class ItemsForSaleDataSource extends FrappeInstance {
 		this.purchaseItemInstance = this.getFrappeClient();
 	}
 
-	async getFinishedProductsToSellOrBuy({ fields }: { fields: GetItemsDTO }) {
+	async getFinishedProductsToSellOrBuy({
+		fields,
+	}: {
+		fields: Omit<GetItemsDTO, "order_by">;
+	}) {
+		const { fields: fi, limit_page_length, limit_start } = fields;
 		const items: AxiosResponse<{ data: PurchaseItemModel[] }> =
 			await this.purchaseItemInstance(this.docType, {
 				params: {
-					fields: JSON.stringify(fields),
+					fields: JSON.stringify(fi),
 					filters: JSON.stringify([["item_group", "=", "Products"]]),
+					limit_page_length,
+					limit_start,
 				},
 			});
 		return items.data.data;
