@@ -23,18 +23,20 @@ export function LeoFreshCard({
 	content,
 	className,
 }: LeoFreshCardProps) {
-	<Card
-		className={cn(
-			"shadow-lg shadown-primary/10 rounded-md lg:rounded-lg",
-			className
-		)}>
-		<CardHeader>
-			<CardTitle>{title}</CardTitle>
-			<CardDescription>{description}</CardDescription>
-		</CardHeader>
-		<CardContent>{content}</CardContent>
-		<CardFooter>
-			<p>{footer}</p>
-		</CardFooter>
-	</Card>;
+	return (
+		<Card
+			className={cn(
+				"shadow-lg shadown-primary/10 rounded-md lg:rounded-lg",
+				className
+			)}>
+			<CardHeader>
+				<CardTitle>{title}</CardTitle>
+				<CardDescription>{description}</CardDescription>
+			</CardHeader>
+			<CardContent>{content}</CardContent>
+			<CardFooter>
+				<p>{footer}</p>
+			</CardFooter>
+		</Card>
+	);
 }
