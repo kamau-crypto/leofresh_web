@@ -53,7 +53,7 @@ export function LeoFreshTable<TSchema extends z.ZodType<any, any>>({
 	name,
 	columns,
 	addButtonText = "Add Item",
-	defaultValues = {},
+	defaultValues = [],
 	maxRows,
 	minRows = 0,
 	disabled = false,
