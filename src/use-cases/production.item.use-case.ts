@@ -37,6 +37,10 @@ export class ProductionItemUseCase {
 	}> {
 		try {
 			const productionItems = await this.listAllProductionItems();
+			const allItems = await this.itemRepository.getAllItems({
+				limit_page_length: 500,
+				limit_start: 0,
+			});
 			const salesItems = await this.itemRepository.listAllSalesItems({
 				limit_page_length: 100,
 			});
@@ -46,9 +50,22 @@ export class ProductionItemUseCase {
 					prodItem => prodItem.created_item === salesItem.item_code
 				);
 				if (matchedItems.length > 0) {
+					//Add the valuation rate for each item
+					const matchWitRates = matchedItems.map(matched => {
+						const matchedItemDetails = allItems.find(
+							item => matched.item_name === item.item_code
+						);
+						return {
+							...matched,
+							rate: matchedItemDetails
+								? +matchedItemDetails!.valuation_rate || 0
+								: 0,
+						};
+					});
+
 					return {
 						...salesItem,
-						production_items: matchedItems,
+						production_items: matchWitRates,
 					};
 				}
 				return {
