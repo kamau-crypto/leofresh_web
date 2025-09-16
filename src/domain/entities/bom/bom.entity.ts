@@ -25,8 +25,8 @@ export interface CreateBOMEntity {
 	default_source_warehouse?: string;
 	uom: string;
 	items: CreateBOMItemEntity[];
-	process_loss_percentage: number;
-	process_loss_qty: number;
+	process_loss_percentage?: number;
+	process_loss_qty?: number;
 }
 
 export interface CreateBOMItemEntity {
