@@ -41,9 +41,9 @@ export class ProductionItemUseCase {
 				limit_page_length: 100,
 			});
 
-			const materials = salesItems.map(salesItem => {
+			const allMaterials = salesItems.map(salesItem => {
 				const matchedItems = productionItems.filter(
-					prodItem => prodItem.item === salesItem.item_name
+					prodItem => prodItem.created_item === salesItem.item_code
 				);
 				if (matchedItems.length > 0) {
 					return {
@@ -56,6 +56,7 @@ export class ProductionItemUseCase {
 					production_items: [],
 				};
 			});
+			const materials = allMaterials.filter(m => m.stock_uom === m.uom);
 
 			return { materials };
 		} catch (error) {
