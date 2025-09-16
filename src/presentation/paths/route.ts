@@ -55,7 +55,7 @@ export const leofreshRoutes: Route[] = [
 		isOpen: true,
 		items: [
 			{
-				title: "POS",
+				title: "Point of Sale",
 				url: "/app/sales/pos",
 				icon: BanknoteArrowUp,
 			},
