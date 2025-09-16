@@ -95,32 +95,6 @@ export function useListItems() {
 	return { data, isLoading };
 }
 
-export function useListManufacturingMaterials({
-	limit_page_length,
-}: {
-	limit_page_length?: number;
-}) {
-	const { user } = useAuth();
-	const { error, isLoading, data } = useQuery({
-		queryKey: ["ManufacturingMaterials", user?.user.email, limit_page_length],
-		queryFn: async () => {
-			const itemRepo = new ItemRepository();
-			const itemUseCase = new ItemUseCase({ itemRepository: itemRepo });
-
-			return itemUseCase.compileItemListData({
-				limit_page_length: limit_page_length ?? 100,
-			});
-		},
-		enabled: !!user?.user.email,
-	});
-
-	if (error instanceof Error) {
-		throw new LeofreshError({ message: error.message });
-	}
-
-	return { data, isLoading };
-}
-
 export function useListManufactureMaterials() {
 	const { user } = useAuth();
 
@@ -137,6 +111,7 @@ export function useListManufactureMaterials() {
 
 			const { materials } =
 				await productionUseCase.combineMaterialsForProduction();
+
 			return materials;
 		},
 		enabled: !!user?.user.email,
