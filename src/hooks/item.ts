@@ -1,6 +1,3 @@
-//
-// Get Selling Items
-
 import { useAuth } from "@/components";
 import { LeofreshError } from "@/lib/error";
 import { ItemRepository, ProductionItemRepository } from "@/repository";
@@ -10,11 +7,6 @@ import { ItemUseCase } from "@/use-cases/item.use-case";
 import { ProductionItemUseCase } from "@/use-cases/production.item.use-case";
 import { useQuery } from "@tanstack/react-query";
 
-//
-//Get buying Items
-
-//
-//Get all Items
 const getItemMethods = async () => {
 	const itemRepo = new ItemPriceRepository();
 	const itemsUsecase = new ItemPriceUseCase({ itemRepository: itemRepo });
@@ -48,7 +40,6 @@ export function useBuyingPriceProducts() {
 		queryKey: ["PurchaseProducts", user?.user.email],
 		queryFn: async () => (await getItemMethods()).getItemWithBuyingPrice(),
 	});
-	//Include frappe Error throwing mechanism
 	if (error instanceof Error) {
 		throw new LeofreshError({ message: error.message });
 	}
