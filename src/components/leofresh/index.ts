@@ -4,6 +4,7 @@ export * from "./LeoFreshCard";
 export * from "./LeofreshDataTable/DataColumnsDefinition";
 export * from "./LeofreshDataTable/LeoDataTable";
 export * from "./LeoFreshDialog";
+export * from "./LeofreshFormCheckboxField";
 export * from "./LeoFreshFormDatePicker";
 export * from "./LeofreshFormField";
 export * from "./LeoFreshNotFound";
