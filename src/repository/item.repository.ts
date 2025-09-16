@@ -1,12 +1,16 @@
 import { ItemsForSaleDataSource } from "@/data-access/api/item";
 import type {
-	ItemListEntity,
 	ItemListFieldsEntity,
+	ListItemWithValueEntity,
+	ManufactuatringItemListEntity,
+	ManufacturingMaterialsFieldsEntity,
 	PurchaseItemEntity,
 } from "@/domain";
 
 export interface IItemRepository {
-	getAllItems(): Promise<ItemListEntity[]>;
+	getAllItems(
+		params: ManufacturingMaterialsFieldsEntity
+	): Promise<ManufactuatringItemListEntity[]>;
 	listAllSalesItems({
 		limit_page_length,
 	}: Omit<ItemListFieldsEntity, "fields">): Promise<PurchaseItemEntity[]>;
@@ -18,19 +22,44 @@ export class ItemRepository implements IItemRepository {
 		this.ItemDataSource = new ItemsForSaleDataSource({ docType: "Item" });
 	}
 
-	async getAllItems(): Promise<ItemListEntity[]> {
-		const data = await this.ItemDataSource.getAllItems();
-		return this.mapItemsToDomain({ items: data.data.data });
+	async getAllItems({
+		limit_page_length,
+		limit_start,
+	}: ManufacturingMaterialsFieldsEntity): Promise<ListItemWithValueEntity[]> {
+		const filters = [
+			["item_group", "=", "Sub Assemblies"],
+			["item_group", "=", "Raw Material"],
+			["item_group", "=", "Leofresh Products"],
+		];
+		const fields = [
+			"item_name",
+			"image",
+			"item_code",
+			"item_group",
+			"stock_uom",
+			"valuation_rate",
+			"uoms",
+			"uoms.conversion_factor",
+			"uoms.uom",
+		];
+		// const fields
+		const response = await this.ItemDataSource.getAllItems({
+			fields,
+			filters,
+			limit_page_length,
+			limit_start,
+		});
+		return this.mapItemsToDomain({ items: response.data.data });
 	}
 
 	private mapItemsToDomain({
 		items,
 	}: {
-		items: Pick<ItemListEntity, "name">[];
-	}): ItemListEntity[] {
+		items: ManufactuatringItemListEntity[];
+	}): ListItemWithValueEntity[] {
 		return items.map(item => ({
-			name: item.name,
-			value: item.name,
+			...item,
+			value: item.item_name,
 		}));
 	}
 	// GET ALL ITEMS that can be sold...
@@ -41,6 +70,7 @@ export class ItemRepository implements IItemRepository {
 			"item_name",
 			"item_code",
 			"item_group",
+			"valuation_rate",
 			"stock_uom",
 			"uoms",
 			"uoms.conversion_factor",
@@ -48,6 +78,8 @@ export class ItemRepository implements IItemRepository {
 			"image",
 			"purchase_uom",
 		];
+		//
+		//Map to domain/ Compile a unique list of items where the UOM are grouped.
 		return await this.ItemDataSource.getFinishedProductsToSellOrBuy({
 			fields: {
 				fields,
