@@ -1,6 +1,12 @@
 // src/components/pages/bom/create/BOMCreateMultiStepForm.tsx
 import { MultiStepForm, type StepConfig } from "@/components/leofresh";
+import type { CreateBOMEntity } from "@/domain";
+import { useAppSelector } from "@/hooks/appHooks";
+import { useCreateBOM } from "@/hooks/bom";
+import { useListItems } from "@/hooks/item";
+import { LeofreshError } from "@/lib/error";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { BasicInfoStep } from "./BasicInfoStep";
@@ -10,9 +16,14 @@ import { ReviewStep } from "./ReviewStep";
 // Step schemas
 const basicInfoSchema = z.object({
 	item_name: z.string().min(1, "Item name is required"),
-	description: z.string().optional(),
 	uom: z.string().min(1, "UOM is required"),
-	quantity: z.number().min(0.001, "Quantity must be greater than 0"),
+	quantity: z.number().min(1, "Quantity must be greater than 0"),
+	target_warehouse: z.string().optional(),
+	rm_cost_as_per: z.enum([
+		"Valuation Rate",
+		"Last Purchase Rate",
+		"Standard Rate",
+	]),
 	is_active: z.boolean(),
 	is_default: z.boolean(),
 });
@@ -34,6 +45,8 @@ const itemsSchema = z.object({
 
 const reviewSchema = z.object({
 	notes: z.string().optional(),
+	process_loss_percentage: z.number().optional(),
+	process_loss_qty: z.number().optional(),
 	submit_on_creation: z.boolean(),
 });
 
@@ -44,11 +57,16 @@ type BOMFormData = z.infer<typeof bomFormSchema>;
 export type BasicInfoItems = z.infer<typeof basicInfoSchema>;
 
 export function BOMCreateMultiStepForm() {
+	const { profile } = useAppSelector(state => state.profile);
+	const { mutateAsync: createBOM } = useCreateBOM();
+	const { data: items, isLoading } = useListItems();
+
 	const form = useForm<BOMFormData>({
 		resolver: zodResolver(bomFormSchema),
 		defaultValues: {
 			item_name: "",
-			description: "",
+			target_warehouse: profile?.warehouse_name || "",
+			rm_cost_as_per: "Valuation Rate",
 			uom: "",
 			quantity: 1,
 			is_active: true,
@@ -62,17 +80,42 @@ export function BOMCreateMultiStepForm() {
 				},
 			],
 			notes: "",
+			process_loss_percentage: 0,
+			process_loss_qty: 0,
 			submit_on_creation: false,
 		},
 	});
 
+	const itemList = useMemo(() => {
+		if (!items) return [];
+		return items;
+	}, [items, isLoading]);
+
 	const handleSubmit = async (data: BOMFormData) => {
 		try {
-			console.log("Submitting BOM:", data);
+			const createData: CreateBOMEntity = {
+				...data,
+				item: data.item_name,
+				is_active: data.is_active ? 1 : 0,
+				is_default: data.is_default ? 1 : 0,
+				items: data.items.map(item => ({
+					item_code:
+						itemList.find(i => item.item_code === i.item_name)?.item_code ||
+						item.item_code,
+					uom: item.uom,
+					qty: item.qty,
+					rate: item.rate,
+				})),
+			};
+
+			const name = await createBOM(createData);
+			console.log("Item Created", name);
 			// Handle form submission
 			// await createBOM(data);
 		} catch (error) {
-			console.error("Error creating BOM:", error);
+			if (error instanceof Error) {
+				throw new LeofreshError({ message: error.message });
+			}
 		}
 	};
 
@@ -84,7 +127,8 @@ export function BOMCreateMultiStepForm() {
 			schema: basicInfoSchema,
 			fields: [
 				"item_name",
-				"description",
+				"rm_cost_as_per",
+				"target_warehouse",
 				"uom",
 				"quantity",
 				"is_active",
@@ -105,7 +149,12 @@ export function BOMCreateMultiStepForm() {
 			title: "Review & Submit",
 			description: "Review your BOM before submission",
 			schema: reviewSchema,
-			fields: ["notes", "submit_on_creation"],
+			fields: [
+				"notes",
+				"submit_on_creation",
+				"process_loss_percentage",
+				"process_loss_qty",
+			],
 			component: ReviewStep,
 		},
 	];

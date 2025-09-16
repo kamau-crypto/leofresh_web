@@ -1,5 +1,5 @@
 // src/components/pages/bom/form/ReviewStep.tsx
-import { LeoFreshCard } from "@/components/leofresh";
+import { LeoFreshCard, LeofreshFormField } from "@/components/leofresh";
 import {
 	Card,
 	CardContent,
@@ -109,7 +109,28 @@ export function ReviewStep({ form }: ReviewStepProps) {
 					</div>
 				</CardContent>
 			</Card>
-
+			<Card className='elevation-md'>
+				<CardHeader>
+					<CardTitle className='flex items-center gap-2'>
+						<CheckCircle className='h-5 w-5' />
+						Pre-submission Checklist
+					</CardTitle>
+				</CardHeader>
+				<CardContent className='grid grid-cols-2 gap-4'>
+					<LeofreshFormField
+						name='process_loss_percentage'
+						labelText='Process Loss Percentage (%)'
+						control={form.control}
+						placeholder='Enter process loss percentage'
+					/>
+					<LeofreshFormField
+						name='process_loss_qty'
+						labelText='Process Loss Quantity'
+						control={form.control}
+						placeholder='Enter process loss quantity'
+					/>
+				</CardContent>
+			</Card>
 			{/* Pre-submission Checklist */}
 			<Card>
 				<CardHeader>

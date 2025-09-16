@@ -54,6 +54,7 @@ export function ItemsStep({ form }: ItemsStepProps) {
 		if (!manufacturingItems) {
 			return {
 				item_code: "",
+				item_name: "",
 				qty: 1,
 				rate: 0,
 				uom: "piece",
