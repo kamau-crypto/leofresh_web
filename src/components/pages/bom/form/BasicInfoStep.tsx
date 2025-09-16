@@ -1,24 +1,11 @@
-// src/components/pages/bom/create/steps/BasicInfoStep.tsx
+import {
+	LeofreshFormCheckboxField,
+	LeofreshFormField,
+	LeoFreshToolTip,
+} from "@/components/leofresh";
 import { LeoFreshFormCombobox } from "@/components/leofresh/LeoFreshFormComboBox";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useAppSelector } from "@/hooks/appHooks";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { BasicInfoItems } from "./bom";
 
@@ -44,6 +31,20 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
 		}));
 	}, [manufacturingItems]);
 
+	useEffect(() => {
+		const subscribe = form.watch((value, { name }) => {
+			if (name === "item_name" && value.item_name) {
+				const selectedItem = manufacturingItems!.find(
+					item => item.item_code === value.item_name
+				);
+				if (selectedItem) {
+					form.setValue("uom", selectedItem.stock_uom);
+				}
+			}
+		});
+		return () => subscribe.unsubscribe();
+	}, [form.watch("item_name"), manufacturingItems]);
+
 	return (
 		<div className='space-y-4'>
 			<LeoFreshFormCombobox<BasicInfoItems>
@@ -55,7 +56,14 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
 				required
 			/>
 
-			<FormField
+			<LeofreshFormField
+				control={form.control}
+				name='description'
+				labelText='Description'
+				placeholder='Enter Description'
+			/>
+
+			{/* <FormField
 				control={form.control}
 				name='description'
 				render={({ field }) => (
@@ -70,10 +78,16 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
 						<FormMessage />
 					</FormItem>
 				)}
-			/>
+			/> */}
 
 			<div className='grid grid-cols-2 gap-4'>
-				<FormField
+				<LeofreshFormField
+					control={form.control}
+					name='uom'
+					labelText='UOM'
+					placeholder='Enter UOM'
+				/>
+				{/* <FormField
 					control={form.control}
 					name='uom'
 					render={({ field }) => (
@@ -96,31 +110,23 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
 							<FormMessage />
 						</FormItem>
 					)}
-				/>
-
-				<FormField
+				/> */}
+				<LeofreshFormField
 					control={form.control}
 					name='quantity'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Quantity *</FormLabel>
-							<FormControl>
-								<Input
-									type='number'
-									step='0.001'
-									placeholder='Enter quantity'
-									{...field}
-									onChange={e => field.onChange(Number(e.target.value))}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
+					labelText='Quantity'
+					placeholder='Enter Quantity'
+					description= {"Quantity to produce per the stock UOM for this item"}
 				/>
 			</div>
 
 			<div className='flex space-x-4'>
-				<FormField
+				<LeofreshFormCheckboxField
+					control={form.control}
+					labelText='Is Active'
+					name='is_active'
+				/>
+				{/* <FormField
 					control={form.control}
 					name='is_active'
 					render={({ field }) => (
@@ -134,9 +140,18 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
 							<FormLabel>Is Active</FormLabel>
 						</FormItem>
 					)}
+				/> */}
+				<LeoFreshToolTip
+					Content={<p>This checkbox indicates whether the item is active.</p>}
+					Trigger={
+						<LeofreshFormCheckboxField
+							name='is_default'
+							control={form.control}
+							labelText='Is Default'
+						/>
+					}
 				/>
-
-				<FormField
+				{/* <FormField
 					control={form.control}
 					name='is_default'
 					render={({ field }) => (
@@ -150,7 +165,7 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
 							<FormLabel>Is Default</FormLabel>
 						</FormItem>
 					)}
-				/>
+				/> */}
 			</div>
 		</div>
 	);

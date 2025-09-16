@@ -67,7 +67,7 @@ export function ItemsStep({ form }: ItemsStepProps) {
 			return item.production_items.map(prodItem => ({
 				item_code: prodItem.item_name,
 				qty: prodItem.qty,
-				rate: item.standard_buying_uom || 0,
+				rate: prodItem.rate || 0,
 				uom: item.stock_uom,
 			}));
 		});
