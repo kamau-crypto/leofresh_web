@@ -41,6 +41,7 @@ const reviewSchema = z.object({
 const bomFormSchema = basicInfoSchema.merge(itemsSchema).merge(reviewSchema);
 
 type BOMFormData = z.infer<typeof bomFormSchema>;
+export type BasicInfoItems = z.infer<typeof basicInfoSchema>;
 
 export function BOMCreateMultiStepForm() {
 	const form = useForm<BOMFormData>({

@@ -1,4 +1,5 @@
 // src/components/pages/bom/create/steps/BasicInfoStep.tsx
+import { LeoFreshFormCombobox } from "@/components/leofresh/LeoFreshFormComboBox";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	FormControl,
@@ -16,7 +17,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useAppSelector } from "@/hooks/appHooks";
+import { useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";
+import type { BasicInfoItems } from "./bom";
 
 interface BasicInfoStepProps {
 	form: UseFormReturn<any>;
@@ -27,23 +31,28 @@ interface BasicInfoStepProps {
 }
 
 export function BasicInfoStep({ form }: BasicInfoStepProps) {
+	const { manufacturingItems } = useAppSelector(
+		state => state.manufacturingItems
+	);
+
+	const itemsList = useMemo(() => {
+		if (!manufacturingItems) return [];
+
+		return manufacturingItems.map(item => ({
+			label: item.item_code,
+			value: item.item_code,
+		}));
+	}, [manufacturingItems]);
+
 	return (
 		<div className='space-y-4'>
-			<FormField
+			<LeoFreshFormCombobox<BasicInfoItems>
 				control={form.control}
 				name='item_name'
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>Item Name </FormLabel>
-						<FormControl>
-							<Input
-								placeholder='Enter item name'
-								{...field}
-							/>
-						</FormControl>
-						<FormMessage />
-					</FormItem>
-				)}
+				options={itemsList}
+				placeholder='Select an item to create a BOM'
+				label='Item Name'
+				required
 			/>
 
 			<FormField
