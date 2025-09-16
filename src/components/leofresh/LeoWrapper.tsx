@@ -1,7 +1,7 @@
 type LeoWrapperProps = {
 	title?: string;
 	description?: string;
-	HeaderButtons: React.ReactNode;
+	HeaderButtons?: React.ReactNode;
 	Content: React.ReactNode;
 };
 
@@ -21,7 +21,9 @@ export function LeoWrapper({
 					{description && <p className='text-gray-600'>{description}</p>}
 				</div>
 			)}
-			<div className='flex justify-end mb-4'>{HeaderButtons}</div>
+			{HeaderButtons && (
+				<div className='flex justify-end mb-4'>{HeaderButtons}</div>
+			)}
 			<div className='max-h-[80%] overflow-y-auto rounded-md'>{Content}</div>
 		</div>
 	);
