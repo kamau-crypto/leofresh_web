@@ -2,6 +2,7 @@ export * from "./bom/bom.entity";
 export * from "./customer/customer.entity";
 export * from "./item/item-price.entity";
 export * from "./item/item.entity";
+export * from "./item/production.item.entity";
 export * from "./profile/profile.entity";
 export * from "./purchase/purchase.invoice.entity";
 export * from "./purchase/purchase.order.entity";

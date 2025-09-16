@@ -8,6 +8,7 @@ export type * from "./je.model";
 export type * from "./material-req.model";
 export type * from "./meter-reading.model";
 export type * from "./payment.model";
+export type * from "./productionItem.model";
 export type * from "./profile.model";
 export type * from "./purchase.invoice.model";
 export type * from "./purchase.order.model";
