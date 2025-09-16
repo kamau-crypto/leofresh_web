@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
+import manufacturingItemsReducer from "./manufacturingItems";
 import { profileStorageMiddleware } from "./middleware/profileStorage";
 import profileReducer from "./profile";
 
 export const store = configureStore({
 	reducer: {
 		profile: profileReducer,
-		// Add other reducers here
+		manufacturingItems: manufacturingItemsReducer,
+		// Add other reducers her
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware().concat(profileStorageMiddleware),
