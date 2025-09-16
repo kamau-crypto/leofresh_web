@@ -44,6 +44,7 @@ interface CommonItemModel {
 	item_name: string;
 	item_code: string;
 	item_group: string;
+	valuation_rate: string;
 	stock_uom: string;
 	uoms: string;
 	image: string;
