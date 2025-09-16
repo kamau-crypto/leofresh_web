@@ -1,12 +1,16 @@
 import { LeofreshDataTable } from "@/components/leofresh";
 import type { GetBOMsFilterEntity } from "@/domain";
-import { useAppSelector } from "@/hooks/appHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/appHooks";
 import { useListBOMs } from "@/hooks/bom";
+import { useListManufactureMaterials } from "@/hooks/item";
+import { setManufacturingItems } from "@/store/manufacturingItems";
 import { useMemo, useState } from "react";
 import { BOMListColumns } from "./columns";
 
 export function BOMList() {
 	const { profile } = useAppSelector(state => state.profile);
+	const dispatch = useAppDispatch();
+
 	const [filter, _setFilter] = useState<Omit<GetBOMsFilterEntity, "fields">>({
 		limit_page_length: 100,
 		limit_start: 0,
@@ -15,13 +19,16 @@ export function BOMList() {
 		default_target_warehouse: profile?.warehouse_name || undefined,
 	});
 
+	const { data: materialData } = useListManufactureMaterials();
+
 	const { data, isLoading } = useListBOMs({ params: filter });
 
 	const memoizedData = useMemo(() => {
 		if (!data) return [];
+		dispatch(setManufacturingItems(materialData || []));
 
 		return data;
-	}, [data]);
+	}, [data, materialData]);
 
 	return (
 		<LeofreshDataTable
