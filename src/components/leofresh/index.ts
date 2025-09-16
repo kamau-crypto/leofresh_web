@@ -8,6 +8,7 @@ export * from "./LeofreshFormCheckboxField";
 export * from "./LeoFreshFormDatePicker";
 export * from "./LeofreshFormField";
 export * from "./LeoFreshNotFound";
+export * from "./LeoFreshSelect";
 export * from "./LeoToolTip";
 export * from "./LeoWrapper";
 export * from "./MultistepperForm";
