@@ -13,6 +13,7 @@ export interface CommonItemEntity {
 	item_code: string;
 	item_group: string;
 	stock_uom: string;
+	valuation_rate: string;
 	uoms: string;
 	image: string;
 }
