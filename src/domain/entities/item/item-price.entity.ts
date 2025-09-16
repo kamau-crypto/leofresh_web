@@ -16,6 +16,7 @@ export interface PurchaseItemEntity {
 	item_code: string;
 	item_group: string;
 	stock_uom: string;
+	valuation_rate: number;
 	standard_buying_uom: string | null;
 	uom: string;
 	conversion_factor: number;

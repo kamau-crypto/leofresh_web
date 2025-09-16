@@ -61,4 +61,5 @@ export interface PurchaseItemModel extends PurchaseItemsModel {
 	standard_selling_uom: string | null;
 	qty: number;
 	item_tax_template: string | null;
+	valuation_rate: number;
 }
