@@ -8,24 +8,21 @@ export interface RetrieveBOMDto extends PaginationDTO, SortDTO {
 
 export interface CreateBOMDTO {
 	item: string;
-	is_default: number;
+	quantity: number;
 	is_active: number;
+	is_default: number;
+	rm_cost_as_per: string;
 	default_target_warehouse?: string;
 	default_source_warehouse?: string;
-	rm_cost_as_per: string;
-	process_loss_percentage: number;
-	process_loss_qty: number;
+	uom: string;
 	items: CreateBOMItems[];
+	process_loss_percentage?: number;
+	process_loss_qty?: number;
 }
 
 interface CreateBOMItems {
 	item_code: string;
-	item_name: string;
 	uom: string;
 	qty: number;
 	rate: number;
-	conversion_factor: number;
-	amount: number;
-	include_item_in_manufacturing: number;
-	is_stock_item: number;
 }

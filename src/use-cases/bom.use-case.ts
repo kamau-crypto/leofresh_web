@@ -1,4 +1,4 @@
-import type { GetBOMsFilterEntity } from "@/domain";
+import type { CreateBOMEntity, GetBOMsFilterEntity } from "@/domain";
 import type { IBomRepository } from "@/repository/";
 
 export class BOMUseCase {
@@ -17,7 +17,10 @@ export class BOMUseCase {
 		return this.bomRepository.getAllBOMs({ ...bomsParams });
 	}
 
+	async createBOMs(bomData: CreateBOMEntity) {
+		return this.bomRepository.createBOM(bomData);
+	}
 	// async createBOM({data}: )
 	// get the items involved in manufacturing and use them to construct an object of all the necessary details. For example, item name, quantity, uom, cost price etc.
-	async compileItemListData(){}
+	async compileItemListData() {}
 }

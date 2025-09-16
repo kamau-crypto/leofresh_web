@@ -1,10 +1,15 @@
 import { BOMDataSource } from "@/data-access/api/bom";
-import type { BOMListEntity, GetBOMsFilterEntity } from "@/domain";
+import type {
+	BOMListEntity,
+	CreateBOMEntity,
+	GetBOMsFilterEntity,
+} from "@/domain";
 
 export interface IBomRepository {
 	getAllBOMs(
 		entities: Omit<GetBOMsFilterEntity, "fields">
 	): Promise<BOMListEntity[]>;
+	createBOM(data: CreateBOMEntity): Promise<string>;
 }
 
 export class BOMRepository implements IBomRepository {
@@ -50,5 +55,9 @@ export class BOMRepository implements IBomRepository {
 			id: bom.name,
 			...bom,
 		}));
+	}
+
+	async createBOM(bomData: CreateBOMEntity) {
+		return await this.bomDataSource.createBOM({ BOMData: bomData });
 	}
 }

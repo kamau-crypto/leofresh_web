@@ -47,7 +47,7 @@ export class BOMDataSource extends FrappeInstance {
 				...BOMData,
 			}
 		);
-		return newBOM.data;
+		return newBOM.data.name;
 	}
 
 	async updateBOM({ name, BOMData }: { name: string; BOMData: CreateBOMDTO }) {
