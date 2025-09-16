@@ -1,6 +1,6 @@
 import type { AxiosInstance, AxiosResponse } from "axios";
-import type { GetItemsDTO } from "../dto";
-import type { PurchaseItemModel } from "../models";
+import type { GetItemsDTO, ListItemsDTO } from "../dto";
+import type { ManufacturingItemsListModel, PurchaseItemModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
 export class ItemsForSaleDataSource extends FrappeInstance {
@@ -40,11 +40,24 @@ export class ItemsForSaleDataSource extends FrappeInstance {
 		return naming_series.data.data;
 	}
 
-	async getAllItems(): Promise<AxiosResponse<{ data: { name: string }[] }>> {
-		return await this.purchaseItemInstance("Item");
+	async getAllItems({
+		limit_page_length,
+		limit_start,
+		fields,
+		filters,
+	}: ListItemsDTO): Promise<
+		AxiosResponse<{ data: ManufacturingItemsListModel[] }>
+	> {
+		return await this.purchaseItemInstance("Item", {
+			params: {
+				limit_page_length,
+				filters: JSON.stringify(filters),
+				fields: JSON.stringify(fields),
+				limit_start,
+			},
+		});
 	}
 }
-
 export const ItemGroup = {
 	Products: "Products",
 	RawMaterial: "Raw Material",
