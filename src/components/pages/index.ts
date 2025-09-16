@@ -1,5 +1,6 @@
 export * from "./bom/BOM";
 export * from "./customer/Customer";
+export * from "./dashboard/Dashboard";
 export * from "./items/Items";
 export * from "./purchase/invoice/PurchaseInvoice";
 export * from "./purchase/order/PurchaseOrder";
