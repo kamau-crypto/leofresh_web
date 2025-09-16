@@ -57,7 +57,6 @@ export function TeamSwitcher() {
 	}, [data]);
 	// Look for a session for this use case.
 	//
-	// [ ] Work with a certain session to storSave these changes to the API for better usage...
 	// Set initial active team only when data is loaded
 	useEffect(() => {
 		if (profiles.length > 0) {
@@ -73,7 +72,6 @@ export function TeamSwitcher() {
 		}
 	}, [activeTeam, dispatch]);
 
-	//[ ] Add a better loading component here
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
