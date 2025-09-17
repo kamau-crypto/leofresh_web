@@ -4,6 +4,7 @@ export interface BOMListEntity {
 	id: string;
 	name: string;
 	modified: string;
+	docstatus: number;
 	is_default: number;
 	is_active: number;
 	default_source_warehouse: string;

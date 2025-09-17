@@ -30,6 +30,7 @@ export class BOMRepository implements IBomRepository {
 			"modified",
 			"is_default",
 			"is_active",
+			"docstatus",
 			"default_source_warehouse",
 			"default_target_warehouse",
 		];
