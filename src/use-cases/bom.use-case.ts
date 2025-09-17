@@ -1,4 +1,10 @@
-import type { CreateBOMEntity, GetBOMsFilterEntity } from "@/domain";
+import type {
+	CancelBOMEntity,
+	CreateBOMEntity,
+	GetBOMsFilterEntity,
+	SubmitBOMEntity,
+	UpdateBOMEntity,
+} from "@/domain";
 import type { IBomRepository } from "@/repository/";
 
 export class BOMUseCase {
@@ -16,11 +22,20 @@ export class BOMUseCase {
 			: params;
 		return this.bomRepository.getAllBOMs({ ...bomsParams });
 	}
+	async getBOM(name: string) {
+		return this.bomRepository.getBOM({ name });
+	}
 
-	async createBOMs(bomData: CreateBOMEntity) {
+	async createBOM(bomData: CreateBOMEntity) {
 		return this.bomRepository.createBOM(bomData);
 	}
-	// async createBOM({data}: )
-	// get the items involved in manufacturing and use them to construct an object of all the necessary details. For example, item name, quantity, uom, cost price etc.
-	async compileItemListData() {}
+	async submitBOM({ name }: SubmitBOMEntity) {
+		return this.bomRepository.submitBOM({ name });
+	}
+	async cancelBOM({ name }: CancelBOMEntity) {
+		return this.bomRepository.cancelBOM({ name });
+	}
+	async updateBOM({ name, ...bomData }: UpdateBOMEntity) {
+		return this.bomRepository.updateBOM({ name, ...bomData });
+	}
 }

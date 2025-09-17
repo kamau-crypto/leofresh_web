@@ -36,3 +36,16 @@ export interface CreateBOMItemEntity {
 	qty: number;
 	rate: number;
 }
+
+export interface CommonBOMEntity {
+	name: string;
+}
+
+export interface UpdateBOMEntity
+	extends Partial<CreateBOMEntity>,
+		CommonBOMEntity {}
+
+export interface GetBOMEntity extends CommonBOMEntity {}
+export interface SubmitBOMEntity extends CommonBOMEntity {}
+export interface CancelBOMEntity extends CommonBOMEntity {}
+export interface DeleteBOMEntity extends CommonBOMEntity {}

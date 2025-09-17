@@ -76,12 +76,13 @@ export const BOMListColumns: ColumnDef<BOMListEntity>[] = [
 	{
 		id: "actions",
 		cell: ({ row }) => {
-			const { id, name } = row.original;
+			const { id, name, docstatus } = row.original;
 
 			return (
 				<BOMActions
 					id={id}
 					name={name}
+					docstatus={docstatus}
 				/>
 			);
 		},
@@ -91,12 +92,24 @@ export const BOMListColumns: ColumnDef<BOMListEntity>[] = [
 function compileDocStatusText(status: number) {
 	switch (status) {
 		case 0:
-			return { text: "Draft", variant: "error" };
+			return {
+				text: "Draft",
+				variant: "error",
+				nextSteps: ["Submit", "Delete"],
+			};
 		case 1:
-			return { text: "Submitted", variant: "success" };
+			return { text: "Submitted", variant: "success", nextSteps: ["Cancel"] };
 		case 2:
-			return { text: "Amended", variant: "warning" };
+			return {
+				text: "Cancelled",
+				variant: "warning",
+				nextSteps: ["Amend", "New Version"],
+			};
 		default:
-			return { text: "Draft", variant: "error" };
+			return {
+				text: "Draft",
+				variant: "error",
+				nextSteps: ["Submit", "Delete"],
+			};
 	}
 }

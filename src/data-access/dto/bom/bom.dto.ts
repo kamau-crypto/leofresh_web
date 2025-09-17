@@ -26,3 +26,12 @@ interface CreateBOMItems {
 	qty: number;
 	rate: number;
 }
+
+export interface CommonBOMDTO {
+	name: string;
+}
+
+export interface UpdateBOMDTO extends Partial<CreateBOMDTO>, CommonBOMDTO {}
+export interface GetBOMDTO extends CommonBOMDTO {}
+export interface SubmitBOMDTO extends CommonBOMDTO {}
+export interface CancelBOMDTO extends CommonBOMDTO {}

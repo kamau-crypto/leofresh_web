@@ -1,9 +1,16 @@
 import { useAuth } from "@/components";
-import type { CreateBOMEntity, GetBOMsFilterEntity } from "@/domain";
+import type {
+	CreateBOMEntity,
+	GetBOMsFilterEntity,
+	UpdateBOMEntity,
+} from "@/domain";
 import { LeofreshError } from "@/lib/error";
+import { BOMKEYS } from "@/presentation";
 import { BOMRepository } from "@/repository";
 import { BOMUseCase } from "@/use-cases/bom.use-case";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { toast } from "react-hot-toast";
 
 export function useListBOMs({
 	params,
@@ -28,6 +35,25 @@ export function useListBOMs({
 	return { isLoading, data };
 }
 
+export function useGetBOM(name: string) {
+	const { user } = useAuth();
+	const { data, isLoading, error } = useQuery({
+		queryKey: [...BOMKEYS.GET_BOM, user?.user?.email, name],
+		queryFn: async () => {
+			const bomRepo = new BOMRepository();
+			const bomUseCase = new BOMUseCase({ bomRepository: bomRepo });
+			return await bomUseCase.getBOM(name);
+		},
+		enabled: !!user?.user?.email && !!name,
+	});
+
+	if (error instanceof Error) {
+		throw new LeofreshError({ message: error.message });
+	}
+
+	return { isLoading, data };
+}
+
 export function useCreateBOM() {
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
@@ -38,10 +64,12 @@ export function useCreateBOM() {
 				throw new LeofreshError({ message: "User not authenticated" });
 			const bomRepo = new BOMRepository();
 			const bomUseCase = new BOMUseCase({ bomRepository: bomRepo });
-			return await bomUseCase.createBOMs(data);
+			return await bomUseCase.createBOM(data);
 		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ["bom-list"] });
+		onSuccess(_data, _variables, _context) {
+			queryClient.invalidateQueries({
+				queryKey: [BOMKEYS.LIST_BOM, user?.user?.email],
+			});
 		},
 	});
 
@@ -50,4 +78,91 @@ export function useCreateBOM() {
 	}
 
 	return { mutateAsync, data };
+}
+
+export function useSubmitBOM() {
+	const queryClient = useQueryClient();
+	const { user } = useAuth();
+	const { mutateAsync: submitBOM } = useMutation({
+		mutationKey: [...BOMKEYS.SUBMIT_BOM, user?.user?.email],
+		mutationFn: async (name: string) => {
+			if (!user?.user?.email) {
+				throw new LeofreshError({ message: "User not authenticated" });
+			}
+			const bomRepo = new BOMRepository();
+			const bomUseCase = new BOMUseCase({ bomRepository: bomRepo });
+			return await bomUseCase.submitBOM({ name });
+		},
+		onError: (error, _variables, _context) => {
+			if (error instanceof Error) {
+				throw new LeofreshError({ message: error.message });
+			}
+		},
+		onSuccess: (_data, _variables, _context) => {
+			queryClient.invalidateQueries({
+				queryKey: [BOMKEYS.LIST_BOM, user?.user?.email],
+			});
+			toast.success("BOM submitted successfully");
+		},
+	});
+
+	return { submitBOM };
+}
+
+export function useCancelBOM() {
+	const queryClient = useQueryClient();
+	const { user } = useAuth();
+	const { mutateAsync: cancelBOM } = useMutation({
+		mutationKey: [...BOMKEYS.CANCEL_BOM, user?.user?.email],
+		mutationFn: async (name: string) => {
+			if (!user?.user?.email) {
+				throw new LeofreshError({ message: "User not authenticated" });
+			}
+			const bomRepo = new BOMRepository();
+			const bomUseCase = new BOMUseCase({ bomRepository: bomRepo });
+			return await bomUseCase.cancelBOM({ name });
+		},
+		onError: (error, _variables, _context) => {
+			if (error instanceof Error) {
+				throw new LeofreshError({ message: error.message });
+			}
+		},
+		onSuccess: (_data, _variables, _context) => {
+			queryClient.invalidateQueries({
+				queryKey: [BOMKEYS.LIST_BOM, user?.user?.email],
+			});
+			toast.success("BOM cancelled successfully");
+		},
+	});
+
+	return { cancelBOM };
+}
+
+export function useUpdateBOM() {
+	const queryClient = useQueryClient();
+	const { user } = useAuth();
+	const { mutateAsync: updateBOM } = useMutation({
+		mutationKey: [...BOMKEYS.CANCEL_BOM, user?.user?.email],
+		mutationFn: async ({ name, ...bomData }: UpdateBOMEntity) => {
+			if (!user?.user?.email) {
+				throw new LeofreshError({ message: "User not authenticated" });
+			}
+			const bomRepo = new BOMRepository();
+			const bomUseCase = new BOMUseCase({ bomRepository: bomRepo });
+			return await bomUseCase.updateBOM({ name, ...bomData });
+		},
+		onError: (error, _variables, _context) => {
+			if (error instanceof Error) {
+				throw new LeofreshError({ message: error.message });
+			}
+		},
+		onSuccess: (_data, _variables, _context) => {
+			queryClient.invalidateQueries({
+				queryKey: [BOMKEYS.LIST_BOM, user?.user?.email],
+			});
+			toast.success("BOM updated successfully");
+		},
+	});
+
+	return { updateBOM };
 }

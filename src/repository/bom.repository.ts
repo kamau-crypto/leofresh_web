@@ -1,15 +1,26 @@
 import { BOMDataSource } from "@/data-access/api/bom";
+import type { CancelBOMDTO } from "@/data-access/dto";
 import type {
 	BOMListEntity,
+	CancelBOMEntity,
 	CreateBOMEntity,
+	GetBOMEntity,
 	GetBOMsFilterEntity,
+	SubmitBOMEntity,
+	UpdateBOMEntity,
 } from "@/domain";
 
 export interface IBomRepository {
 	getAllBOMs(
 		entities: Omit<GetBOMsFilterEntity, "fields">
 	): Promise<BOMListEntity[]>;
+	getBOM(data: GetBOMEntity): Promise<BOMListEntity>;
 	createBOM(data: CreateBOMEntity): Promise<string>;
+	submitBOM(name: SubmitBOMEntity): Promise<void>;
+	cancelBOM(name: CancelBOMEntity): Promise<{
+		[key: string]: any;
+	}>;
+	updateBOM(data: UpdateBOMEntity): Promise<{ name: string }>;
 }
 
 export class BOMRepository implements IBomRepository {
@@ -60,5 +71,19 @@ export class BOMRepository implements IBomRepository {
 
 	async createBOM(bomData: CreateBOMEntity) {
 		return await this.bomDataSource.createBOM({ BOMData: bomData });
+	}
+
+	async getBOM({ name }: GetBOMEntity): Promise<any> {
+		return await this.bomDataSource.getBOM({ name });
+	}
+
+	async submitBOM({ name }: SubmitBOMEntity): Promise<void> {
+		return await this.bomDataSource.submitBOM({ name });
+	}
+	async cancelBOM({ name }: CancelBOMDTO) {
+		return await this.bomDataSource.cancelBOM({ name });
+	}
+	async updateBOM({ name, ...bomData }: UpdateBOMEntity) {
+		return await this.bomDataSource.updateBOM({ name, BOMData: bomData });
 	}
 }

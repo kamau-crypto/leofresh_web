@@ -1,7 +1,13 @@
 //
 
 import type { AxiosInstance, AxiosResponse } from "axios";
-import type { CreateBOMDTO, RetrieveBOMDto } from "../dto";
+import type {
+	CancelBOMDTO,
+	CreateBOMDTO,
+	GetBOMDTO,
+	RetrieveBOMDto,
+	SubmitBOMDTO,
+} from "../dto";
 import type { RetrieveBOMModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
@@ -14,8 +20,7 @@ export class BOMDataSource extends FrappeInstance {
 		this.docType = docType;
 		this.bomInstance = this.getFrappeClient();
 	}
-	//
-	//Get a list of all BOM's
+
 	async getAllBOMs({
 		fields,
 		limit_page_length,
@@ -49,12 +54,31 @@ export class BOMDataSource extends FrappeInstance {
 		);
 		return newBOM.data.name;
 	}
-
-	async updateBOM({ name, BOMData }: { name: string; BOMData: CreateBOMDTO }) {
+	// [ ] map Return Type
+	async updateBOM({
+		name,
+		BOMData,
+	}: {
+		name: string;
+		BOMData: Partial<CreateBOMDTO>;
+	}) {
 		const updatedBOM: AxiosResponse<{ name: string }> =
 			await this.bomInstance.put(`/${this.docType}/${name}`, {
 				...BOMData,
 			});
-		return updatedBOM;
+		return updatedBOM.data;
+	}
+	// [ ] map Return Type
+	async getBOM({ name }: GetBOMDTO) {
+		return await this.bomInstance.get(`/${this.docType}/${name}`);
+	}
+
+	async submitBOM({ name }: SubmitBOMDTO) {
+		const { data } = await this.getBOM({ name });
+		return await this.frappeSubmit({ doc: data.data });
+	}
+
+	async cancelBOM({ name }: CancelBOMDTO) {
+		return await this.frappeCancel({ doctype: this.docType, name });
 	}
 }
