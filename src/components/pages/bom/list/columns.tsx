@@ -55,6 +55,18 @@ export const BOMListColumns: ColumnDef<BOMListEntity>[] = [
 		),
 	},
 	{
+		accessorKey: "docstatus",
+		header: "Status",
+		cell: ({ row }) => {
+			const label = compileDocStatusText(row.getValue("docstatus"));
+			return (
+				<span className='flex items-center'>
+					<LeoFreshBadge variant={label.variant}>{label.text}</LeoFreshBadge>
+				</span>
+			);
+		},
+	},
+	{
 		accessorKey: "modified",
 		header: "Last Modified",
 		cell: ({ row }) => (
@@ -75,3 +87,16 @@ export const BOMListColumns: ColumnDef<BOMListEntity>[] = [
 		},
 	},
 ];
+
+function compileDocStatusText(status: number) {
+	switch (status) {
+		case 0:
+			return { text: "Draft", variant: "error" };
+		case 1:
+			return { text: "Submitted", variant: "success" };
+		case 2:
+			return { text: "Amended", variant: "warning" };
+		default:
+			return { text: "Draft", variant: "error" };
+	}
+}

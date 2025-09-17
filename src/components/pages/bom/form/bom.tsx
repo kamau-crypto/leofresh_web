@@ -8,6 +8,7 @@ import { LeofreshError } from "@/lib/error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { BasicInfoStep } from "./BasicInfoStep";
 import { ItemsStep } from "./ItemStep";
@@ -17,7 +18,7 @@ import { ReviewStep } from "./ReviewStep";
 const basicInfoSchema = z.object({
 	item_name: z.string().min(1, "Item name is required"),
 	uom: z.string().min(1, "UOM is required"),
-	quantity: z.number().min(1, "Quantity must be greater than 0"),
+	quantity: z.coerce.number<number>().min(1, "Quantity must be greater than 0"),
 	target_warehouse: z.string().optional(),
 	rm_cost_as_per: z.enum([
 		"Valuation Rate",
@@ -96,6 +97,7 @@ export function BOMCreateMultiStepForm() {
 			const createData: CreateBOMEntity = {
 				...data,
 				item: data.item_name,
+				quantity: +data.quantity,
 				is_active: data.is_active ? 1 : 0,
 				is_default: data.is_default ? 1 : 0,
 				items: data.items.map(item => ({
@@ -103,13 +105,16 @@ export function BOMCreateMultiStepForm() {
 						itemList.find(i => item.item_code === i.item_name)?.item_code ||
 						item.item_code,
 					uom: item.uom,
-					qty: item.qty,
+					qty: +item.qty,
 					rate: item.rate,
 				})),
 			};
 
 			const name = await createBOM(createData);
 			console.log("Item Created", name);
+			toast.success("BOM created successfully");
+			form.reset();
+			return;
 			// Handle form submission
 			// await createBOM(data);
 		} catch (error) {
