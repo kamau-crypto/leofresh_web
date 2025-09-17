@@ -26,7 +26,7 @@ export function convertToLocalDate(isoString: string) {
 	const date = new Date(isoString);
 	return date.toLocaleDateString("en-KE", {
 		year: "numeric",
-		month: "long",
+		month: "short",
 		day: "numeric",
 		hour: "2-digit",
 		minute: "2-digit",
