@@ -39,13 +39,20 @@ export function LeoFreshDialogForm({
 	);
 }
 
-export function LeoFreshDialogButtons() {
+export function LeoFreshDialogButtons({
+	rightBtn,
+}: {
+	rightBtn?: React.ReactNode;
+}) {
 	return (
 		<DialogFooter className='grid grid-cols-2 gap-4'>
 			<DialogClose asChild>
 				<Button variant='outline'>Cancel</Button>
 			</DialogClose>
-			<LeoButton type='submit'>Create</LeoButton>
+			<LeoButton type='submit'>
+				{rightBtn && rightBtn}
+				Create
+			</LeoButton>
 		</DialogFooter>
 	);
 }
