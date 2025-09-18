@@ -20,3 +20,4 @@ export type * from "./stock.transfer.model";
 export type * from "./supplier.model";
 export type * from "./tank.model";
 export type * from "./warehouse.model";
+export type * from "./work-order.model";

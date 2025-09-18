@@ -10,3 +10,4 @@ export * from "./sales/invoice/sales.invoice.entity";
 export * from "./sales/order/sales.order.entity";
 export * from "./supplier/supplier.entity";
 export * from "./user/user.entity";
+export * from "./work-order/work-order.entity";

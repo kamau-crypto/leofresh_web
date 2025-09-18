@@ -1,3 +1,4 @@
+import { WorkOrder } from "@/components";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/manufacturing/work-orders/")({
@@ -5,5 +6,9 @@ export const Route = createFileRoute("/app/manufacturing/work-orders/")({
 });
 
 function RouteComponent() {
-	return <div>Hello "/app/manufacturing/work-orders/"!</div>;
+	return (
+		<div>
+			<WorkOrder />
+		</div>
+	);
 }
