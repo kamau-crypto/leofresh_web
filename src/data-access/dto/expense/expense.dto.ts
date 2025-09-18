@@ -1,4 +1,4 @@
-import type { PaginationDTO } from "../common/pagination.dto";
+import type { PaginationDTO } from "../common/common.dto";
 
 export interface ReadExpensesDTO {
 	limit: number;

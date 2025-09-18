@@ -1,5 +1,4 @@
-import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
-
+import type { PaginationDTO, SortDTO } from "../common/common.dto";
 
 // [ ] Move to a distant location.
 export const profileFieldsDTO: string[] = [

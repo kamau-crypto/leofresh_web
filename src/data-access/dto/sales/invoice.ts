@@ -1,4 +1,4 @@
-import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
+import type { PaginationDTO, SortDTO } from "../common/common.dto";
 
 export interface CreateSalesInvoiceRecordDTO {
 	naming_series: string;

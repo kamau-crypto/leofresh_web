@@ -1,4 +1,4 @@
-import type { PaginationDTO, SortDTO } from "../common/pagination.dto";
+import type { PaginationDTO, SortDTO } from "../common/common.dto";
 
 export interface MeterReadingDTO extends PaginationDTO, SortDTO {
 	tank_name: string;
