@@ -32,7 +32,7 @@ export function LeoFreshSideBar({ children }: { children: React.ReactNode }) {
 		<SidebarProvider className='shadow-xl shadow-primary/30'>
 			<AppSidebar />
 			<SidebarInset>
-				<header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 shadow-lg shadow-primary/10 relative'>
+				<header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 shadow-lg shadow-primary/10 sticky top-0 bg-background z-10'>
 					<div className='flex items-center gap-2 px-4  inset-0 z-10 top-0'>
 						<SidebarTrigger className='-ml-1' />
 						<Separator
