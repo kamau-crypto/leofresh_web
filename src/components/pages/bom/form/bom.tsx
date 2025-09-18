@@ -111,7 +111,6 @@ export function BOMCreateMultiStepForm() {
 			};
 
 			const name = await createBOM(createData);
-			console.log("Item Created", name);
 			toast.success("BOM created successfully");
 			form.reset();
 			return;
