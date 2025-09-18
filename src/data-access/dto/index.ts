@@ -1,10 +1,10 @@
 // Data transfer objects are what you need to fulfill the contract with the server backend
 export * from "./bom/bom.dto";
-export type { PaginationDTO, SortDTO } from "./common/pagination.dto";
+export type { PaginationDTO, SortDTO } from "./common/common.dto";
 export * from "./customer/customer.dto";
 export * from "./expense/expense.dto";
-export * from "./item/production.item";
 export * from "./item/item.dto";
+export * from "./item/production.item";
 export * from "./journal_entry/banking.dto";
 export * from "./journal_entry/je.dto";
 export type * from "./journal_entry/payment.dto";
@@ -21,3 +21,4 @@ export * from "./stock/transfer";
 export * from "./suppliers/supplier";
 export * from "./tank/tank";
 export * from "./warehouse.dto";
+export * from "./work-order/work-order.dto";
