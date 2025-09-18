@@ -9,3 +9,4 @@ export * from "./sales/invoice/SalesInvoice";
 export * from "./sales/order/SalesOrder";
 export * from "./sales/pos/POS";
 export * from "./supplier/Suppliers";
+export * from "./work-order/WorkOrder";
