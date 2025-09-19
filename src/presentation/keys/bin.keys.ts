@@ -1,0 +1,4 @@
+export const BIN_KEYS = {
+	LIST_WAREHOUSE_BIN: ["LIST_WAREHOUSE_BIN"] as const,
+	LIST_BULK_WATER_BIN: ["LIST_BULK_WATER_BIN"] as const,
+};
