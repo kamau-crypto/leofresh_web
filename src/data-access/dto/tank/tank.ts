@@ -2,12 +2,7 @@ import type { PaginationDTO, SortDTO } from "../common/common.dto";
 
 export interface GetTanksDTO extends PaginationDTO, SortDTO {
 	fields: string[];
-}
-
-export interface GetTankDTO {
-	fields: string[];
-	tank_name: string;
-	filters: string[];
+	customer_name?: string;
 }
 
 export interface GetTankDetailsDTO {
@@ -33,3 +28,8 @@ export interface CreateTankReadingDTO {
 	height: number;
 	volume: number;
 }
+
+export interface UpdateTankReadingDTO extends Partial<CreateTankReadingDTO> {
+	name: string;
+}
+

@@ -1,5 +1,7 @@
 export interface ReadCustomerTankModel {
 	tank: string;
+	name: string;
+	customer_group: string;
 }
 
 export interface ReadTankDetailsModel {
@@ -38,15 +40,13 @@ export interface ReadTankReadingsModel {
 }
 
 export interface ReadTankReadingModel {
-	opening_reading: null;
+	opening_reading?: string;
 	meter_reading: number;
 	reading_type: string;
 	height: number;
 	volume: number;
-	date: null;
-	tank: string;
-	tank_height: number;
-	tank_num: number;
+	date?: string;
+	status: string;
 }
 
 export interface ReadCustomerTankModel {
