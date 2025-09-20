@@ -19,6 +19,7 @@ import {
 import type { ReadProfileEntity } from "@/domain";
 import { useAppDispatch, useAppSelector } from "@/hooks/appHooks";
 import { usePOSProfile } from "@/hooks/profile";
+import { base64ToBytes } from "@/lib/utils";
 import { setCustomer } from "@/store/profile";
 
 // Default fallback profile
@@ -56,6 +57,15 @@ export function TeamSwitcher() {
 
 	// Determine active profile with priority: Redux > First Available > Default
 	const activeProfile = useMemo((): ReadProfileEntity => {
+		// 1. Read from localStorage=
+		const storedProfile = localStorage.getItem("leofresh_profile");
+		if (storedProfile) {
+			const decodedText = new TextDecoder().decode(
+				base64ToBytes(storedProfile)
+			);
+			const profile: ReadProfileEntity = JSON.parse(decodedText);
+			return profile;
+		}
 		// 1. Redux store has highest priority (includes persisted data from middleware)
 		if (currentProfile.profile) {
 			return currentProfile.profile;
