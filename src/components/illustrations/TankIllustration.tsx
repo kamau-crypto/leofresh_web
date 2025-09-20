@@ -1,49 +1,230 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+
+type TankCalibration = {
+	// Real-world tank dimensions in mm
+	realDiameter: number;
+	realHeight: number;
+	// Real-world level values in height from bottom (mm)
+	realWaterLevel?: number;
+	realLowLevel?: number;
+	realLowLowLevel?: number;
+};
 
 type WaterTankProps = {
-	waterLevel: number;
+	// Option 1: Use percentage values (0-100)
+	waterLevel?: number;
 	lowLevel?: number; // Yellow warning line (default: 30%)
 	lowLowLevel?: number; // Red danger line (default: 15%)
+
+	// Option 2: Use real-world calibration
+	calibration?: TankCalibration;
+
+	// SVG dimensions
 	width?: number;
 	height?: number;
 	className?: string;
 	style?: React.CSSProperties;
 };
 
+// Safe number conversion utility
+const safeNumber = (value: any, fallback: number = 0): number => {
+	if (value === null || value === undefined || value === "") {
+		return fallback;
+	}
+	const num = Number(value);
+	return isNaN(num) ? fallback : num;
+};
+
+// Safe percentage calculation
+const safePercentage = (
+	numerator: number,
+	denominator: number,
+	fallback: number = 0
+): number => {
+	const num = safeNumber(numerator);
+	const den = safeNumber(denominator);
+	if (den === 0) {
+		return fallback;
+	}
+
+	const result = (num / den) * 100;
+	return isNaN(result) ? fallback : Math.max(0, Math.min(100, result));
+};
+
+const safeVolume = (diameter: number, height: number): number => {
+	const radius = safeNumber(diameter) / 2;
+	const h = safeNumber(height);
+
+	if (radius < 0 || h < 0) {
+		return 0;
+	}
+
+	const volume = Math.PI * Math.pow(radius, 2) * h;
+	return isNaN(volume) ? 0 : volume;
+};
+
+// Hook to calculate calibrated dimensions and percentages
+const useTankCalibration = (props: WaterTankProps) => {
+	return useMemo(() => {
+		// SVG coordinate system constants
+		const SVG_TANK_TOP = 39.7309;
+		const SVG_TANK_BOTTOM = 202.869;
+		const SVG_TANK_HEIGHT = SVG_TANK_BOTTOM - SVG_TANK_TOP; // ~163.14
+		const SVG_TANK_WIDTH = 131.342 - 3.612; // ~127.73
+
+		if (props.calibration) {
+			const {
+				realDiameter,
+				realHeight,
+				realWaterLevel = 0,
+				realLowLevel = safeNumber(realHeight) * 0.3, // Default 30% of tank height
+				realLowLowLevel = safeNumber(realHeight) * 0.15, // Default 15% of tank height
+			} = props.calibration;
+
+			// Safe conversions
+			const safeDiameter = safeNumber(realDiameter, 1000); // Default 1m
+			const safeHeight = safeNumber(realHeight, 1000); // Default 1m
+			const safeWaterLevel = safeNumber(realWaterLevel, 0);
+			const safeLowLevel = safeNumber(realLowLevel, safeHeight * 0.3);
+			const safeLowLowLevel = safeNumber(realLowLowLevel, safeHeight * 0.15);
+
+			// Convert real measurements to percentages
+			const waterLevelPercent = safePercentage(safeWaterLevel, safeHeight, 0);
+			const lowLevelPercent = safePercentage(safeLowLevel, safeHeight, 30);
+			const lowLowLevelPercent = safePercentage(
+				safeLowLowLevel,
+				safeHeight,
+				15
+			);
+
+			// Calculate actual volumes (cylindrical tank)
+			const tankRadius = safeDiameter / 2;
+			const totalVolume = safeVolume(safeDiameter, safeHeight); // mm³
+			const currentVolume = safeVolume(safeDiameter, safeWaterLevel); // mm³
+
+			// Convert volumes to liters (1 liter = 1,000,000 mm³)
+			const totalVolumeLiters = totalVolume / 1000000;
+			const currentVolumeLiters = currentVolume / 1000000;
+			const volumePercentage = safePercentage(
+				currentVolumeLiters,
+				totalVolumeLiters,
+				0
+			);
+
+			return {
+				// Percentage values for rendering
+				waterLevelPercent,
+				lowLevelPercent,
+				lowLowLevelPercent,
+
+				// Real-world measurements
+				realMeasurements: {
+					diameter: safeDiameter,
+					height: safeHeight,
+					waterLevel: safeWaterLevel,
+					lowLevel: safeLowLevel,
+					lowLowLevel: safeLowLowLevel,
+				},
+
+				// Volume calculations
+				volumes: {
+					total: totalVolumeLiters,
+					current: currentVolumeLiters,
+					percentage: volumePercentage,
+				},
+
+				// SVG scaling factors
+				scaling: {
+					heightScale: safeHeight > 0 ? SVG_TANK_HEIGHT / safeHeight : 1,
+					widthScale: safeDiameter > 0 ? SVG_TANK_WIDTH / safeDiameter : 1,
+					svgTankHeight: SVG_TANK_HEIGHT,
+					svgTankWidth: SVG_TANK_WIDTH,
+				},
+
+				// Display values
+				display: {
+					waterHeightMM: safeWaterLevel,
+					waterHeightM: (safeWaterLevel / 1000).toFixed(2),
+					lowLevelHeightMM: safeLowLevel,
+					lowLowLevelHeightMM: safeLowLowLevel,
+					diameterM: (safeDiameter / 1000).toFixed(2),
+					totalHeightM: (safeHeight / 1000).toFixed(2),
+				},
+			};
+		} else {
+			// Use percentage-based values (legacy mode)
+			const waterLevelPercent = Math.max(
+				0,
+				Math.min(100, safeNumber(props.waterLevel, 50))
+			);
+			const lowLevelPercent = Math.max(
+				0,
+				Math.min(100, safeNumber(props.lowLevel, 30))
+			);
+			const lowLowLevelPercent = Math.max(
+				0,
+				Math.min(100, safeNumber(props.lowLowLevel, 15))
+			);
+
+			return {
+				waterLevelPercent,
+				lowLevelPercent,
+				lowLowLevelPercent,
+				realMeasurements: null,
+				volumes: null,
+				scaling: {
+					heightScale: 1,
+					widthScale: 1,
+					svgTankHeight: SVG_TANK_HEIGHT,
+					svgTankWidth: SVG_TANK_WIDTH,
+				},
+				display: null,
+			};
+		}
+	}, [props.calibration, props.waterLevel, props.lowLevel, props.lowLowLevel]);
+};
+
 export const AnimatedTank: React.FC<WaterTankProps> = ({
-	waterLevel = 50,
-	lowLevel = 30,
-	lowLowLevel = 15,
 	width = 155,
 	height = 203,
 	className,
 	style,
 	...props
 }) => {
-	// Validate props
-	const validatedWaterLevel = Math.max(0, Math.min(100, waterLevel));
-	const validatedLowLevel = Math.max(0, Math.min(100, lowLevel));
-	const validatedLowLowLevel = Math.max(0, Math.min(100, lowLowLevel));
+	// Calculate calibrated dimensions and percentages
+	const calibration = useTankCalibration(props);
+
+	const {
+		waterLevelPercent: validatedWaterLevel,
+		lowLevelPercent: validatedLowLevel,
+		lowLowLevelPercent: validatedLowLowLevel,
+	} = calibration;
 
 	// Animation state
 	const [waveOffset, setWaveOffset] = useState(0);
 	const [waveHeight, setWaveHeight] = useState(1);
 
-	// Tank dimensions
+	// Tank dimensions with safe fallbacks
 	const tankTop = 39.7309;
 	const tankBottom = 202.869;
-	const tankHeight = tankBottom - tankTop;
+	const tankHeight = safeNumber(tankBottom - tankTop, 163.14);
 	const tankCurveFactor = 8; // Matches the tank's bottom curve
 
-	// Calculate positions
-	const waterHeight = (validatedWaterLevel / 100) * tankHeight;
-	const waterTop = tankBottom - waterHeight;
-	const lowLineY = tankBottom - (validatedLowLevel / 100) * tankHeight;
-	const lowLowLineY = tankBottom - (validatedLowLowLevel / 100) * tankHeight;
+	// Calculate positions with NaN protection
+	const waterHeight = safeNumber((validatedWaterLevel / 100) * tankHeight, 0);
+	const waterTop = safeNumber(tankBottom - waterHeight, tankBottom);
+	const lowLineY = safeNumber(
+		tankBottom - (validatedLowLevel / 100) * tankHeight,
+		tankBottom
+	);
+	const lowLowLineY = safeNumber(
+		tankBottom - (validatedLowLowLevel / 100) * tankHeight,
+		tankBottom
+	);
 
-	// Enhanced wave parameters
+	// Enhanced wave parameters with safe values
 	const baseWaveHeight = 8;
-	const waveLength = 20;
+	const waveLength = safeNumber(20, 20);
 
 	// CSS Animation using requestAnimationFrame
 	useEffect(() => {
@@ -57,14 +238,21 @@ export const AnimatedTank: React.FC<WaterTankProps> = ({
 
 			// Wave horizontal movement (1.5s cycle)
 			const waveProgress = ((currentTime - startTime) / 1500) % 1;
-			setWaveOffset(waveProgress * 2 * Math.PI);
+			setWaveOffset(safeNumber(waveProgress * 2 * Math.PI, 0));
 
 			// Wave height pulsing (2s cycle total - 1s up, 1s down)
 			const heightProgress = ((currentTime - heightStartTime) / 2000) % 1;
-			const heightValue = heightProgress < 0.5
-				? 1 + (0.3 * Math.sin(heightProgress * 2 * Math.PI)) // 1 to 1.3 and back
-				: 1 + (0.3 * Math.sin((heightProgress - 0.5) * 2 * Math.PI)); // Continue the cycle
-			setWaveHeight(1 + 0.3 * Math.sin(heightProgress * 2 * Math.PI));
+			const heightValue =
+				heightProgress < 0.5
+					? 1 + 0.3 * Math.sin(safeNumber(heightProgress * 2 * Math.PI, 0)) // 1 to 1.3 and back
+					: 1 +
+						0.3 * Math.sin(safeNumber((heightProgress - 0.5) * 2 * Math.PI, 0)); // Continue the cycle
+			setWaveHeight(
+				safeNumber(
+					1 + 0.3 * Math.sin(safeNumber(heightProgress * 2 * Math.PI, 0)),
+					1
+				)
+			);
 
 			animationId = requestAnimationFrame(animate);
 		};
@@ -78,53 +266,64 @@ export const AnimatedTank: React.FC<WaterTankProps> = ({
 		};
 	}, []);
 
-	// Generate curve matching tank bottom angle
+	// Generate curve matching tank bottom angle with safe values
 	const generateTankCurvedLine = (yPosition: number) => {
 		const startX = 3.612;
 		const endX = 131.342;
 		const midX = (startX + endX) / 2;
+		const safeY = safeNumber(yPosition, tankBottom);
+		const safeCurveFactor = safeNumber(tankCurveFactor, 8);
+
 		// Curve matches tank bottom angle using tankCurveFactor
-		return `M${startX} ${yPosition} Q${midX} ${
-			yPosition + tankCurveFactor
-		} ${endX} ${yPosition}`;
+		return `M${startX} ${safeY} Q${midX} ${
+			safeY + safeCurveFactor
+		} ${endX} ${safeY}`;
 	};
 
-	// Generate label position matching curve
+	// Generate label position matching curve with safe values
 	const getLabelPosition = (yPosition: number) => {
 		const labelX = 141.342; // 20px left of startX (3.612)
 		const midX = (3.612 + 131.342) / 2;
+		const safeY = safeNumber(yPosition, tankBottom);
+		const safeCurveFactor = safeNumber(tankCurveFactor, 8);
+
 		// Calculate Y position accounting for curve
 		const curveOffset =
-			tankCurveFactor * (1 - Math.pow((midX - 3.612) / (midX - 3.612), 2));
-		return { x: labelX, y: yPosition + curveOffset };
+			safeCurveFactor * (1 - Math.pow((midX - 3.612) / (midX - 3.612), 2));
+		return { x: labelX, y: safeY + curveOffset };
 	};
 
-	// Generate wave path
+	// Generate wave path with safe values
 	const generateWavePath = (offset: number, heightMultiplier: number) => {
 		const startX = 3.612;
 		const endX = 131.342;
-		const width = endX - startX;
-		const segments = Math.ceil(width / waveLength);
+		const width = safeNumber(endX - startX, 127.73);
+		const safeOffset = safeNumber(offset, 0);
+		const safeHeightMultiplier = safeNumber(heightMultiplier, 1);
+		const safeWaveLength = safeNumber(waveLength, 20);
+
+		const segments = Math.ceil(width / safeWaveLength);
 
 		let path = `M${startX} ${waterTop + waterHeight}`;
 		path += ` L${startX} ${
 			waterTop +
-			baseWaveHeight * heightMultiplier * (0.3 + 0.7 * Math.sin(offset))
+			baseWaveHeight * safeHeightMultiplier * (0.3 + 0.7 * Math.sin(safeOffset))
 		}`;
 
 		for (let i = 1; i <= segments; i++) {
 			const x = startX + (i * width) / segments;
-			const waveFactor = Math.sin(offset + i * 0.8);
+			const waveFactor = Math.sin(safeOffset + i * 0.8);
 			const y =
-				waterTop + baseWaveHeight * heightMultiplier * (0.3 + 0.7 * waveFactor);
-			path += ` L${x} ${y}`;
+				waterTop +
+				baseWaveHeight * safeHeightMultiplier * (0.3 + 0.7 * waveFactor);
+			path += ` L${x} ${safeNumber(y, waterTop)}`;
 		}
 
 		path += ` L${endX} ${waterTop + waterHeight} Z`;
 		return path;
 	};
 
-	// Get positions for all labels
+	// Get positions for all labels with safe values
 	const highLabelPos = getLabelPosition(tankTop);
 	const lowLabelPos = getLabelPosition(lowLineY);
 	const lowLowLabelPos = getLabelPosition(lowLowLineY);
@@ -159,9 +358,9 @@ export const AnimatedTank: React.FC<WaterTankProps> = ({
 			<g clipPath='url(#water-clip)'>
 				<rect
 					x='3.612'
-					y={waterTop}
+					y={isNaN(waterTop) ? tankBottom : waterTop}
 					width='127.73'
-					height={waterHeight}
+					height={isNaN(waterHeight) ? 0 : waterHeight}
 					fill='#007AFF'
 					fillOpacity={0.4}
 				/>
@@ -243,42 +442,194 @@ export const AnimatedTank: React.FC<WaterTankProps> = ({
 };
 
 // Demo component to show the tank in action
-const WaterTankDemo: React.FC = () => {
-	const [waterLevel, setWaterLevel] = useState(50);
+// const WaterTankDemo: React.FC = () => {
+// 	const [waterLevel, setWaterLevel] = useState(50);
+// 	const [useCalibration, setUseCalibration] = useState(false);
+// 	const [realWaterLevel, setRealWaterLevel] = useState(980); // 980mm = 50% of 1960mm
 
-	return (
-		<div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
-			<h1 className="text-2xl font-bold mb-6">Animated Water Tank Component</h1>
-			
-			<div className="mb-6">
-				<label className="block text-sm font-medium mb-2">
-					Water Level: {waterLevel}%
-				</label>
-				<input
-					type="range"
-					min="0"
-					max="100"
-					value={waterLevel}
-					onChange={(e) => setWaterLevel(Number(e.target.value))}
-					className="w-64"
-				/>
-			</div>
+// 	// Real tank dimensions (your example)
+// 	const tankDimensions = {
+// 		realDiameter: 2350, // mm
+// 		realHeight: 1960, // mm
+// 		realLowLevel: 480, // mm (your example)
+// 		realLowLowLevel: 294, // mm (15% of 1960)
+// 	};
 
-			<div className="bg-white p-8 rounded-lg shadow-lg">
-				<AnimatedTank 
-					waterLevel={waterLevel}
-					lowLevel={30}
-					lowLowLevel={15}
-					width={200}
-					height={260}
-				/>
-			</div>
+// 	const calibrationConfig: TankCalibration = {
+// 		...tankDimensions,
+// 		realWaterLevel: realWaterLevel,
+// 	};
 
-			<div className="mt-6 max-w-md text-sm text-gray-600">
-				<p><span className="inline-block w-4 h-1 bg-green-500 mr-2"></span><strong>H:</strong> High level indicator</p>
-				<p><span className="inline-block w-4 h-1 bg-yellow-500 mr-2"></span><strong>L:</strong> Low level warning (30%)</p>
-				<p><span className="inline-block w-4 h-1 bg-red-500 mr-2"></span><strong>LL:</strong> Low-low danger level (15%)</p>
-			</div>
-		</div>
-	);
-};
+// 	return (
+// 		<div className='p-8 bg-gray-100 min-h-screen flex flex-col items-center'>
+// 			<h1 className='text-3xl font-bold mb-6'>
+// 				Calibrated Water Tank Component
+// 			</h1>
+
+// 			<div className='mb-6 bg-white p-4 rounded-lg shadow'>
+// 				<label className='flex items-center mb-4'>
+// 					<input
+// 						type='checkbox'
+// 						checked={useCalibration}
+// 						onChange={e => setUseCalibration(e.target.checked)}
+// 						className='mr-2'
+// 					/>
+// 					Use Real-World Calibration
+// 				</label>
+
+// 				{useCalibration ? (
+// 					<div className='space-y-4'>
+// 						<div>
+// 							<label className='block text-sm font-medium mb-2'>
+// 								Water Level: {realWaterLevel}mm (
+// 								{((realWaterLevel / tankDimensions.realHeight) * 100).toFixed(
+// 									1
+// 								)}
+// 								%)
+// 							</label>
+// 							<input
+// 								type='range'
+// 								min='0'
+// 								max={tankDimensions.realHeight}
+// 								value={realWaterLevel}
+// 								onChange={e => setRealWaterLevel(Number(e.target.value))}
+// 								className='w-full'
+// 							/>
+// 						</div>
+
+// 						<div className='grid grid-cols-2 gap-4 text-sm'>
+// 							<div>
+// 								<p>
+// 									<strong>Tank Dimensions:</strong>
+// 								</p>
+// 								<p>
+// 									Diameter: {(tankDimensions.realDiameter / 1000).toFixed(2)}m
+// 								</p>
+// 								<p>Height: {(tankDimensions.realHeight / 1000).toFixed(2)}m</p>
+// 							</div>
+// 							<div>
+// 								<p>
+// 									<strong>Levels:</strong>
+// 								</p>
+// 								<p>
+// 									Low Level: {tankDimensions.realLowLevel}mm (
+// 									{(
+// 										(tankDimensions.realLowLevel / tankDimensions.realHeight) *
+// 										100
+// 									).toFixed(1)}
+// 									%)
+// 								</p>
+// 								<p>
+// 									Low-Low: {tankDimensions.realLowLowLevel}mm (
+// 									{(
+// 										(tankDimensions.realLowLowLevel /
+// 											tankDimensions.realHeight) *
+// 										100
+// 									).toFixed(1)}
+// 									%)
+// 								</p>
+// 							</div>
+// 						</div>
+// 					</div>
+// 				) : (
+// 					<div>
+// 						<label className='block text-sm font-medium mb-2'>
+// 							Water Level: {waterLevel}%
+// 						</label>
+// 						<input
+// 							type='range'
+// 							min='0'
+// 							max='100'
+// 							value={waterLevel}
+// 							onChange={e => setWaterLevel(Number(e.target.value))}
+// 							className='w-full'
+// 						/>
+// 					</div>
+// 				)}
+// 			</div>
+
+// 			<div className='bg-white p-8 rounded-lg shadow-lg mb-6'>
+// 				<AnimatedTank
+// 					{...(useCalibration
+// 						? { calibration: calibrationConfig }
+// 						: { waterLevel, lowLevel: 30, lowLowLevel: 15 })}
+// 					width={200}
+// 					height={260}
+// 				/>
+// 			</div>
+
+// 			{useCalibration && <TankInfoDisplay calibration={calibrationConfig} />}
+
+// 			<div className='mt-6 max-w-md text-sm text-gray-600'>
+// 				<p>
+// 					<span className='inline-block w-4 h-1 bg-green-500 mr-2'></span>
+// 					<strong>H:</strong> High level indicator
+// 				</p>
+// 				<p>
+// 					<span className='inline-block w-4 h-1 bg-yellow-500 mr-2'></span>
+// 					<strong>L:</strong> Low level warning
+// 				</p>
+// 				<p>
+// 					<span className='inline-block w-4 h-1 bg-red-500 mr-2'></span>
+// 					<strong>LL:</strong> Low-low danger level
+// 				</p>
+// 			</div>
+// 		</div>
+// 	);
+// };
+
+// // Component to display calculated tank information
+// const TankInfoDisplay: React.FC<{ calibration: TankCalibration }> = ({
+// 	calibration,
+// }) => {
+// 	const tankCalibration = useTankCalibration({ calibration });
+// 	const { realMeasurements, volumes, display } = tankCalibration;
+
+// 	if (!realMeasurements || !volumes || !display) return null;
+
+// 	return (
+// 		<div className='bg-white p-6 rounded-lg shadow-lg max-w-2xl'>
+// 			<h3 className='text-xl font-semibold mb-4'>Tank Information</h3>
+
+// 			<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+// 				<div>
+// 					<h4 className='font-medium text-gray-700 mb-2'>
+// 						Physical Dimensions
+// 					</h4>
+// 					<div className='space-y-1 text-sm'>
+// 						<p>Diameter: {display.diameterM}m</p>
+// 						<p>Height: {display.totalHeightM}m</p>
+// 						<p>Current Level: {display.waterHeightM}m</p>
+// 					</div>
+// 				</div>
+
+// 				<div>
+// 					<h4 className='font-medium text-gray-700 mb-2'>
+// 						Volume Calculations
+// 					</h4>
+// 					<div className='space-y-1 text-sm'>
+// 						<p>Total Capacity: {volumes.total.toLocaleString()} L</p>
+// 						<p>Current Volume: {volumes.current.toLocaleString()} L</p>
+// 						<p>Fill Percentage: {volumes.percentage.toFixed(1)}%</p>
+// 					</div>
+// 				</div>
+
+// 				<div>
+// 					<h4 className='font-medium text-gray-700 mb-2'>Warning Levels</h4>
+// 					<div className='space-y-1 text-sm'>
+// 						<p>Low Level: {display.lowLevelHeightMM}mm</p>
+// 						<p>Low-Low Level: {display.lowLowLevelHeightMM}mm</p>
+// 						<p>
+// 							Current Status:{" "}
+// 							{realMeasurements.waterLevel <= realMeasurements.lowLowLevel
+// 								? "🔴 Critical"
+// 								: realMeasurements.waterLevel <= realMeasurements.lowLevel
+// 									? "🟡 Warning"
+// 									: "🟢 Normal"}
+// 						</p>
+// 					</div>
+// 				</div>
+// 			</div>
+// 		</div>
+// 	);
+// };
