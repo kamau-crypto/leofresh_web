@@ -5,7 +5,7 @@ import type { CreatedStockMovementModel } from "../models";
 import { FrappeInstance } from "./frappe";
 
 //Stock enty is a Stock Entry type of Material Transfer from the Stock Entry DocType
-export class StockTransfer
+export class StockEntryDataSource
 	extends FrappeInstance
 	implements FrappeCreateRequirement
 {
@@ -28,6 +28,16 @@ export class StockTransfer
 		return naming_series.data.data;
 	}
 
+	async listStockTransfers() {
+		const stockTransfers: AxiosResponse<{ data: CreatedStockMovementModel[] }> =
+			await this.stockTransferInstance.get(this.docType, {
+				params: {
+					fields: JSON.stringify([fields]),
+				},
+			});
+		return stockTransfers.data.data;
+	}
+
 	async createStockTransfer({ data }: { data: CreateStockMovementEntryDTO }) {
 		const res: AxiosResponse<{ data: CreatedStockMovementModel }> =
 			await this.stockTransferInstance.post(this.docType, { data });
@@ -39,6 +49,20 @@ export class StockTransfer
 			await this.frappeSubmit({ doc: data });
 		return submitStock.data.message;
 	}
+
+	async updateStockTransfer({
+		data,
+		name,
+	}: {
+		data: Partial<CreateStockMovementEntryDTO>;
+		name: string;
+	}) {
+		const res: AxiosResponse<{ data: CreatedStockMovementModel }> =
+			await this.stockTransferInstance.put(`${this.docType}/${name}`, { data });
+		const submitted = await this.submitStockTransfer({ data: res.data.data });
+		return submitted.name;
+	}
+
 	async transferStock({ data }: { data: CreateStockMovementEntryDTO }) {
 		const transferStock = await this.createStockTransfer({ data });
 		return await this.submitStockTransfer({ data: transferStock });
