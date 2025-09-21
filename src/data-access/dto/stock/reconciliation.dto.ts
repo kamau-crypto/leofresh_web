@@ -1,3 +1,5 @@
+import type { PaginationDTO, SortDTO } from "../common/common.dto";
+
 export interface CreateStockReconciliationDTO {
 	naming_series: string;
 	purpose: string;
@@ -15,4 +17,13 @@ export interface StockReconciliationItemDTO {
 	item_code: string;
 	qty: number;
 	valuation_rate: number;
+}
+
+export interface ListStockReconciliationDTO extends PaginationDTO, SortDTO {
+	fields: string[];
+}
+
+export interface StockReconciliationDetailsDTO {
+	name: string;
+	fields: string[];
 }

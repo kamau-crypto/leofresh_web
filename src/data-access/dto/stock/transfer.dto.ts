@@ -1,3 +1,5 @@
+import type { PaginationDTO, SortDTO } from "../common/common.dto";
+
 export interface CreateStockMovementEntryDTO {
 	naming_series?: string;
 	stock_entry_type: string;
@@ -17,4 +19,13 @@ export interface CreateStockMovementEntryItemDTO {
 	uom: string;
 	conversion_factor: number;
 	basic_rate: number;
+}
+
+export interface ListStockTransferDTO extends PaginationDTO, SortDTO {
+	fields: string[];
+}
+
+export interface StockTransferDetailsDTO {
+	name: string;
+	fields: string[];
 }
