@@ -1,69 +1,66 @@
-# React + TypeScript + Vite
+# LEOFRESH ERPNext Simplification
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introduction
 
-Currently, two official plugins are available:
+- From the experience encountered due to the complexities associated with client UI hardening and technicalities involved in app development, this simpliERPNext was created to help solve this problems by mapping a the simpler interface into some easier to work with ERPNext, i.e., for non-technical users.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Architecture
 
-## Expanding the ESLint configuration
+- Clean Architecture (with some hybrid deconcotions).
+- Role Based Access Control - RBAC, this limits the users from accessing some core components/ pages on the mobile app.
+- Role Base Authorization - Not entirely needed for this kind of app.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tasks
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Doctypes and access restructuring in this application interface.
+- Data Access Implementation
+  - [x] API implementation
+    - [x] Profile [ ]TODO
+    - [x] Customer
+    - [x] Banking
+    - [x] Expenses
+    - [x] Price List - Refine the DTOs here and isolate them [ ]TODO
+  - [x] DTO implementation
+    - [x] Profile
+    - [x] Customer
+    - [x] banking
+    - [x] expenses
+    - [x] Price List - Refine the DTOs at this stage
+  - [x] Models Migration
+    - [x] Profile Migration
+- [x] Repository Implementation
+  - [x] Transfer the filters from the API's
+- Domain
+- [x]Entities
+- [x] Services.(Remove to eliminate redundancies)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Manufacturing
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- WOrk on the BOM creation and order creation mechanism.
+- Create an association of materials to be produced for example, if a user selects they want to manufacture 1Ltr bottled water, extract all the materials associated with 1Ltr's and the user just checks the ingredients needed to create the end product.
+- [ ] Get the selected item also show the stock quantities.
+- [ ] Get all items with the same name from App Storage.(Prefetch if they do not exist).
+  - [ ] Check the product's current stock quantity.
+  - [ ] Get the stock quantities and check against the quantities to produce before proceeding. If the quantities at the source warehouse do not match the needed quantities, show a link to raise a purchase order to the supplier.
+  - [ ] If the stock quantities do match, then created a BOM or use an existing one with the same materials as the previous one.
+  - [ ] Proceed to the work order with the selected quantities.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+  ### UI FLOW
+  - Create a multistepper form whereby:
+    - 1. On the first page:-
+      - Select the material you want to produce, and the quantities. Show the current quantities at the specific warehouse.
+      - Check for existing BOM's depending on the source warehouse.
+        - If none is found, create one,
+        - If there is one for this item, then reselect one and have it reused.
+    - 2. After that move with the BOM to the work order dialog and finish the manufacuting process.
+    - Show a dialog of the completed materials and provide some links to either the **stock** or the **selling** pages.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Think of finishing the work order programmatically. Once done, the rest of the application should be done properly.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  ### BOM/ Work Order Editing.
+  - Redirect the user to the BOM page and toggle the BOM for editing purposes.
+  - Once done, edit and save to persist the changes.
+
+## Borehole Water.
+
+- How can I setup borehole water to automatically use Raw Water at a zero rated value at the warehouse??. However, we might need to adjust for the cost of production to associate the amount from the final cost of raw water valuation which ineffect changes the purified water completion criteria.
