@@ -1,0 +1,76 @@
+module.exports = {
+	apps: [
+		{
+			name: "vite-app-dev",
+			script: "npm",
+			args: "run dev",
+			cwd: process.cwd(),
+			instances: 1,
+			autorestart: true,
+			watch: ["src", "public", "index.html"], // Watch for file changes
+			ignore_watch: ["node_modules", "dist", ".git"],
+			max_memory_restart: "500M",
+			env: {
+				NODE_ENV: "development",
+				PORT: 5173,
+				VITE_DEV_SERVER_HOST: "0.0.0.0",
+			},
+			log_file: "./logs/dev-combined.log",
+			out_file: "./logs/dev-out.log",
+			error_file: "./logs/dev-error.log",
+			time: true,
+			merge_logs: true,
+		},
+		{
+			name: "vite-app-preview",
+			script: "npm",
+			args: "run preview",
+			cwd: process.cwd(),
+			instances: 1,
+			autorestart: true,
+			watch: false,
+			max_memory_restart: "300M",
+			env: {
+				NODE_ENV: "production",
+				PORT: 4173,
+				HOST: "0.0.0.0",
+			},
+			log_file: "./logs/preview-combined.log",
+			out_file: "./logs/preview-out.log",
+			error_file: "./logs/preview-error.log",
+			time: true,
+		},
+		{
+			name: "vite-app-build-watch",
+			script: "npm",
+			args: "run build:watch",
+			cwd: process.cwd(),
+			instances: 1,
+			autorestart: true,
+			watch: ["src"],
+			ignore_watch: ["node_modules", "dist", ".git"],
+			max_memory_restart: "200M",
+			env: {
+				NODE_ENV: "development",
+			},
+			log_file: "./logs/build-watch-combined.log",
+			out_file: "./logs/build-watch-out.log",
+			error_file: "./logs/build-watch-error.log",
+			time: true,
+		},
+	],
+
+	deploy: {
+		production: {
+			user: "SSH_USERNAME",
+			host: "SSH_HOSTMACHINE",
+			ref: "origin/master",
+			repo: "GIT_REPOSITORY",
+			path: "DESTINATION_PATH",
+			"pre-deploy-local": "",
+			"post-deploy":
+				"npm install && pm2 reload ecosystem.config.js --env production",
+			"pre-setup": "",
+		},
+	},
+};
