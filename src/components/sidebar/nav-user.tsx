@@ -36,7 +36,7 @@ export function NavUser({
 
 	const handleLogout = async () => {
 		await logout();
-		toast.success("Logged out, Login and Try Agains", { duration: 2000 });
+		toast.success("Logged out, Login and Try Again", { duration: 2000 });
 		navigate({ to: "/auth/login" });
 	};
 
